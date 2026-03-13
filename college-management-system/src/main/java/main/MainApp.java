@@ -17,6 +17,6 @@ public class MainApp {
 		LoginController logincontroller=new LoginController();
 		logincontroller.login(email, password);
 		
-
+		input.close();
 	}
 }

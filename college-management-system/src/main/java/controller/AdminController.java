@@ -1,10 +1,13 @@
 package controller;
 
-public class FacultyController {
+public class AdminController {
 
 	public void showMenu() {
 		
+		
 	}
+
+	
 
 	
 

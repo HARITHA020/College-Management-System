@@ -10,20 +10,20 @@ public class LoginController {
 		
 		 if(role.equals("ADMIN")) {
 	            System.out.println("Admin Login Successful");
-	            AdminContoller adminController = new AdminContoller();
-	            adminController.adminDashboard();
+	            AdminController adminController = new AdminController();
+	            adminController.showMenu();
 	        }
 
-	        else if(role.equals("FACULTY")) {
-	            System.out.println("Faculty Login Successful");
-	            FacultyController facultyController = new FacultyController();
-	            facultyController.facultyDashboard();
-	        }
+		 else if(role.equals("FACULTY")) {
+			    System.out.println("Faculty Login Successful");
+			    FacultyController facultyController = new FacultyController();
+			    facultyController.showMenu();
+			}
 
 	        else if(role.equals("STUDENT")) {
 	            System.out.println("Student Login Successful");
 	            StudentController studentController = new StudentController();
-	            studentController.studentDashboard();
+	            studentController.showMenu();
 	        }
 
 	        else {
