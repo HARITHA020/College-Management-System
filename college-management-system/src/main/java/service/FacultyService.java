@@ -1,31 +1,32 @@
 package service;
 
-import java.util.List;
-import dao.StudentDAO;
-import model.Student;
+import dao.FacultyDAO;
+import model.Faculty;
 
 public class FacultyService {
+	FacultyDAO facultyDao=new FacultyDAO();
+	public void addFaculty(int id, String name, String department) {
 
-    private StudentDAO studentDAO = new StudentDAO();
+        Faculty faculty = new Faculty(id, name, department);
+        facultyDao.addFaculty(faculty);
 
-    public void viewStudents() {
-
-        List<Student> students = studentDAO.getAllStudents();
-
-        for (Student s : students) {
-            System.out.println(s.getId() + " " + s.getName() + " " + s.getDepartment());
-        }
+        System.out.println("Faculty Added Successfully");
     }
 
-    public void viewAttendance() {
-        System.out.println("Viewing student attendance records");
+    public void updateFaculty(int id, String name, String department) {
+
+        facultyDao.updateFaculty(id, name, department);
+
+        System.out.println("Faculty Updated Successfully");
     }
 
-    public void viewMarks() {
-        System.out.println("Viewing student marks");
+    public void deleteFaculty(int id) {
+
+        facultyDao.deleteFaculty(id);
+
+        System.out.println("Faculty Deleted Successfully");
     }
 
-    public void viewTimeTable() {
-        System.out.println("Viewing faculty timetable");
-    }
+	
+
 }

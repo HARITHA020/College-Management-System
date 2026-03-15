@@ -18,6 +18,21 @@ public class StudentService {
 		System.out.println("Student added successfully");
 	}
 	
+
+    public void updateStudent(int id, String name, String department) {
+
+        studentDAO.updateStudent(id, name, department);
+
+        System.out.println("Student Updated Successfully");
+    }
+
+    public void deleteStudent(int id) {
+
+        studentDAO.deleteStudent(id);
+
+        System.out.println("Student Deleted Successfully");
+    }
+	
 	public void viewStudents() {
 		
 		List<Student> students = studentDAO.getAllStudents();
