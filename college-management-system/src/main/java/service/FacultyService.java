@@ -4,25 +4,21 @@ import java.util.List;
 
 import dao.FacultyDAO;
 import dao.StudentDAO;
-import dao.TimetableDAO;
 import dao.ExamDAO;
 
 import model.Faculty;
 import model.Student;
-import model.Timetable;
 import model.Exam;
 
 public class FacultyService {
 
     private FacultyDAO facultyDAO;
     private StudentDAO studentDAO;
-    private TimetableDAO timetableDAO;
     private ExamDAO examDAO;
 
     public FacultyService() {
         facultyDAO = new FacultyDAO();
         studentDAO = new StudentDAO();
-        timetableDAO = new TimetableDAO();
         examDAO = new ExamDAO();
     }
 
@@ -65,28 +61,12 @@ public class FacultyService {
         }
     }
 
-    // ── Students ─────────────────────────
-
-    public void viewStudents() {
-
-        List<Student> students = studentDAO.getAllStudents();
-
-        System.out.println("Student Details:");
-
-        for (Student s : students) {
-            System.out.println(
-                "Student Id: " + s.getId() +
-                "\nStudent Name: " + s.getName() +
-                "\nDepartment: " + s.getDepartment()
-            );
-        }
-    }
-
+    
     // ── Marks ─────────────────────────
 
     public void viewMarks() {
 
-        List<Exam> exams = examDAO.getAllExams();
+        List<Exam> exams = examDAO.getAllExam();
 
         System.out.println("Exam / Marks Records:");
 
@@ -99,20 +79,8 @@ public class FacultyService {
         }
     }
 
-    // ── Timetable ─────────────────────────
+   
 
-    public void viewTimeTable() {
-
-        List<Timetable> timetables = timetableDAO.getAllTimetables();
-
-        System.out.println("Faculty Timetable:");
-
-        for (Timetable t : timetables) {
-            System.out.println(
-                "Day: " + t.getDay() +
-                " | Time: " + t.getTime() +
-                " | Room: " + t.getRoom()
-            );
-        }
-    }
+    
+    
 }

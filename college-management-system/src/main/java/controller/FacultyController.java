@@ -1,11 +1,16 @@
 package controller;
 
 import java.util.Scanner;
+
+import service.AdminService;
 import service.FacultyService;
+import service.StudentService;
 
 public class FacultyController {
 
 	private FacultyService facultyService = new FacultyService();
+	private AdminService adminService= new AdminService();
+	private StudentService studentService= new StudentService();
 	private Scanner scanner = new Scanner(System.in);
 
 	public void showMenu() {
@@ -23,7 +28,7 @@ public class FacultyController {
 			switch (choice) {
 
 			case 1:
-				facultyService.viewStudents();
+				studentService.viewStudents();
 				break;
 
 			case 2:
@@ -35,7 +40,7 @@ public class FacultyController {
 				break;
 
 			case 4:
-				facultyService.viewTimeTable();
+				adminService.viewTimetable();
 				break;
 
 			case 5:

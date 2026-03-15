@@ -4,18 +4,21 @@ import java.util.List;
 
 import dao.AdminDAO;
 import dao.CourseDAO;
+import dao.ExamDAO;
 import dao.TimetableDAO;
 import model.Administrator;
 import model.Course;
+import model.Exam;
 import model.Faculty;
 import model.Timetable;
 
 public class AdminService {
 	
 	
-	CourseDAO courseDao=new CourseDAO();
-	TimetableDAO timetableDao=new TimetableDAO();
-	AdminDAO adminDao = new AdminDAO();
+	private CourseDAO courseDao=new CourseDAO();
+	private TimetableDAO timetableDao=new TimetableDAO();
+	private AdminDAO adminDao = new AdminDAO();
+	private ExamDAO examDao=new ExamDAO();
 
     public void addAdmin(int id, String name, String password) {
 
@@ -53,6 +56,12 @@ public class AdminService {
         System.out.println("Timetable Added Successfully");
     }
     
+    public void scheduleExam(int examId, int courseId, String examDate) {
+		examDao.addExam(examId,courseId,examDate);
+		System.out.println("Exam Scheduled Succesfully");
+		
+	}
+    
     public void viewAdmins() {
 		
 		List<Administrator> admins = adminDao.getAllAdmins();
@@ -77,5 +86,16 @@ public class AdminService {
     		System.out.println("Id:"+timetable.gettimetableId()+" Day:"+timetable.getDay()+" Time:"+timetable.getTime()+" Room No:"+timetable.getRoom()+" courseId:"+timetable.getCourseId());
     	}
     }
+
+	public void viewSchedules() {
+		List<Exam> exams=examDao.getAllExam();
+		System.out.println("Examination Schedules:");
+		for(Exam exam:exams) {
+			System.out.println("Exam id:"+exam.getExamId()+"\nCourse Id;"+exam.getCourseId()+"\nExam Date:"+exam.getExamDate());
+		}
+		
+	}
+
+	
 
 }

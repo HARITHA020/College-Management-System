@@ -7,9 +7,9 @@ import service.FacultyService;
 
 public class AdminController {
 
-    AdminService adminService = new AdminService();
-    StudentService studentService = new StudentService();
-    FacultyService facultyService = new FacultyService();
+    private AdminService adminService = new AdminService();
+    private StudentService studentService = new StudentService();
+    private FacultyService facultyService = new FacultyService();
 
     Scanner input = new Scanner(System.in);
 
@@ -17,7 +17,7 @@ public class AdminController {
 
         int choice = 0;
 
-        while (choice != 7) {
+        while (choice != 10) {
 
             System.out.println("\n===== ADMIN MENU =====");
             System.out.println("1. Manage Admin");
@@ -25,8 +25,11 @@ public class AdminController {
             System.out.println("3. Manage Faculty");
             System.out.println("4. Manage Course");
             System.out.println("5. Manage Timetable");
-            System.out.println("6. View Details");
-            System.out.println("7. Exit");
+            System.out.println("6. Schedule exam");
+            System.out.println("7. Send notification");
+            System.out.println("8. Manage Library");
+            System.out.println("9. View Details");
+            System.out.println("10. Exit");
 
             System.out.println("Enter your choice:");
             choice = input.nextInt();
@@ -52,12 +55,24 @@ public class AdminController {
             case 5:
                 manageTimetable();
                 break;
-
+                
             case 6:
+            	examSchedule();
+            	break;
+            	
+            case 7:
+            	manageNotification();
+            	break;
+            
+            case 8:
+            	manageLibrary();
+            	break;
+            	
+            case 9:
                 viewDetails();
                 break;
-
-            case 7:
+                
+            case 10:
                 System.out.println("Exiting Program...");
                 break;
 
@@ -298,7 +313,7 @@ public class AdminController {
 
         int choice = 0;
 
-        while (choice != 6) {
+        while (choice != 7) {
 
             System.out.println("\n--- View Details ---");
             System.out.println("1. View Students");
@@ -306,7 +321,8 @@ public class AdminController {
             System.out.println("3. View Admins");
             System.out.println("4. View Courses");
             System.out.println("5. View Timetable");
-            System.out.println("6. Exit");
+            System.out.println("6. View ExamSchedules");
+            System.out.println("7. Exit");
 
             choice = input.nextInt();
 
@@ -315,7 +331,7 @@ public class AdminController {
             }
 
             else if (choice == 2) {
-                facultyService.viewFacultys();
+                facultyService.viewFaculties();
             }
 
             else if (choice == 3) {
@@ -329,6 +345,27 @@ public class AdminController {
             else if (choice == 5) {
                 adminService.viewTimetable();
             }
+            
+            else if( choice == 6) {
+            	adminService.viewSchedules();
+            }
         }
     }
+        
+     public void examSchedule() {
+
+    	 System.out.println("Enter Exam ID:");
+         int examId = input.nextInt();
+
+         System.out.println("Enter Course ID:");
+         int courseId = input.nextInt();
+         input.nextLine();
+
+    	 System.out.println("Enter Exam Date:");
+    	 String examDate = input.nextLine();
+
+    	 adminService.scheduleExam(examId, courseId, examDate);
+    }
 }
+
+ 
