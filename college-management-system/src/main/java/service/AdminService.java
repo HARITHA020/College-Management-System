@@ -1,8 +1,14 @@
 package service;
 
+import java.util.List;
+
 import dao.AdminDAO;
 import dao.CourseDAO;
 import dao.TimetableDAO;
+import model.Administrator;
+import model.Course;
+import model.Faculty;
+import model.Timetable;
 
 public class AdminService {
 	
@@ -46,4 +52,30 @@ public class AdminService {
     	timetableDao.addTimetable(id,day,time,room,courseId);
         System.out.println("Timetable Added Successfully");
     }
+    
+    public void viewAdmins() {
+		
+		List<Administrator> admins = adminDao.getAllAdmins();
+		System.out.println("Admin Details:");
+		for (Administrator admin: admins) {
+			System.out.println("Admin Id"+admin.getId() + " Admin Name " + admin.getName());
+		}
+	}
+    
+    public void viewCourse() {
+    	List<Course> courses= courseDao.getAllCourses();
+    	System.out.println("Course details:");
+    	for(Course course:courses) {
+    		System.out.println("Course Id:"+course.getcourseId()+" Course Name:"+course.getcourseName()+"Faculty assignned to corurse:"+course.getFacultyid());
+    	}
+    }
+    
+    public void viewTimetable() {
+    	List<Timetable> timetables= timetableDao.getAllTimetables();
+    	System.out.println("Timetable Schedules:");
+    	for(Timetable timetable:timetables) {
+    		System.out.println("Id:"+timetable.gettimetableId()+" Day:"+timetable.getDay()+" Time:"+timetable.getTime()+" Room No:"+timetable.getRoom()+" courseId:"+timetable.getCourseId());
+    	}
+    }
+
 }

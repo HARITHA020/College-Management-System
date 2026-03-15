@@ -16,7 +16,7 @@ public class Timetable {
         this.courseId = courseId;
     }
 
-    public int getId() {
+    public int gettimetableId() {
         return id;
     }
 

@@ -8,223 +8,272 @@ import service.FacultyService;
 public class AdminController {
 
     AdminService adminService = new AdminService();
-    StudentService studentService=new StudentService();
-    FacultyService facultyService=new FacultyService();
+    StudentService studentService = new StudentService();
+    FacultyService facultyService = new FacultyService();
+
     Scanner input = new Scanner(System.in);
 
     public void showMenu() {
-    	
-    	System.out.println("1. Manage Admin");
-        System.out.println("2. Manage Student");
-        System.out.println("3. Manage Faculty");
-        System.out.println("4. Manage Course");
-        System.out.println("5. Manage Timetable");
 
-        System.out.println("Enter your choice:");
-        int choice = input.nextInt();
+        int choice = 0;
 
-        switch(choice) {
+        while (choice != 7) {
 
-        case 1:
-            manageAdmin();
-            break;
+            System.out.println("\n===== ADMIN MENU =====");
+            System.out.println("1. Manage Admin");
+            System.out.println("2. Manage Student");
+            System.out.println("3. Manage Faculty");
+            System.out.println("4. Manage Course");
+            System.out.println("5. Manage Timetable");
+            System.out.println("6. View Details");
+            System.out.println("7. Exit");
 
-        case 2:
-            manageStudent();
-            break;
+            System.out.println("Enter your choice:");
+            choice = input.nextInt();
 
-        case 3:
-            manageFaculty();
-            break;
+            switch (choice) {
 
-        case 4:
-            manageCourse();
-            break;
-        case 5:
-        	manageTimetable();
+            case 1:
+                manageAdmin();
+                break;
 
-        default:
-            System.out.println("Invalid Choice");
+            case 2:
+                manageStudent();
+                break;
+
+            case 3:
+                manageFaculty();
+                break;
+
+            case 4:
+                manageCourse();
+                break;
+
+            case 5:
+                manageTimetable();
+                break;
+
+            case 6:
+                viewDetails();
+                break;
+
+            case 7:
+                System.out.println("Exiting Program...");
+                break;
+
+            default:
+                System.out.println("Invalid Choice");
+            }
         }
     }
 
     private void manageAdmin() {
 
-        System.out.println("1. Add Admin");
-        System.out.println("2. Update Admin");
-        System.out.println("3. Delete Admin");
+        int choice = 0;
 
-        int choice = input.nextInt();
-        input.nextLine();
+        while (choice != 4) {
 
-        if(choice == 1) {
+            System.out.println("\n--- Manage Admin ---");
+            System.out.println("1. Add Admin");
+            System.out.println("2. Update Admin");
+            System.out.println("3. Delete Admin");
+            System.out.println("4. Exit");
 
-            System.out.println("Enter Admin ID:");
-            int id = input.nextInt();
+            choice = input.nextInt();
             input.nextLine();
 
-            System.out.println("Enter Admin Name:");
-            String name = input.nextLine();
+            if (choice == 1) {
 
-            System.out.println("Enter Password:");
-            String password = input.nextLine();
+                System.out.println("Enter Admin ID:");
+                int id = input.nextInt();
+                input.nextLine();
 
-            adminService.addAdmin(id, name, password);
-        }
+                System.out.println("Enter Admin Name:");
+                String name = input.nextLine();
 
-        else if(choice == 2) {
+                System.out.println("Enter Password:");
+                String password = input.nextLine();
 
-            System.out.println("Enter Admin ID:");
-            int id = input.nextInt();
-            input.nextLine();
+                adminService.addAdmin(id, name, password);
+            }
 
-            System.out.println("Enter New Name:");
-            String name = input.nextLine();
+            else if (choice == 2) {
 
-            System.out.println("Enter New Password:");
-            String password = input.nextLine();
+                System.out.println("Enter Admin ID:");
+                int id = input.nextInt();
+                input.nextLine();
 
-            adminService.updateAdmin(id, name, password);
-        }
+                System.out.println("Enter New Name:");
+                String name = input.nextLine();
 
-        else if(choice == 3) {
+                System.out.println("Enter New Password:");
+                String password = input.nextLine();
 
-            System.out.println("Enter Admin ID:");
-            int id = input.nextInt();
+                adminService.updateAdmin(id, name, password);
+            }
 
-            adminService.deleteAdmin(id);
+            else if (choice == 3) {
+
+                System.out.println("Enter Admin ID:");
+                int id = input.nextInt();
+
+                adminService.deleteAdmin(id);
+            }
         }
     }
 
-	public void manageStudent() {
+    public void manageStudent() {
 
-        System.out.println("1. Add Student");
-        System.out.println("2. Update Student");
-        System.out.println("3. Delete Student");
+        int choice = 0;
 
-        int choice = input.nextInt();
-        input.nextLine();
+        while (choice != 4) {
 
-        if(choice == 1) {
+            System.out.println("\n--- Manage Student ---");
+            System.out.println("1. Add Student");
+            System.out.println("2. Update Student");
+            System.out.println("3. Delete Student");
+            System.out.println("4. Exit");
 
-            System.out.println("Enter Student ID:");
-            int id = input.nextInt();
+            choice = input.nextInt();
             input.nextLine();
 
-            System.out.println("Enter Student Name:");
-            String name = input.nextLine();
+            if (choice == 1) {
 
-            System.out.println("Enter Department:");
-            String dept = input.nextLine();
+                System.out.println("Enter Student ID:");
+                int id = input.nextInt();
+                input.nextLine();
 
-            studentService.addStudent(id, name, dept);
-        }
+                System.out.println("Enter Student Name:");
+                String name = input.nextLine();
 
-        else if(choice == 2) {
+                System.out.println("Enter Department:");
+                String dept = input.nextLine();
 
-            System.out.println("Enter Student ID:");
-            int id = input.nextInt();
-            input.nextLine();
+                studentService.addStudent(id, name, dept);
+            }
 
-            System.out.println("Enter New Name:");
-            String name = input.nextLine();
+            else if (choice == 2) {
 
-            System.out.println("Enter New Department:");
-            String dept = input.nextLine();
+                System.out.println("Enter Student ID:");
+                int id = input.nextInt();
+                input.nextLine();
 
-            studentService.updateStudent(id, name, dept);
-        }
+                System.out.println("Enter New Name:");
+                String name = input.nextLine();
 
-        else if(choice == 3) {
+                System.out.println("Enter New Department:");
+                String dept = input.nextLine();
 
-            System.out.println("Enter Student ID:");
-            int id = input.nextInt();
+                studentService.updateStudent(id, name, dept);
+            }
 
-            studentService.deleteStudent(id);
+            else if (choice == 3) {
+
+                System.out.println("Enter Student ID:");
+                int id = input.nextInt();
+
+                studentService.deleteStudent(id);
+            }
         }
     }
 
     public void manageFaculty() {
 
-        System.out.println("1. Add Faculty");
-        System.out.println("2. Update Faculty");
-        System.out.println("3. Delete Faculty");
+        int choice = 0;
 
-        int choice = input.nextInt();
-        input.nextLine();
+        while (choice != 4) {
 
-        if(choice == 1) {
+            System.out.println("\n--- Manage Faculty ---");
+            System.out.println("1. Add Faculty");
+            System.out.println("2. Update Faculty");
+            System.out.println("3. Delete Faculty");
+            System.out.println("4. Exit");
 
-            System.out.println("Enter Faculty ID:");
-            int id = input.nextInt();
+            choice = input.nextInt();
             input.nextLine();
 
-            System.out.println("Enter Faculty Name:");
-            String name = input.nextLine();
+            if (choice == 1) {
 
-            System.out.println("Enter Faculty Department:");
-            String dept = input.nextLine();
+                System.out.println("Enter Faculty ID:");
+                int id = input.nextInt();
+                input.nextLine();
 
-            facultyService.addFaculty(id, name, dept);
-        }
+                System.out.println("Enter Faculty Name:");
+                String name = input.nextLine();
 
-        else if(choice == 2) {
+                System.out.println("Enter Faculty Department:");
+                String dept = input.nextLine();
 
-            System.out.println("Enter Faculty ID:");
-            int id = input.nextInt();
-            input.nextLine();
+                facultyService.addFaculty(id, name, dept);
+            }
 
-            System.out.println("Enter New Name:");
-            String name = input.nextLine();
+            else if (choice == 2) {
 
-            System.out.println("Enter New Department:");
-            String dept = input.nextLine();
+                System.out.println("Enter Faculty ID:");
+                int id = input.nextInt();
+                input.nextLine();
 
-            facultyService.updateFaculty(id, name, dept);
-        }
+                System.out.println("Enter New Name:");
+                String name = input.nextLine();
 
-        else if(choice == 3) {
+                System.out.println("Enter New Department:");
+                String dept = input.nextLine();
 
-            System.out.println("Enter Faculty ID:");
-            int id = input.nextInt();
+                facultyService.updateFaculty(id, name, dept);
+            }
 
-            facultyService.deleteFaculty(id);
+            else if (choice == 3) {
+
+                System.out.println("Enter Faculty ID:");
+                int id = input.nextInt();
+
+                facultyService.deleteFaculty(id);
+            }
         }
     }
 
     public void manageCourse() {
 
-        System.out.println("1. Add Course");
-        System.out.println("2. Assign Course");
+        int choice = 0;
 
-        int choice = input.nextInt();
-        input.nextLine();
+        while (choice != 3) {
 
-        if(choice == 1) {
+            System.out.println("\n--- Manage Course ---");
+            System.out.println("1. Add Course");
+            System.out.println("2. Assign Course");
+            System.out.println("3. Exit");
 
-            System.out.println("Enter Course ID:");
-            int courseId = input.nextInt();
+            choice = input.nextInt();
             input.nextLine();
 
-            System.out.println("Enter Course Name:");
-            String courseName = input.nextLine();
+            if (choice == 1) {
 
-            adminService.addCourse(courseId, courseName);
-        }
+                System.out.println("Enter Course ID:");
+                int courseId = input.nextInt();
+                input.nextLine();
 
-        else if(choice == 2) {
+                System.out.println("Enter Course Name:");
+                String courseName = input.nextLine();
 
-            System.out.println("Enter Course ID:");
-            int courseId = input.nextInt();
+                adminService.addCourse(courseId, courseName);
+            }
 
-            System.out.println("Enter Faculty ID:");
-            int facultyId = input.nextInt();
+            else if (choice == 2) {
 
-            adminService.assignCourse(courseId, facultyId);
+                System.out.println("Enter Course ID:");
+                int courseId = input.nextInt();
+
+                System.out.println("Enter Faculty ID:");
+                int facultyId = input.nextInt();
+
+                adminService.assignCourse(courseId, facultyId);
+            }
         }
     }
 
     public void manageTimetable() {
+
+        System.out.println("\n--- Add Timetable ---");
 
         System.out.println("Enter Timetable ID:");
         int id = input.nextInt();
@@ -243,5 +292,43 @@ public class AdminController {
         int courseId = input.nextInt();
 
         adminService.addTimetable(id, day, time, room, courseId);
+    }
+
+    public void viewDetails() {
+
+        int choice = 0;
+
+        while (choice != 6) {
+
+            System.out.println("\n--- View Details ---");
+            System.out.println("1. View Students");
+            System.out.println("2. View Faculties");
+            System.out.println("3. View Admins");
+            System.out.println("4. View Courses");
+            System.out.println("5. View Timetable");
+            System.out.println("6. Exit");
+
+            choice = input.nextInt();
+
+            if (choice == 1) {
+                studentService.viewStudents();
+            }
+
+            else if (choice == 2) {
+                facultyService.viewFacultys();
+            }
+
+            else if (choice == 3) {
+                adminService.viewAdmins();
+            }
+
+            else if (choice == 4) {
+                adminService.viewCourse();
+            }
+
+            else if (choice == 5) {
+                adminService.viewTimetable();
+            }
+        }
     }
 }

@@ -1,7 +1,10 @@
 package service;
 
+import java.util.List;
+
 import dao.FacultyDAO;
 import model.Faculty;
+import model.Student;
 
 public class FacultyService {
 	FacultyDAO facultyDao=new FacultyDAO();
@@ -26,6 +29,15 @@ public class FacultyService {
 
         System.out.println("Faculty Deleted Successfully");
     }
+    
+     public void viewFacultys() {
+		
+		List<Faculty> facultys = facultyDao.getAllfaculty();
+		System.out.println("Faulty details:");
+		for (Faculty faculty : facultys) {
+			System.out.println("Faculty Id:"+faculty.getId() + "\nFaculty Name:" + faculty.getName() + "\nFaculty Department: " + faculty.getDepartment());
+		}
+	}
 
 	
 

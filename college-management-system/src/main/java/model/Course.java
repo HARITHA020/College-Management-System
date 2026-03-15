@@ -13,11 +13,11 @@ public class Course {
 		this.name=course_Name;
 	}
 
-	public int getId() {
+	public int getcourseId() {
         return id;
     }
 
-    public String getName() {
+    public String getcourseName() {
         return name;
     }
 

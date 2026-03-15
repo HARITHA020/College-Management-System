@@ -2,6 +2,8 @@ package dao;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Administrator;
 import model.Student;
 
 public class StudentDAO {
@@ -17,12 +19,12 @@ public class StudentDAO {
 	}
 
 	public void updateStudent(int id, String name, String department) {
-		for(Student students : students) {
+		for(Student student : students) {
 
-	        if(students.getId() == id) {
+	        if(student.getId() == id) {
 
-	            students.setName(name);
-	            students.setDepartment(department);
+	            student.setName(name);
+	            student.setDepartment(department);
 
 	            System.out.println("Student Updated Successfully");
 	        }
@@ -30,11 +32,7 @@ public class StudentDAO {
 	}
 	
 	public void deleteStudent(int id) {
-		for(Student student: students) {
-			if(student.getId() ==id) {
-				students.remove(id);
-			}
-		}
+		students.removeIf(student -> student.getId() == id);
 	}
 	
 }

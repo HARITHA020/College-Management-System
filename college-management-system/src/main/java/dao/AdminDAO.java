@@ -29,12 +29,8 @@ public class AdminDAO {
     }
 
     public void deleteAdmin(int id) {
-
-    	for(Administrator admin:admins) {
-    		if(admin.getId()== id) {
-    			admins.remove(id);
-    		}
-    	}
+    		admins.removeIf(admin -> admin.getId() == id);
+    	
     }
 
     public List<Administrator> getAllAdmins() {

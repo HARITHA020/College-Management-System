@@ -36,9 +36,9 @@ public class StudentService {
 	public void viewStudents() {
 		
 		List<Student> students = studentDAO.getAllStudents();
-		
+		System.out.println("Student details:");
 		for (Student s : students) {
-			System.out.println(s.getId() + " " + s.getName() + " " + s.getDepartment());
+			System.out.println("Student Id:"+s.getId() + "\nStudent name: " + s.getName() + "\nStudent Department: " + s.getDepartment());
 		}
 	}
 }

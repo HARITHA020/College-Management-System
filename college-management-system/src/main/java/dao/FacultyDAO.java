@@ -32,10 +32,6 @@ public class FacultyDAO {
 	}
 	
 	public void deleteFaculty(int id) {
-		for(Faculty faculty:facultys) {
-			if(faculty.getId() ==id) {
-				facultys.remove(id);
-			}
-		}
+		facultys.removeIf(faculty -> faculty.getId() == id);
 	}
 }
