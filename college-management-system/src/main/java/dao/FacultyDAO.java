@@ -5,33 +5,32 @@ import java.util.List;
 
 import model.Faculty;
 
-
-
 public class FacultyDAO {
 
-    private List<Faculty> facultys = new ArrayList<>();
+    private List<Faculty> faculties = new ArrayList<>();
 
     public void addFaculty(Faculty faculty) {
-		facultys.add(faculty);
-	}
-    public List<Faculty> getAllfaculty() {
-        return facultys;
+        faculties.add(faculty);
     }
-    
+
+    public List<Faculty> getAllFaculty() {
+        return faculties;
+    }
+
     public void updateFaculty(int id, String name, String department) {
-		for(Faculty faculty : facultys) {
+        for (Faculty faculty : faculties) {
 
-	        if(faculty.getId() == id) {
+            if (faculty.getId() == id) {
 
-	            faculty.setName(name);
-	            faculty.setDepartment(department);
+                faculty.setName(name);
+                faculty.setDepartment(department);
 
-	            System.out.println("Student Updated Successfully");
-	        }
-	    }
-	}
-	
-	public void deleteFaculty(int id) {
-		facultys.removeIf(faculty -> faculty.getId() == id);
-	}
+                System.out.println("Faculty Updated Successfully");
+            }
+        }
+    }
+
+    public void deleteFaculty(int id) {
+        faculties.removeIf(faculty -> faculty.getId() == id);
+    }
 }
