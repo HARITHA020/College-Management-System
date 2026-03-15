@@ -12,6 +12,7 @@ public class StudentDAO {
 	
 	public void addStudent(Student student) {
 		students.add(student);
+		System.out.println("Student added: " + student.getName());
 	}
 	
 	public List<Student> getAllStudents(){
@@ -34,5 +35,14 @@ public class StudentDAO {
 	public void deleteStudent(int id) {
 		students.removeIf(student -> student.getId() == id);
 	}
+	
+	public Student getStudentById(int id) {
+        for (Student s : students) {
+            if (s.getId() == id) return s;
+        }
+        return null;
+    }
+	
+	
 	
 }
