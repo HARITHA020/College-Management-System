@@ -1,54 +1,61 @@
 package controller;
 
 import java.util.Scanner;
-
-import service.AdminService;
 import service.FacultyService;
 import service.StudentService;
+import service.AdminService;
 
 public class FacultyController {
 
-	private FacultyService facultyService = new FacultyService();
-	private AdminService adminService= new AdminService();
-	private StudentService studentService= new StudentService();
-	private Scanner scanner = new Scanner(System.in);
+    private FacultyService facultyService = new FacultyService();
+    private StudentService studentService = new StudentService();
+    private AdminService adminService = new AdminService();
+    private Scanner scanner = new Scanner(System.in);
 
-	public void showMenu() {
+    public void showMenu() {
 
-		while (true) {
+        while (true) {
 
-			System.out.println("1. View Students");
-			System.out.println("2. View Attendance");
-			System.out.println("3. View Marks");
-			System.out.println("4. View Timetable");
-			System.out.println("5. Logout");
+            System.out.println("\n--- Faculty Menu ---");
+            System.out.println("1. View Students");
+            System.out.println("2. Mark Attendance");
+            System.out.println("3. View Marks");
+            System.out.println("4. View Timetable");
+            System.out.println("5. Logout");
 
-			int choice = scanner.nextInt();
+            int choice = scanner.nextInt();
 
-			switch (choice) {
+            switch (choice) {
 
-			case 1:
-				facultyService.viewStudents();
-				break;
+            case 1:
+                studentService.viewStudents();
+                break;
 
-			case 2:
-				facultyService.viewAttendance();
-				break;
+            case 2:
+                System.out.println("Enter Student ID:");
+                int studentId = scanner.nextInt();
 
-			case 3:
-				facultyService.viewMarks();
-				break;
+                System.out.println("Present? (true/false)");
+                boolean present = scanner.nextBoolean();
 
-			case 4:
-				facultyService.viewTimetable();
-				break;
+                facultyService.markAttendance(studentId, present);
+                break;
 
-			case 5:
-				return;
+            case 3:
+                facultyService.viewMarks();
+                break;
 
-			default:
-				System.out.println("Invalid Choice");
-			}
-		}
-	}
+            case 4:
+                adminService.viewTimetable();
+                break;
+
+            case 5:
+                System.out.println("Logging out...");
+                return;
+
+            default:
+                System.out.println("Invalid Choice");
+            }
+        }
+    }
 }
