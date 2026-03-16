@@ -28,7 +28,7 @@ public class FacultyController {
 			switch (choice) {
 
 			case 1:
-				studentService.viewStudents();
+				facultyService.viewStudents();
 				break;
 
 			case 2:
@@ -40,7 +40,7 @@ public class FacultyController {
 				break;
 
 			case 4:
-				adminService.viewTimetable();
+				facultyService.viewTimetable();
 				break;
 
 			case 5:
