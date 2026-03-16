@@ -12,6 +12,11 @@ import model.Student;
 import model.Timetable;
 public class StudentService {
 	private StudentDAO studentDAO = new StudentDAO();
+	private CourseDAO courseDAO;
+    private TimetableDAO timetableDAO;
+    private ExamDAO examDAO;
+    private BookDAO bookDAO;
+    private BorrowRecordDAO borrowRecordDAO;
 	
 	public void addStudent(int id, String name, String department) {
 		
@@ -48,11 +53,6 @@ public class StudentService {
 			System.out.println("Student Id:"+s.getId() + "\nStudent name: " + s.getName() + "\nStudent Department: " + s.getDepartment());
 		}
 	}
-	private CourseDAO courseDAO;
-    private TimetableDAO timetableDAO;
-    private ExamDAO examDAO;
-    private BookDAO bookDAO;
-    private BorrowRecordDAO borrowRecordDAO;
     
     public StudentService() {
         this.studentDAO      = new StudentDAO();
@@ -86,6 +86,19 @@ public class StudentService {
                 System.out.println(t.getDay() + " | " + t.getTime() + " | Room: " + t.getRoom()));
         }
     }
+    
+ // ── Attendance ────────────────────────────────────────
+    public void viewAttendance() {
+        // Attendance records would be fetched from an AttendanceDAO in a full system.
+        System.out.println("Attendance feature: connect to AttendanceDAO for real data.");
+    }
+
+    // ── Notifications ─────────────────────────────────────
+    public void viewNotifications() {
+        // Notifications are managed by AdminService/NotificationDAO.
+        System.out.println("No new notifications at the moment.");
+    }
+
 
     // ── Marks ─────────────────────────────────────────────
     public void viewMarks() {
