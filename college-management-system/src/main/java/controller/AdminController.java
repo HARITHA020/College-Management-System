@@ -353,10 +353,97 @@ public class AdminController {
 
     // TEMP METHODS
     public void manageNotification() {
-        System.out.println("Notification feature coming soon...");
+
+        int choice = 0;
+
+        while (choice != 3) {
+
+            System.out.println("\n--- Notification Menu ---");
+            System.out.println("1. Add Notification");
+            System.out.println("2. View Notifications");
+            System.out.println("3. Exit");
+
+            choice = input.nextInt();
+            input.nextLine(); // FIX
+
+            if (choice == 1) {
+
+                System.out.print("Enter Notification ID: ");
+                int id = input.nextInt();
+                input.nextLine();
+
+                System.out.print("Enter Message: ");
+                String message = input.nextLine();
+
+                System.out.print("Enter Date (yyyy-mm-dd): ");
+                String dateStr = input.nextLine();
+
+                java.util.Date date = java.sql.Date.valueOf(dateStr);
+
+                adminService.addNotification(id, message, date);
+            }
+
+            else if (choice == 2) {
+                adminService.viewNotifications();
+            }
+        }
     }
 
     public void manageLibrary() {
-        System.out.println("Library feature coming soon...");
+
+        int choice = 0;
+
+        while (choice != 5) {
+
+            System.out.println("\n--- Library Menu ---");
+            System.out.println("1. Add Book");
+            System.out.println("2. Remove Book");
+            System.out.println("3. View All Books");
+            System.out.println("4. View Borrow Records");
+            System.out.println("5. Exit");
+
+            choice = input.nextInt();
+            input.nextLine();
+
+            switch (choice) {
+
+                case 1:
+                    System.out.print("Enter Book ID: ");
+                    int id = input.nextInt();
+                    input.nextLine();
+
+                    System.out.print("Enter Title: ");
+                    String title = input.nextLine();
+
+                    System.out.print("Enter Author: ");
+                    String author = input.nextLine();
+
+                    adminService.addBook(id, title, author);
+                    break;
+
+                case 2:
+                    System.out.print("Enter Book ID to remove: ");
+                    int removeId = input.nextInt();
+                    input.nextLine();
+
+                    adminService.removeBook(removeId);
+                    break;
+
+                case 3:
+                    adminService.viewAllBooks();
+                    break;
+
+                case 4:
+                    adminService.viewBorrowRecords();
+                    break;
+
+                case 5:
+                    System.out.println("Exiting Library Menu...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice");
+            }
+        }
     }
 }

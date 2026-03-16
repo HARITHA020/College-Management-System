@@ -20,7 +20,7 @@ public class CourseDAO {
 
         for (Course course : courses) {
 
-            if (course.getId() == courseId) {
+            if (course.getcourseId() == courseId) {
                 course.setFacultyid(facultyId);
                 break;
             }
