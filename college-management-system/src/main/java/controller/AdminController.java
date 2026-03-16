@@ -330,7 +330,7 @@ public class AdminController {
             if (choice == 1) studentService.viewStudents();
             else if (choice == 2) facultyService.viewFaculties();
             else if (choice == 3) adminService.viewAdmins();
-            else if (choice == 4) adminService.viewCourse();
+            else if (choice == 4) adminService.viewCourses();
             else if (choice == 5) adminService.viewTimetable();
             else if (choice == 6) adminService.viewSchedules();
         }
@@ -418,7 +418,7 @@ public class AdminController {
                     System.out.print("Enter Author: ");
                     String author = input.nextLine();
 
-                    adminService.addBook(id, title, author);
+                    adminService.addBook(id, title, author, title);
                     break;
 
                 case 2:

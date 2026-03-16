@@ -9,9 +9,11 @@ import dao.ExamDAO;
 import dao.CourseDAO;
 import dao.BookDAO;
 import dao.BorrowRecordDAO;
+import dao.TimetableDAO;
 
 import model.Faculty;
 import model.Student;
+import model.Timetable;
 import model.Exam;
 import model.Course;
 import model.Book;
@@ -25,6 +27,7 @@ public class FacultyService {
     private CourseDAO courseDAO;
     private BookDAO bookDAO;
     private BorrowRecordDAO borrowRecordDAO;
+    private TimetableDAO timetableDAO=new TimetableDAO();
 
     public FacultyService() {
         facultyDAO = new FacultyDAO();
@@ -33,6 +36,7 @@ public class FacultyService {
         courseDAO = new CourseDAO();
         bookDAO = new BookDAO();
         borrowRecordDAO = new BorrowRecordDAO();
+        
     }
 
     // Faculty Management (Admin Purpose)
@@ -207,4 +211,21 @@ public class FacultyService {
 
         System.out.println("Record not found");
     }
+    
+    public void viewTimetable() {
+        List<Timetable> list = timetableDAO.getAllTimetables() ;
+        if(list.isEmpty()) {
+            System.out.println("No timetable available");
+            return;
+        }
+        for (Timetable t : list) {
+            System.out.println("ID: " + t.gettimetableId() +
+                    ", Day: " + t.getDay() +
+                    ", Time: " + t.getTime() +
+                    ", Room: " + t.getRoom() +
+                    ", Course ID: " + t.getCourseId());
+        }
+    }
+
+
 }
