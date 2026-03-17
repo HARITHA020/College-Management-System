@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Date;
 
 import dao.FacultyDAO;
+import dao.ResultDAO;
 import dao.StudentDAO;
 import dao.ExamDAO;
 import dao.CourseDAO;
@@ -12,6 +13,7 @@ import dao.BorrowRecordDAO;
 import dao.TimetableDAO;
 
 import model.Faculty;
+import model.Result;
 import model.Student;
 import model.Timetable;
 import model.Exam;
@@ -28,6 +30,7 @@ public class FacultyService {
     private BookDAO bookDAO;
     private BorrowRecordDAO borrowRecordDAO;
     private TimetableDAO timetableDAO=new TimetableDAO();
+    private ResultDAO resultDAO = new ResultDAO();
 
     public FacultyService() {
         facultyDAO = new FacultyDAO();
@@ -36,6 +39,7 @@ public class FacultyService {
         courseDAO = new CourseDAO();
         bookDAO = new BookDAO();
         borrowRecordDAO = new BorrowRecordDAO();
+        
         
     }
 
@@ -134,7 +138,37 @@ public class FacultyService {
 
         System.out.println("Marks Entered Successfully");
     }
+    public void enterResult(int studentId, int courseId, int marks) {
 
+        if(studentId <= 0 || courseId <= 0) {
+            System.out.println("Invalid data");
+            return;
+        }
+
+        if(marks < 0 || marks > 100) {
+            System.out.println("Invalid marks");
+            return;
+        }
+
+        String grade;
+
+        if(marks >= 90) grade = "A";
+        else if(marks >= 75) grade = "B";
+        else if(marks >= 50) grade = "C";
+        else grade = "Fail";
+
+        Result result = new Result(
+                resultDAO.getAllResults().size() + 1,
+                studentId,
+                courseId,
+                marks,
+                grade
+        );
+
+        resultDAO.addResult(result);
+
+        System.out.println("Marks Entered by Faculty (Not Published)");
+    }
     public void viewMarks() {
 
         List<Exam> exams = examDAO.getAllExam();
