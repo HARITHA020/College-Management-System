@@ -183,7 +183,8 @@ public class FacultyService {
 
         BorrowRecord record = new BorrowRecord(
                 borrowRecordDAO.getAllRecords().size() + 1,
-                facultyId,
+                0,              // studentId
+                facultyId,      // ✅ now it works
                 bookId,
                 new Date(),
                 null

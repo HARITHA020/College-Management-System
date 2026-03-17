@@ -15,6 +15,7 @@ public class AdminService {
     private NotificationDAO notificationDao = new NotificationDAO();
     private BookDAO bookDAO = new BookDAO();
     private BorrowRecordDAO borrowRecordDAO = new BorrowRecordDAO();
+    private ResultDAO resultDAO = new ResultDAO();
 
     // ================= ADMIN =================
     public void addAdmin(int id, String name, String password) {
@@ -189,9 +190,49 @@ public class AdminService {
         for (BorrowRecord r : records) {
             System.out.println("Record ID: " + r.getRecordId() +
                     " | Student ID: " + r.getStudentId() +
+                    " | Faculty ID:  "+r.getFacultyId()+
                     " | Book ID: " + r.getBookId() +
                     " | Borrow Date: " + r.getBorrowDate() +
                     " | Return Date: " + r.getReturnDate());
         }
     }
+    public void publishResult(int resultId) {
+
+        boolean found = false;
+
+        for (Result r : resultDAO.getAllResults()) {
+
+            if (r.getResultId() == resultId) {
+
+                r.setPublished(true);
+                System.out.println("Result published successfully!");
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Result not found!");
+        }
+    }
+    public void viewAllResults() {
+
+        List<Result> results = resultDAO.getAllResults();
+
+        if(results.isEmpty()) {
+            System.out.println("No results available");
+            return;
+        }
+
+        for(Result r : results) {
+            System.out.println("ID: " + r.getResultId() +
+                    " | Student: " + r.getStudentId() +
+                    " | Course: " + r.getCourseId() +
+                    " | Marks: " + r.getMarks() +
+                    " | Grade: " + r.getGrade() +
+                    " | Published: " + r.isPublished());
+        }
+    }
+    
+    
 }

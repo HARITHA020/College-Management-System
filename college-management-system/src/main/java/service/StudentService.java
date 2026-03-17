@@ -149,6 +149,7 @@ public class StudentService {
         BorrowRecord record = new BorrowRecord(
                 recordId,
                 studentId,
+                0,
                 bookId,
                 new java.util.Date(),
                 null

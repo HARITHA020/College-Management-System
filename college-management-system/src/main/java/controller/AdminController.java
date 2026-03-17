@@ -10,14 +10,15 @@ public class AdminController {
     private AdminService adminService = new AdminService();
     private StudentService studentService = new StudentService();
     private FacultyService facultyService = new FacultyService();
-    private LoginController logincontroller=new LoginController();
+    private LoginController logincontroller = new LoginController();
+
     Scanner input = new Scanner(System.in);
 
     public void showMenu() {
 
         int choice = 0;
-        
-        while (choice != 10) {
+
+        while (choice != 12) {
 
             System.out.println("\n===== ADMIN MENU =====");
             System.out.println("1. Manage Admin");
@@ -29,11 +30,13 @@ public class AdminController {
             System.out.println("7. Send notification");
             System.out.println("8. Manage Library");
             System.out.println("9. View Details");
-            System.out.println("10.Logout");
+            System.out.println("10. Publish Result");   // NEW
+            System.out.println("11. View All Results"); // NEW
+            System.out.println("12. Logout");
 
             System.out.print("Enter your choice: ");
             choice = input.nextInt();
-            input.nextLine(); // FIXED
+            input.nextLine();
 
             switch (choice) {
 
@@ -74,7 +77,15 @@ public class AdminController {
                     break;
 
                 case 10:
-                	System.out.println("Logging out...");
+                    publishResult(); // NEW
+                    break;
+
+                case 11:
+                    adminService.viewAllResults(); // NEW
+                    break;
+
+                case 12:
+                    System.out.println("Logging out...");
                     return;
 
                 default:
@@ -82,8 +93,8 @@ public class AdminController {
             }
         }
     }
-    
 
+    // ================= ADMIN =================
     private void manageAdmin() {
 
         int choice = 0;
@@ -139,6 +150,7 @@ public class AdminController {
         }
     }
 
+    // ================= STUDENT =================
     public void manageStudent() {
 
         int choice = 0;
@@ -194,6 +206,7 @@ public class AdminController {
         }
     }
 
+    // ================= FACULTY =================
     public void manageFaculty() {
 
         int choice = 0;
@@ -249,6 +262,7 @@ public class AdminController {
         }
     }
 
+    // ================= COURSE =================
     public void manageCourse() {
 
         int choice = 0;
@@ -288,6 +302,7 @@ public class AdminController {
         }
     }
 
+    // ================= TIMETABLE =================
     public void manageTimetable() {
 
         System.out.println("\n--- Add Timetable ---");
@@ -311,6 +326,7 @@ public class AdminController {
         adminService.addTimetable(id, day, time, room, courseId);
     }
 
+    // ================= VIEW DETAILS =================
     public void viewDetails() {
 
         int choice = 0;
@@ -337,6 +353,7 @@ public class AdminController {
         }
     }
 
+    // ================= EXAM =================
     public void examSchedule() {
 
         System.out.print("Enter Exam ID: ");
@@ -352,7 +369,16 @@ public class AdminController {
         adminService.scheduleExam(examId, courseId, examDate);
     }
 
-    // TEMP METHODS
+    // ================= PUBLISH RESULT =================
+    private void publishResult() {
+
+        System.out.print("Enter Result ID to publish: ");
+        int resultId = input.nextInt();
+
+        adminService.publishResult(resultId);
+    }
+
+    // ================= NOTIFICATION =================
     public void manageNotification() {
 
         int choice = 0;
@@ -365,7 +391,7 @@ public class AdminController {
             System.out.println("3. Exit");
 
             choice = input.nextInt();
-            input.nextLine(); // FIX
+            input.nextLine();
 
             if (choice == 1) {
 
@@ -390,6 +416,7 @@ public class AdminController {
         }
     }
 
+    // ================= LIBRARY =================
     public void manageLibrary() {
 
         int choice = 0;
@@ -419,13 +446,15 @@ public class AdminController {
                     System.out.print("Enter Author: ");
                     String author = input.nextLine();
 
-                    adminService.addBook(id, title, author, title);
+                    System.out.print("Enter ISBN: ");
+                    String isbn = input.nextLine();
+
+                    adminService.addBook(id, title, author, isbn);
                     break;
 
                 case 2:
                     System.out.print("Enter Book ID to remove: ");
                     int removeId = input.nextInt();
-                    input.nextLine();
 
                     adminService.removeBook(removeId);
                     break;
