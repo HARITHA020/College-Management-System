@@ -58,7 +58,7 @@ public class StudentController {
                     break;
                 case 0:
                     System.out.println("Logging out...");
-                    break;
+                     return;
                 default:
                     System.out.println("Invalid choice");
             }
