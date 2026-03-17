@@ -10,13 +10,13 @@ public class AdminController {
     private AdminService adminService = new AdminService();
     private StudentService studentService = new StudentService();
     private FacultyService facultyService = new FacultyService();
-
+    private LoginController logincontroller=new LoginController();
     Scanner input = new Scanner(System.in);
 
     public void showMenu() {
 
         int choice = 0;
-
+        
         while (choice != 10) {
 
             System.out.println("\n===== ADMIN MENU =====");
@@ -29,7 +29,7 @@ public class AdminController {
             System.out.println("7. Send notification");
             System.out.println("8. Manage Library");
             System.out.println("9. View Details");
-            System.out.println("10. Exit");
+            System.out.println("10.Logout");
 
             System.out.print("Enter your choice: ");
             choice = input.nextInt();
@@ -74,14 +74,15 @@ public class AdminController {
                     break;
 
                 case 10:
-                    System.out.println("Exiting Program...");
-                    break;
+                	System.out.println("Logging out...");
+                    return;
 
                 default:
                     System.out.println("Invalid Choice");
             }
         }
     }
+    
 
     private void manageAdmin() {
 
