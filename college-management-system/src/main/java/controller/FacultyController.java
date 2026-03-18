@@ -19,7 +19,7 @@ public class FacultyController {
             System.out.println("\n--- Faculty Menu ---");
             System.out.println("1. View Students");
             System.out.println("2. Mark Attendance");
-            System.out.println("3. View Marks");
+            System.out.println("3. Enter Marks");
             System.out.println("4. View Timetable");
             System.out.println("5. Logout");
 
@@ -42,7 +42,16 @@ public class FacultyController {
                 break;
 
             case 3:
-                facultyService.viewMarks();
+                System.out.println("Enter Student ID:");
+                int sid = scanner.nextInt();
+
+                System.out.println("Enter Course ID:");
+                int cid = scanner.nextInt();
+
+                System.out.println("Enter Marks:");
+                int marks = scanner.nextInt();
+
+                facultyService.enterResult(sid, cid, marks);
                 break;
 
             case 4:
