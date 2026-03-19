@@ -10,7 +10,7 @@ public class AdminController {
     private AdminService adminService = new AdminService();
     private StudentService studentService = new StudentService();
     private FacultyService facultyService = new FacultyService();
-    private LoginController logincontroller = new LoginController();
+
 
     Scanner input = new Scanner(System.in);
 
@@ -272,7 +272,8 @@ public class AdminController {
             System.out.println("\n--- Manage Course ---");
             System.out.println("1. Add Course");
             System.out.println("2. Assign Course");
-            System.out.println("3. Exit");
+            System.out.println("3. Assign Student to Course");
+            System.out.println("4. Exit");
 
             choice = input.nextInt();
             input.nextLine();
@@ -298,6 +299,18 @@ public class AdminController {
                 int facultyId = input.nextInt();
 
                 adminService.assignCourse(courseId, facultyId);
+            }
+            
+           
+
+            else if (choice == 3) {
+                System.out.print("Enter Student ID: ");
+                int studentId = input.nextInt();
+
+                System.out.print("Enter Course ID: ");
+                int courseId = input.nextInt();
+
+                adminService.assignStudentToCourse(studentId, courseId);
             }
         }
     }

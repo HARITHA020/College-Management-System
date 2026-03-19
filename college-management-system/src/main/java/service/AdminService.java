@@ -16,6 +16,8 @@ public class AdminService {
     private BookDAO bookDAO = new BookDAO();
     private BorrowRecordDAO borrowRecordDAO = new BorrowRecordDAO();
     private ResultDAO resultDAO = new ResultDAO();
+    private EnrollmentDAO enrollmentDAO = new EnrollmentDAO();
+    private StudentDAO studentDao= new StudentDAO();
 
     // ================= ADMIN =================
     public void addAdmin(int id, String name, String password) {
@@ -70,6 +72,40 @@ public class AdminService {
     public void assignCourse(int courseId, int facultyId) {
         courseDao.assignCourse(courseId, facultyId);
         System.out.println("Course Assigned Successfully");
+    }
+    
+    public void assignStudentToCourse(int studentId, int courseId) {
+        
+        // 🔹 Step 1: Validate student exists
+        boolean studentExists = false;
+        for (Student s : studentDao.getAllStudents()) {
+            if (s.getId() == studentId) {
+                studentExists = true;
+                break;
+            }
+        }
+
+        if (!studentExists) {
+            System.out.println("Error: Student ID " + studentId + " does not exist.");
+            return;
+        }
+
+        // 🔹 Step 2: Validate course exists
+        boolean courseExists = false;
+        for (Course c : courseDao.getAllCourses()) {
+            if (c.getcourseId() == courseId) {
+                courseExists = true;
+                break;
+            }
+        }
+
+        if (!courseExists) {
+            System.out.println("Error: Course ID " + courseId + " does not exist.");
+            return;
+        }
+
+        // 🔹 Step 3: If both exist, enroll student
+        enrollmentDAO.enrollStudent(studentId, courseId);
     }
 
     public void viewCourses() {

@@ -30,11 +30,10 @@ public class FacultyController {
             System.out.println("0. Logout");
 
             int choice = scanner.nextInt();
-
             switch (choice) {
-
             case 1:
-                facultyService.viewStudents();
+            	int facultyId1=101;
+                facultyService.viewMyStudents(facultyId1);
                 break;
 
             case 2:
@@ -84,7 +83,7 @@ public class FacultyController {
                 System.out.println("Enter Book ID:");
                 int bookId = scanner.nextInt();
 
-                libraryService.borrowBook(fid, "Faculty" ,bookId);
+                libraryService.borrowBook(fid, "faculty" ,bookId);
                 break;
 
             case 8:

@@ -34,10 +34,10 @@ public class StudentController {
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine();
-
+            int studentId=101;
             switch (choice) {
                 case 1:
-                    viewCourses();
+                	viewCourses(studentId);
                     break;
                 case 2:
                     viewTimetable();
@@ -70,7 +70,9 @@ public class StudentController {
         } while (choice != 0);
     }
 
-    public void viewCourses() { studentService.viewCourses(); }
+    public void viewCourses(int studentId) { 
+        studentService.viewMyCourses(studentId); 
+    }
     public void viewTimetable() { studentService.viewTimetable(); }
     public void viewMarks() { studentService.viewMarks(); }
     public void viewAttendance() { studentService.viewAttendance(); }

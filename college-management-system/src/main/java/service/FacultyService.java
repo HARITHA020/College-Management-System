@@ -9,6 +9,7 @@ import dao.ResultDAO;
 import dao.StudentDAO;
 import dao.ExamDAO;
 import dao.CourseDAO;
+import dao.EnrollmentDAO;
 import dao.BookDAO;
 import dao.BorrowRecordDAO;
 import dao.TimetableDAO;
@@ -22,7 +23,7 @@ import model.Exam;
 import model.Course;
 import model.Book;
 import model.BorrowRecord;
-
+import model.Enrollment;
 public class FacultyService {
 
     private FacultyDAO facultyDAO;
@@ -34,7 +35,7 @@ public class FacultyService {
     private NotificationDAO notificationDAO;
     private TimetableDAO timetableDAO=new TimetableDAO();
     private ResultDAO resultDAO = new ResultDAO();
-
+    private EnrollmentDAO enrollmentDao;
     public FacultyService() {
         facultyDAO = new FacultyDAO();
         studentDAO = new StudentDAO();
@@ -43,7 +44,7 @@ public class FacultyService {
         bookDAO = new BookDAO();
         borrowRecordDAO = new BorrowRecordDAO();
         notificationDAO=new NotificationDAO();
-        
+        this.enrollmentDao=new EnrollmentDAO();
         
     }
 
@@ -86,20 +87,29 @@ public class FacultyService {
 
     // Students
 
-    public void viewStudents() {
+    public void viewMyStudents(int facultyId) {
 
-        List<Student> students = studentDAO.getAllStudents();
+        for (Course c : courseDAO.getAllCourses()) {
 
-        System.out.println("Student Details:");
+            if (c.getFacultyid() == facultyId) {
 
-        for (Student s : students) {
-            System.out.println(
-                    "Student Id: " + s.getId() +
-                    "\nStudent Name: " + s.getName() +
-                    "\nDepartment: " + s.getDepartment()
-            );
+                for (Enrollment e : enrollmentDao.getAllEnrollments()) {
+
+                    if (e.getCourseId() == c.getcourseId()) {
+
+                        for (Student s : studentDAO.getAllStudents()) {
+
+                            if (s.getId() == e.getStudentId()) {
+                                System.out.println("Student ID: " + s.getId() +
+                                                   " | Name: " + s.getName());
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
+                
 
     // Courses
 

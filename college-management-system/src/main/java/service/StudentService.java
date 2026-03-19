@@ -14,6 +14,7 @@ public class StudentService {
     private BorrowRecordDAO borrowRecordDAO;
     private NotificationDAO notificationDAO;
     private LibraryService libraryService;
+    private EnrollmentDAO enrollmentDao;
     public StudentService() {
         this.studentDAO = new StudentDAO();
         this.courseDAO = new CourseDAO();
@@ -23,6 +24,7 @@ public class StudentService {
         this.borrowRecordDAO = new BorrowRecordDAO();
         this.notificationDAO = new NotificationDAO();
         this.libraryService = new LibraryService();
+        this.enrollmentDao=new EnrollmentDAO();
     }
    public void addStudent(int id, String name, String department) {
 	   Student student = new Student(id, name, department);
@@ -46,15 +48,17 @@ public class StudentService {
 		   }
 	   }
     // ================= COURSES =================
-    public void viewCourses() {
-        List<Course> courses = courseDAO.getAllCourses();
-
-        for (Course c : courses) {
-            System.out.println("ID: " + c.getcourseId() +
-                    " | Name: " + c.getcourseName());
-        }
-    }
-
+   public void viewMyCourses(int studentId) {
+	    for (Enrollment e : enrollmentDao.getEnrollmentsByStudent(studentId)) {
+	        for (Course c : courseDAO.getAllCourses()) {
+	            if (c.getcourseId() == e.getCourseId()) {
+	                System.out.println("Course ID: " + c.getcourseId() +
+	                        " | Name: " + c.getcourseName() +
+	                        " |FacultyId: "+c.getFacultyid());
+	            }
+	        }
+	    }
+	}
     // ================= TIMETABLE =================
     public void viewTimetable() {
         List<Timetable> list = timetableDAO.getAllTimetables();
