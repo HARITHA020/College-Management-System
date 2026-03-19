@@ -8,33 +8,27 @@ public class Notification {
     private String message;
     private Date date;
 
+    public Notification() {}
+
     public Notification(int notificationId, String message, Date date) {
         this.notificationId = notificationId;
         this.message = message;
         this.date = date;
     }
 
-    public int getNotificationId() {
-        return notificationId;
-    }
+    public int getNotificationId() { return notificationId; }
+    public void setNotificationId(int notificationId) { this.notificationId = notificationId; }
 
-    public void setNotificationId(int notificationId) {
-        this.notificationId = notificationId;
-    }
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
 
-    public String getMessage() {
-        return message;
-    }
+    public Date getDate() { return date; }
+    public void setDate(Date date) { this.date = date; }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
+    @Override
+    public String toString() {
+        return "ID: " + notificationId +
+               " | Message: " + message +
+               " | Date: " + date;
     }
 }

@@ -13,7 +13,7 @@ public class StudentService {
     private BookDAO bookDAO;
     private BorrowRecordDAO borrowRecordDAO;
     private NotificationDAO notificationDAO;
-
+    private LibraryService libraryService;
     public StudentService() {
         this.studentDAO = new StudentDAO();
         this.courseDAO = new CourseDAO();
@@ -22,6 +22,7 @@ public class StudentService {
         this.bookDAO = new BookDAO();
         this.borrowRecordDAO = new BorrowRecordDAO();
         this.notificationDAO = new NotificationDAO();
+        this.libraryService = new LibraryService();
     }
    public void addStudent(int id, String name, String department) {
 	   Student student = new Student(id, name, department);
@@ -95,99 +96,18 @@ public class StudentService {
     }
 
     // ================= LIBRARY =================
-
-    // 🔍 Search Book
+ // 🔍 Search Book
     public void searchBook(String keyword) {
-
-        List<Book> books = bookDAO.getAllBooks();
-        boolean found = false;
-
-        for (Book b : books) {
-            if (b.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
-                b.getAuthor().toLowerCase().contains(keyword.toLowerCase())) {
-
-                System.out.println("ID: " + b.getBookId() +
-                        " | Title: " + b.getTitle() +
-                        " | Author: " + b.getAuthor() +
-                        " | Available: " + b.isAvailability());
-
-                found = true;
-            }
-        }
-
-        if (!found) {
-            System.out.println("No books found");
-        }
+        libraryService.searchBook(keyword);
     }
 
     // 📚 Borrow Book
     public void borrowBook(int studentId, int bookId) {
-
-        Book book = null;
-
-        for (Book b : bookDAO.getAllBooks()) {
-            if (b.getBookId() == bookId) {
-                book = b;
-                break;
-            }
-        }
-
-        if (book == null) {
-            System.out.println("Book not found");
-            return;
-        }
-
-        if (!book.isAvailability()) {
-            System.out.println("Book already borrowed");
-            return;
-        }
-
-        book.setAvailability(false);
-
-        int recordId = borrowRecordDAO.getAllRecords().size() + 1;
-
-        BorrowRecord record = new BorrowRecord(
-                recordId,
-                studentId,
-                0,
-                bookId,
-                new java.util.Date(),
-                null
-        );
-
-        borrowRecordDAO.borrowBook(record);
-
-        System.out.println("Book borrowed successfully");
+        libraryService.borrowBook(studentId, "student", bookId);
     }
 
     // 🔁 Return Book
     public void returnBook(int recordId) {
-
-        List<BorrowRecord> records = borrowRecordDAO.getAllRecords();
-
-        for (BorrowRecord r : records) {
-
-            if (r.getRecordId() == recordId) {
-
-                if (r.getReturnDate() != null) {
-                    System.out.println("Book already returned");
-                    return;
-                }
-
-                r.setReturnDate(new java.util.Date());
-
-                for (Book b : bookDAO.getAllBooks()) {
-                    if (b.getBookId() == r.getBookId()) {
-                        b.setAvailability(true);
-                        break;
-                    }
-                }
-
-                System.out.println("Book returned successfully");
-                return;
-            }
-        }
-
-        System.out.println("Record not found");
+        libraryService.returnBook(recordId);
     }
 }

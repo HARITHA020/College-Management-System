@@ -1,15 +1,19 @@
 package controller;
 
 import java.util.Scanner;
+
+import service.LibraryService;
 import service.StudentService;
 
 public class StudentController {
 
     private StudentService studentService;
+    private LibraryService libraryService;
     private Scanner scanner;
 
     public StudentController() {
         this.studentService = new StudentService();
+        this.libraryService = new LibraryService();
         this.scanner = new Scanner(System.in);
     }
 
@@ -71,13 +75,14 @@ public class StudentController {
     public void viewMarks() { studentService.viewMarks(); }
     public void viewAttendance() { studentService.viewAttendance(); }
     public void viewNotifications() { studentService.viewNotifications(); }
+    
 
     public void searchBook() {
         System.out.print("Enter keyword: ");
         String keyword = scanner.nextLine();
-        studentService.searchBook(keyword);
+        libraryService.searchBook(keyword);
     }
-
+    
     public void borrowBook() {
         System.out.print("Enter Student ID: ");
         int studentId = scanner.nextInt();
@@ -86,7 +91,7 @@ public class StudentController {
         int bookId = scanner.nextInt();
         scanner.nextLine();
 
-        studentService.borrowBook(studentId, bookId);
+        libraryService.borrowBook(studentId,"student", bookId);
     }
 
     public void returnBook() {
@@ -94,6 +99,6 @@ public class StudentController {
         int recordId = scanner.nextInt();
         scanner.nextLine();
 
-        studentService.returnBook(recordId);
+        libraryService.returnBook(recordId);
     }
 }

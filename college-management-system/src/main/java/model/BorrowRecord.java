@@ -13,14 +13,24 @@ public class BorrowRecord {
 
     public BorrowRecord() {}
 
-    public BorrowRecord(int recordId, int studentId,int facultyId, int bookId,
+    // ❌ Old constructor (keep optional)
+    public BorrowRecord(int recordId, int studentId, int facultyId, int bookId,
                         Date borrowDate, Date returnDate) {
         this.recordId = recordId;
         this.studentId = studentId;
-        this.facultyId=facultyId;
+        this.facultyId = facultyId;
         this.bookId = bookId;
         this.borrowDate = borrowDate;
         this.returnDate = returnDate;
+    }
+
+    // ✅ NEW constructor (recommended)
+    public BorrowRecord(int studentId, int facultyId, int bookId) {
+        this.studentId = studentId;
+        this.facultyId = facultyId;
+        this.bookId = bookId;
+        this.borrowDate = new Date(); // auto date
+        this.returnDate = null;
     }
 
     public int getRecordId() { return recordId; }
@@ -28,11 +38,9 @@ public class BorrowRecord {
 
     public int getStudentId() { return studentId; }
     public void setStudentId(int studentId) { this.studentId = studentId; }
-    
+
     public int getFacultyId() { return facultyId; }
-    public void setFacultyId(int facultyId) { 
-        this.facultyId = facultyId; 
-    }
+    public void setFacultyId(int facultyId) { this.facultyId = facultyId; }
 
     public int getBookId() { return bookId; }
     public void setBookId(int bookId) { this.bookId = bookId; }
@@ -42,4 +50,15 @@ public class BorrowRecord {
 
     public Date getReturnDate() { return returnDate; }
     public void setReturnDate(Date returnDate) { this.returnDate = returnDate; }
+
+    // 🔥 Add this for printing
+    @Override
+    public String toString() {
+        return "Record ID: " + recordId +
+               " | Student ID: " + studentId +
+               " | Faculty ID: " + facultyId +
+               " | Book ID: " + bookId +
+               " | Borrow Date: " + borrowDate +
+               " | Return Date: " + returnDate;
+    }
 }

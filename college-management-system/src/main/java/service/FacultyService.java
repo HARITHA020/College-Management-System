@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Date;
 
 import dao.FacultyDAO;
+import dao.NotificationDAO;
 import dao.ResultDAO;
 import dao.StudentDAO;
 import dao.ExamDAO;
@@ -13,6 +14,7 @@ import dao.BorrowRecordDAO;
 import dao.TimetableDAO;
 
 import model.Faculty;
+import model.Notification;
 import model.Result;
 import model.Student;
 import model.Timetable;
@@ -29,6 +31,7 @@ public class FacultyService {
     private CourseDAO courseDAO;
     private BookDAO bookDAO;
     private BorrowRecordDAO borrowRecordDAO;
+    private NotificationDAO notificationDAO;
     private TimetableDAO timetableDAO=new TimetableDAO();
     private ResultDAO resultDAO = new ResultDAO();
 
@@ -39,6 +42,7 @@ public class FacultyService {
         courseDAO = new CourseDAO();
         bookDAO = new BookDAO();
         borrowRecordDAO = new BorrowRecordDAO();
+        notificationDAO=new NotificationDAO();
         
         
     }
@@ -180,7 +184,18 @@ public class FacultyService {
     // Notification
 
     public void viewNotification() {
-        System.out.println("No new notifications available.");
+    	List<Notification> list = notificationDAO.getAllNotifications();
+
+        if (list.isEmpty()) {
+            System.out.println("No notifications available");
+            return;
+        }
+
+        for (Notification n : list) {
+            System.out.println("ID: " + n.getNotificationId() +
+                    " | Message: " + n.getMessage() +
+                    " | Date: " + n.getDate());
+        }
     }
 
     // Library
