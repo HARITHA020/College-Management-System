@@ -86,8 +86,8 @@ public class AdminService {
     }
 
     // ================= TIMETABLE =================
-    public void addTimetable(int id, String day, String time, String room, int courseId) {
-        timetableDao.addTimetable(id, day, time, room, courseId);
+    public void addTimetable(int id, int facultyId, String day, String time, String room, int courseId, String section) {
+        timetableDao.addTimetable(id, facultyId, day, time, room, courseId, section);
         System.out.println("Timetable Added Successfully");
     }
 

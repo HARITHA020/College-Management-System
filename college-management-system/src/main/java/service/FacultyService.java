@@ -131,14 +131,7 @@ public class FacultyService {
     }
 
     // Marks
-
-    public void enterMarks(int examId, int courseId, String examDate) {
-
-        examDAO.addExam(examId, courseId, examDate);
-
-        System.out.println("Marks Entered Successfully");
-    }
-    public void enterResult(int studentId, int courseId, int marks) {
+    public void addResult(int studentId, int courseId, int marks) {
 
         if(studentId <= 0 || courseId <= 0) {
             System.out.println("Invalid data");
@@ -217,8 +210,8 @@ public class FacultyService {
 
         BorrowRecord record = new BorrowRecord(
                 borrowRecordDAO.getAllRecords().size() + 1,
-                0,              // studentId
-                facultyId,      // ✅ now it works
+                0,             
+                facultyId,      
                 bookId,
                 new Date(),
                 null
@@ -247,18 +240,29 @@ public class FacultyService {
         System.out.println("Record not found");
     }
     
-    public void viewTimetable() {
-        List<Timetable> list = timetableDAO.getAllTimetables() ;
-        if(list.isEmpty()) {
-            System.out.println("No timetable available");
-            return;
-        }
+    public void viewTimetable(int facultyId) {
+
+        List<Timetable> list = timetableDAO.getAllTimetables();
+
+        boolean found = false;
+
         for (Timetable t : list) {
-            System.out.println("ID: " + t.gettimetableId() +
-                    ", Day: " + t.getDay() +
-                    ", Time: " + t.getTime() +
-                    ", Room: " + t.getRoom() +
-                    ", Course ID: " + t.getCourseId());
+
+            if (t.getFacultyId() == facultyId) {
+
+                System.out.println(
+                    t.getDay() + " " + t.getTime() +
+                    " → Course ID: " + t.getCourseId() +
+                    " → Class: " + t.getSection() +
+                    " → Room: " + t.getRoom()
+                );
+
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No timetable assigned");
         }
     }
 

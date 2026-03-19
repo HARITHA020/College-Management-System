@@ -51,11 +51,13 @@ public class FacultyController {
                 System.out.println("Enter Marks:");
                 int marks = scanner.nextInt();
 
-                facultyService.enterResult(sid, cid, marks);
+                facultyService.addResult(sid, cid, marks);
                 break;
 
             case 4:
-                facultyService.viewTimetable();
+            	System.out.println("Enter your Faculty ID:");
+            	int facultyId=scanner.nextInt();
+                facultyService.viewTimetable(facultyId);
                 break;
 
             case 5:

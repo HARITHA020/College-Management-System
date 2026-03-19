@@ -322,8 +322,15 @@ public class AdminController {
 
         System.out.print("Enter Course ID: ");
         int courseId = input.nextInt();
+        
+        System.out.print("Enter Faculty ID: ");
+        int facultyId = input.nextInt();
+        input.nextLine();
 
-        adminService.addTimetable(id, day, time, room, courseId);
+        System.out.print("Enter Section : ");
+        String section = input.nextLine();
+
+        adminService.addTimetable(id, facultyId, day, time, room, courseId, section);
     }
 
     // ================= VIEW DETAILS =================
