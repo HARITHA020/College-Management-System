@@ -16,6 +16,7 @@ public class StudentDAO {
 	}
 	
 	public List<Student> getAllStudents(){
+		students.add(new Student(101,"Balamurugan","CSE"));
 		return students;
 	}
 

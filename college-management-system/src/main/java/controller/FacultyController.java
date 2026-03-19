@@ -2,6 +2,7 @@ package controller;
 
 import java.util.Scanner;
 import service.FacultyService;
+import service.LibraryService;
 import service.StudentService;
 import service.AdminService;
 
@@ -10,6 +11,7 @@ public class FacultyController {
     private FacultyService facultyService = new FacultyService();
     private StudentService studentService = new StudentService();
     private AdminService adminService = new AdminService();
+    private LibraryService libraryService=new LibraryService();
     private Scanner scanner = new Scanner(System.in);
 
     public void showMenu() {
@@ -21,7 +23,11 @@ public class FacultyController {
             System.out.println("2. Mark Attendance");
             System.out.println("3. Enter Marks");
             System.out.println("4. View Timetable");
-            System.out.println("5. Logout");
+            System.out.println("5. View Notifications");
+            System.out.println("6. Search Book");
+            System.out.println("7. Borrow Book");
+            System.out.println("8. Return Book");
+            System.out.println("0. Logout");
 
             int choice = scanner.nextInt();
 
@@ -51,14 +57,44 @@ public class FacultyController {
                 System.out.println("Enter Marks:");
                 int marks = scanner.nextInt();
 
-                facultyService.enterResult(sid, cid, marks);
+                facultyService.addResult(sid, cid, marks);
                 break;
 
             case 4:
-                facultyService.viewTimetable();
+            	System.out.println("Enter your Faculty ID:");
+            	int facultyId=scanner.nextInt();
+                facultyService.viewTimetable(facultyId);
+                break;
+                
+            case 5:
+                facultyService.viewNotification();
                 break;
 
-            case 5:
+            case 6:
+                System.out.print("Enter keyword: ");
+                scanner.nextLine(); // fix buffer
+                String keyword = scanner.nextLine();
+                libraryService.searchBook(keyword);
+                break;
+
+            case 7:
+                System.out.println("Enter Faculty ID:");
+                int fid = scanner.nextInt();
+
+                System.out.println("Enter Book ID:");
+                int bookId = scanner.nextInt();
+
+                libraryService.borrowBook(fid, "Faculty" ,bookId);
+                break;
+
+            case 8:
+                System.out.println("Enter Record ID:");
+                int recordId = scanner.nextInt();
+
+                libraryService.returnBook(recordId);
+                break;
+
+            case 0:
                 System.out.println("Logging out...");
                 return;
 

@@ -32,4 +32,12 @@ public class Book {
 
     public boolean isAvailability() { return availability; }
     public void setAvailability(boolean availability) { this.availability = availability; }
+
+    @Override
+    public String toString() {
+        return "ID: " + bookId +
+               " | Title: " + title +
+               " | Author: " + author +
+               " | Available: " + availability;
+    }
 }
