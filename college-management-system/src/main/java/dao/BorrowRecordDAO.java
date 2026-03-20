@@ -9,18 +9,18 @@ public class BorrowRecordDAO {
     private static List<BorrowRecord> records = new ArrayList<>();
     private static int recordCounter = 1;
 
-    // 📚 Borrow Book
+    // Borrow Book
     public void borrowBook(BorrowRecord record) {
-        record.setRecordId(recordCounter++); // ✅ auto ID
+        record.setRecordId(recordCounter++); 
         records.add(record);
     }
 
-    // 📋 Get All Records
+    //Get All Records
     public List<BorrowRecord> getAllRecords() {
         return records;
     }
 
-    // 🔍 Get Record by ID
+    // Get Record by ID
     public BorrowRecord getRecordById(int id) {
         for (BorrowRecord r : records) {
             if (r.getRecordId() == id) {

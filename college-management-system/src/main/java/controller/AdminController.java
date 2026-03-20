@@ -30,8 +30,8 @@ public class AdminController {
             System.out.println("7. Send notification");
             System.out.println("8. Manage Library");
             System.out.println("9. View Details");
-            System.out.println("10. Publish Result");   // NEW
-            System.out.println("11. View All Results"); // NEW
+            System.out.println("10. Publish Result");   
+            System.out.println("11. View All Results"); 
             System.out.println("12. Logout");
 
             System.out.print("Enter your choice: ");

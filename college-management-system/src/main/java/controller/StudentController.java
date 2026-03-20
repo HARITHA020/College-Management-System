@@ -8,12 +8,10 @@ import service.StudentService;
 public class StudentController {
 
     private StudentService studentService;
-    private LibraryService libraryService;
     private Scanner scanner;
 
     public StudentController() {
         this.studentService = new StudentService();
-        this.libraryService = new LibraryService();
         this.scanner = new Scanner(System.in);
     }
 
@@ -82,7 +80,7 @@ public class StudentController {
     public void searchBook() {
         System.out.print("Enter keyword: ");
         String keyword = scanner.nextLine();
-        libraryService.searchBook(keyword);
+        studentService.searchBook(keyword);
     }
     
     public void borrowBook() {
@@ -93,7 +91,7 @@ public class StudentController {
         int bookId = scanner.nextInt();
         scanner.nextLine();
 
-        libraryService.borrowBook(studentId,"student", bookId);
+        studentService.borrowBook(studentId,bookId);
     }
 
     public void returnBook() {
@@ -101,6 +99,6 @@ public class StudentController {
         int recordId = scanner.nextInt();
         scanner.nextLine();
 
-        libraryService.returnBook(recordId);
+        studentService.returnBook(recordId);
     }
 }

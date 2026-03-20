@@ -10,8 +10,6 @@ public class StudentService {
     private CourseDAO courseDAO;
     private TimetableDAO timetableDAO;
     private ExamDAO examDAO;
-    private BookDAO bookDAO;
-    private BorrowRecordDAO borrowRecordDAO;
     private NotificationDAO notificationDAO;
     private LibraryService libraryService;
     private EnrollmentDAO enrollmentDao;
@@ -20,8 +18,6 @@ public class StudentService {
         this.courseDAO = new CourseDAO();
         this.timetableDAO = new TimetableDAO();
         this.examDAO = new ExamDAO();
-        this.bookDAO = new BookDAO();
-        this.borrowRecordDAO = new BorrowRecordDAO();
         this.notificationDAO = new NotificationDAO();
         this.libraryService = new LibraryService();
         this.enrollmentDao=new EnrollmentDAO();
@@ -100,17 +96,17 @@ public class StudentService {
     }
 
     // ================= LIBRARY =================
- // 🔍 Search Book
+    // Search Book
     public void searchBook(String keyword) {
         libraryService.searchBook(keyword);
     }
 
-    // 📚 Borrow Book
+    //Borrow Book
     public void borrowBook(int studentId, int bookId) {
         libraryService.borrowBook(studentId, "student", bookId);
     }
 
-    // 🔁 Return Book
+    // Return Book
     public void returnBook(int recordId) {
         libraryService.returnBook(recordId);
     }
