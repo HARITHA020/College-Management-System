@@ -4,23 +4,27 @@ import java.util.List;
 import java.util.Date;
 
 import dao.FacultyDAO;
+import dao.MaterialDAO;
 import dao.NotificationDAO;
 import dao.ResultDAO;
 import dao.StudentDAO;
 import dao.ExamDAO;
 import dao.CourseDAO;
 import dao.EnrollmentDAO;
+import dao.AssignmentDAO;
 import dao.BookDAO;
 import dao.BorrowRecordDAO;
 import dao.TimetableDAO;
 
 import model.Faculty;
+import model.Material;
 import model.Notification;
 import model.Result;
 import model.Student;
 import model.Timetable;
 import model.Exam;
 import model.Course;
+import model.Assignment;
 import model.Book;
 import model.BorrowRecord;
 import model.Enrollment;
@@ -30,21 +34,23 @@ public class FacultyService {
     private StudentDAO studentDAO;
     private ExamDAO examDAO;
     private CourseDAO courseDAO;
-    private BookDAO bookDAO;
-    private BorrowRecordDAO borrowRecordDAO;
     private NotificationDAO notificationDAO;
     private TimetableDAO timetableDAO=new TimetableDAO();
     private ResultDAO resultDAO = new ResultDAO();
     private EnrollmentDAO enrollmentDao;
+    private LibraryService libraryService; 
+    private MaterialDAO materialDAO;
+    private AssignmentDAO assignmentDAO;
     public FacultyService() {
         facultyDAO = new FacultyDAO();
         studentDAO = new StudentDAO();
         examDAO = new ExamDAO();
         courseDAO = new CourseDAO();
-        bookDAO = new BookDAO();
-        borrowRecordDAO = new BorrowRecordDAO();
         notificationDAO=new NotificationDAO();
-        this.enrollmentDao=new EnrollmentDAO();
+        enrollmentDao=new EnrollmentDAO();
+        libraryService=new LibraryService();
+        materialDAO = new MaterialDAO();
+        assignmentDAO = new AssignmentDAO();
         
     }
 
@@ -209,62 +215,22 @@ public class FacultyService {
     }
 
     // Library
-
+    	//Search  books
     public void searchBook(String keyword) {
-
-        List<Book> books = bookDAO.getAllBooks();
-
-        System.out.println("Search Results:");
-
-        for (Book b : books) {
-
-            if (b.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
-                b.getAuthor().toLowerCase().contains(keyword.toLowerCase())) {
-
-                System.out.println(
-                        "Book ID: " + b.getBookId() +
-                        " | Title: " + b.getTitle() +
-                        " | Author: " + b.getAuthor() +
-                        " | Available: " + b.isAvailability()
-                );
-            }
-        }
+        libraryService.searchBook(keyword);
     }
 
+    	//Borrow Book
     public void borrowBook(int facultyId, int bookId) {
-
-        BorrowRecord record = new BorrowRecord(
-                borrowRecordDAO.getAllRecords().size() + 1,
-                0,             
-                facultyId,      
-                bookId,
-                new Date(),
-                null
-        );
-
-        borrowRecordDAO.borrowBook(record);
-
-        System.out.println("Book Borrowed Successfully");
+        libraryService.borrowBook(facultyId, "faculty", bookId);
     }
 
+    	// Return Book
     public void returnBook(int recordId) {
-
-        List<BorrowRecord> records = borrowRecordDAO.getAllRecords();
-
-        for (BorrowRecord r : records) {
-
-            if (r.getRecordId() == recordId) {
-
-                r.setReturnDate(new Date());
-
-                System.out.println("Book Returned Successfully");
-                return;
-            }
-        }
-
-        System.out.println("Record not found");
+        libraryService.returnBook(recordId);
     }
     
+   //Timetable 
     public void viewTimetable(int facultyId) {
 
         List<Timetable> list = timetableDAO.getAllTimetables();
@@ -290,6 +256,74 @@ public class FacultyService {
             System.out.println("No timetable assigned");
         }
     }
+    // Materials
+    public void uploadMaterial(int courseId, String title, String content) {
 
+        Material m = new Material(
+            materialDAO.getAllMaterials().size() + 1,
+            courseId,
+            title,
+            content
+        );
+
+        materialDAO.addMaterial(m);
+        System.out.println("\nMaterial uploaded successfully");
+    }
+
+    public void viewMaterials(int courseId) {
+
+        boolean found = false;
+
+        for (Material m : materialDAO.getAllMaterials()) {
+
+            if (m.getCourseId() == courseId) {
+
+                System.out.println("\nTitle: " + m.getTitle());
+                System.out.println("Content: " + m.getContent());
+                System.out.println("------------------------");
+
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("\nNo materials found");
+        }
+    }
+    
+    // Assignments
+    public void createAssignment(int courseId, String title, String description) {
+
+        Assignment a = new Assignment(
+            assignmentDAO.getAllAssignments().size() + 1,
+            courseId,
+            title,
+            description
+        );
+
+        assignmentDAO.addAssignment(a);
+        System.out.println("\nAssignment created successfully");
+    }
+
+    public void viewAssignments(int courseId) {
+
+        boolean found = false;
+
+        for (Assignment a : assignmentDAO.getAllAssignments()) {
+
+            if (a.getCourseId() == courseId) {
+
+                System.out.println("\nTitle: " + a.getTitle());
+                System.out.println("Description: " + a.getDescription());
+                System.out.println("------------------------");
+
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("\nNo assignments found");
+        }
+    }
 
 }
