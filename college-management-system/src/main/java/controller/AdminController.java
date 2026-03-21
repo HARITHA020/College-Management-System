@@ -385,8 +385,11 @@ public class AdminController {
 
         System.out.print("Enter Exam Date: ");
         String examDate = input.nextLine();
+        
+        System.out.println("Enter the Max Mark:");
+        int maxMark=input.nextInt();
 
-        adminService.scheduleExam(examId, courseId, examDate);
+        adminService.scheduleExam(examId, courseId, examDate,maxMark);
     }
 
     // ================= PUBLISH RESULT =================
@@ -394,8 +397,11 @@ public class AdminController {
 
         System.out.print("Enter Result ID to publish: ");
         int resultId = input.nextInt();
+        
+        System.out.print("Enter the Extra mark(optional):");
+        int extraMark=input.nextInt();
 
-        adminService.publishResult(resultId);
+        adminService.publishResult(resultId, extraMark);
     }
 
     // ================= NOTIFICATION =================
@@ -427,7 +433,22 @@ public class AdminController {
 
                 java.util.Date date = java.sql.Date.valueOf(dateStr);
 
-                adminService.addNotification(id, message, date);
+                // 🔥 NEW INPUTS
+                System.out.print("Enter Role (ALL/STUDENT/FACULTY): ");
+                String role = input.nextLine();
+
+                Integer targetId = null;
+
+                if (!role.equalsIgnoreCase("ALL")) {
+                    System.out.print("Enter Target ID (or 0 for all in role): ");
+                    int temp = input.nextInt();
+                    input.nextLine();
+                    if (temp != 0) {
+                        targetId = temp;
+                    }
+                }
+
+                adminService.addNotification(id, message, date, role, targetId);
             }
 
             else if (choice == 2) {
