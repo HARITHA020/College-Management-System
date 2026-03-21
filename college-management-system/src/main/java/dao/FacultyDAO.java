@@ -17,14 +17,13 @@ public class FacultyDAO {
         return faculties;
     }
 
-    public void updateFaculty(int id, String name, String department) {
+    public void updateFaculty(int id, String name, String department, String dob, String contact) {
         for (Faculty faculty : faculties) {
-
             if (faculty.getId() == id) {
-
                 faculty.setName(name);
                 faculty.setDepartment(department);
-
+                faculty.setDob(dob);          // New
+                faculty.setContact(contact);  // New
                 System.out.println("Faculty Updated Successfully");
             }
         }

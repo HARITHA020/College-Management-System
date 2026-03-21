@@ -58,27 +58,30 @@ public class FacultyService {
 
     // Faculty Management (Admin Purpose)
 
-    public void addFaculty(int id, String name, String department) {
+    public void addFaculty(int id, String name, String department, String dob, String contact) {
 
-        // 🔹 1. Validate ID
         if (id <= 0) {
             System.out.println("Invalid Faculty ID");
             return;
         }
-
-        // 🔹 2. Validate name
         if (name == null || name.trim().isEmpty()) {
             System.out.println("Faculty name cannot be empty");
             return;
         }
-
-        // 🔹 3. Validate department
         if (department == null || department.trim().isEmpty()) {
             System.out.println("Department cannot be empty");
             return;
         }
+        if (dob == null || dob.trim().isEmpty()) {
+            System.out.println("DOB cannot be empty");
+            return;
+        }
+        if (contact == null || contact.trim().isEmpty()) {
+            System.out.println("Contact cannot be empty");
+            return;
+        }
 
-        // 🔹 4. Check duplicate ID
+        // check duplicate
         for (Faculty f : facultyDAO.getAllFaculty()) {
             if (f.getId() == id) {
                 System.out.println("Faculty with this ID already exists");
@@ -86,34 +89,34 @@ public class FacultyService {
             }
         }
 
-        // 🔹 5. Add faculty
-        Faculty faculty = new Faculty(id, name, department);
+        Faculty faculty = new Faculty(id, name, department, dob, contact); // pass dob & contact
         facultyDAO.addFaculty(faculty);
-
         System.out.println("Faculty Added Successfully");
     }
 
-    public void updateFaculty(int id, String name, String department) {
+    public void updateFaculty(int id, String name, String department, String dob, String contact) {
 
-        // 🔹 1. Validate ID
         if (id <= 0) {
             System.out.println("Invalid Faculty ID");
             return;
         }
-
-        // 🔹 2. Validate name
         if (name == null || name.trim().isEmpty()) {
             System.out.println("Faculty name cannot be empty");
             return;
         }
-
-        // 🔹 3. Validate department
         if (department == null || department.trim().isEmpty()) {
             System.out.println("Department cannot be empty");
             return;
         }
+        if (dob == null || dob.trim().isEmpty()) {
+            System.out.println("DOB cannot be empty");
+            return;
+        }
+        if (contact == null || contact.trim().isEmpty()) {
+            System.out.println("Contact cannot be empty");
+            return;
+        }
 
-        // 🔹 4. Check faculty exists
         boolean exists = false;
         for (Faculty f : facultyDAO.getAllFaculty()) {
             if (f.getId() == id) {
@@ -127,8 +130,7 @@ public class FacultyService {
             return;
         }
 
-        // 🔹 5. Update
-        facultyDAO.updateFaculty(id, name, department);
+        facultyDAO.updateFaculty(id, name, department, dob, contact); // pass dob & contact
         System.out.println("Faculty Updated Successfully");
     }
 

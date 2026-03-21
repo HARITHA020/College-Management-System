@@ -21,8 +21,12 @@ public class AdminService {
     private FacultyDAO facultyDao= new FacultyDAO();
 
     // ================= ADMIN =================
-    public void addAdmin(int id, String name, String password) {
-        if(id <= 0 || name == null || name.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+    public void addAdmin(int id, String name, String password, String dob, String contact) {
+        // Validate basic fields
+        if(id <= 0 || name == null || name.trim().isEmpty() || 
+           password == null || password.trim().isEmpty() || 
+           dob == null || dob.trim().isEmpty() || 
+           contact == null || contact.trim().isEmpty()) {
             System.out.println("Invalid Admin data");
             return;
         }
@@ -35,12 +39,12 @@ public class AdminService {
             }
         }
 
-        adminDao.addAdmin(id, name, password);
+        // call DAO to add admin with new fields
+        adminDao.addAdmin(id, name, password, dob, contact);
         System.out.println("Admin Added Successfully");
     }
 
-    public void updateAdmin(int id, String name, String password) {
-
+    public void updateAdmin(int id, String name, String password, String dob, String contact) {
         // 🔹 1. Validate ID
         if (id <= 0) {
             System.out.println("Invalid Admin ID");
@@ -64,7 +68,18 @@ public class AdminService {
             return;
         }
 
-        // 🔹 4. Check if admin exists
+        // 🔹 4. Validate DOB & Contact
+        if (dob == null || dob.trim().isEmpty()) {
+            System.out.println("DOB cannot be empty");
+            return;
+        }
+
+        if (contact == null || contact.trim().isEmpty()) {
+            System.out.println("Contact cannot be empty");
+            return;
+        }
+
+        // 🔹 5. Check if admin exists
         boolean exists = false;
         for (Administrator admin : adminDao.getAllAdmins()) {
             if (admin.getId() == id) {
@@ -78,8 +93,8 @@ public class AdminService {
             return;
         }
 
-        // 🔹 5. Update
-        adminDao.updateAdmin(id, name, password);
+        // 🔹 6. Update
+        adminDao.updateAdmin(id, name, password, dob, contact);
         System.out.println("Admin Updated Successfully");
     }
 
