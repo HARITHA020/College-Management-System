@@ -1,53 +1,65 @@
 package controller;
 
-import service.AuthService;
-import model.User;
-import model.Administrator;
-import model.Student;
-import model.Faculty;
-import dao.AdminDAO;
-import dao.StudentDAO;
-import dao.FacultyDAO;
+import dao.UserDAO;
+import model.LoginResponse;
 
 public class LoginController {
 
-    private AuthService authService = new AuthService();
-    private AdminDAO adminDAO = new AdminDAO();
-    private StudentDAO studentDAO = new StudentDAO();
-    private FacultyDAO facultyDAO = new FacultyDAO();
+    private UserDAO userDAO = new UserDAO();
 
-    public void login(String email, String password) {
+    // ✅ returns LoginResponse (role + userId)
+    public LoginResponse checkRole(String email, String password) {
 
-        User user = authService.login(email, password);
-
-        if (user == null) {
-            System.out.println("Login Failed");
-            return;
+        if (email == null || email.trim().isEmpty()) {
+            System.out.println("Email cannot be empty");
+            return null;
         }
 
-        int userId = user.getUserId();
-        String role = user.getRole();
-
-        if ("ADMIN".equals(role)) {
-            Administrator admin = adminDAO.getAdminByUserId(userId);
-            if(admin != null) {
-                System.out.println("Admin Login Successful: " + admin.getName());
-                new AdminController().showMenu();
-            }
-        } 
-        else if ("FACULTY".equals(role)) {
-            Faculty faculty = facultyDAO.getFacultyByUserId(userId);
-            if(faculty != null) {
-                System.out.println("Faculty Login Successful: " + faculty.getName());
-                new FacultyController().showMenu();
-            }
-        } 
-        else if ("STUDENT".equals(role)) {
-            Student student = studentDAO.getStudentByUserId(userId);
-            if(student != null) {
-                System.out.println("Student Login Successful: " + student.getName());
-                new StudentController().showMenu();
-            }
+        if (password == null || password.trim().isEmpty()) {
+            System.out.println("Password cannot be empty");
+            return null;
         }
+
+        if (!email.contains("@")) {
+            System.out.println("Invalid email format");
+            return null;
+        }
+
+        LoginResponse response = userDAO.checkUser(email, password);
+
+        if (response == null) {
+            System.out.println("Invalid email or password");
+            return null;
+        }
+
+        return response;
+    }
+
+    // ✅ Main login method called from MainApp
+    public boolean login(String email, String password) {
+        LoginResponse response = checkRole(email, password);
+        if (response == null) return false;
+
+        String role = response.getRole();
+        int userId = response.getUserId();
+
+        switch (role) {
+            case "ADMIN":
+                System.out.println("Admin Login Successful");
+                new AdminController(userId).showMenu();
+                break;
+            case "FACULTY":
+                System.out.println("Faculty Login Successful");
+                new FacultyController(userId).showMenu();
+                break;
+            case "STUDENT":
+                System.out.println("Student Login Successful");
+                new StudentController(userId).showMenu();
+                break;
+            default:
+                System.out.println("Unknown Role");
+                return false;
+        }
+        return true;
     }
 }

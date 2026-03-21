@@ -6,12 +6,10 @@ import controller.LoginController;
 public class MainApp {
 
     public static void main(String[] args) {
-
         Scanner input = new Scanner(System.in);
-        LoginController logincontroller = new LoginController();
+        LoginController loginController = new LoginController();
 
-        while (true) { // 🔁 LOOP FOREVER
-
+        while (true) {
             System.out.println("\n===== LOGIN PAGE =====");
 
             System.out.print("Enter Email Id: ");
@@ -20,9 +18,14 @@ public class MainApp {
             System.out.print("Enter Password: ");
             String password = input.nextLine();
 
-            logincontroller.login(email, password);
+            boolean success = loginController.login(email, password);
 
-            // After logout → comes back here again automatically
+            if (!success) {
+                System.out.println("Login failed. Try again.");
+                continue;
+            }
+
+            System.out.println("\nYou have logged out. Returning to LOGIN PAGE...");
         }
     }
 }

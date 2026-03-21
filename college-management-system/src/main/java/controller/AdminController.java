@@ -11,8 +11,13 @@ public class AdminController {
     private StudentService studentService = new StudentService();
     private FacultyService facultyService = new FacultyService();
 
+    private Scanner input = new Scanner(System.in);
+    private int userId; // logged-in admin's userId
 
-    Scanner input = new Scanner(System.in);
+    // ✅ Constructor to set logged-in userId
+    public AdminController(int userId) {
+        this.userId = userId;
+    }
 
     public void showMenu() {
 
@@ -43,51 +48,39 @@ public class AdminController {
                 case 1:
                     manageAdmin();
                     break;
-
                 case 2:
                     manageStudent();
                     break;
-
                 case 3:
                     manageFaculty();
                     break;
-
                 case 4:
                     manageCourse();
                     break;
-
                 case 5:
                     manageTimetable();
                     break;
-
                 case 6:
                     examSchedule();
                     break;
-
                 case 7:
                     manageNotification();
                     break;
-
                 case 8:
                     manageLibrary();
                     break;
-
                 case 9:
                     viewDetails();
                     break;
-
                 case 10:
-                    publishResult(); // NEW
+                    publishResult();
                     break;
-
                 case 11:
-                    adminService.viewAllResults(); // NEW
+                    adminService.viewAllResults();
                     break;
-
                 case 12:
                     System.out.println("Logging out...");
                     return;
-
                 default:
                     System.out.println("Invalid Choice");
             }
@@ -126,13 +119,9 @@ public class AdminController {
 
                 System.out.print("Enter Contact Number: ");
                 String contact = input.nextLine();
-                
-                System.out.print("Enter User ID: ");
-                int userId = input.nextInt();
-                input.nextLine();
 
-                adminService.addAdmin(id, name, password, dob, contact,userId);
-            }
+                adminService.addAdmin(id, name, password, dob, contact, this.userId);
+            } 
             else if (choice == 2) { // Update Admin
                 System.out.print("Enter Admin ID: ");
                 int id = input.nextInt();
@@ -149,19 +138,12 @@ public class AdminController {
 
                 System.out.print("Enter New Contact Number: ");
                 String contact = input.nextLine();
-                
-                System.out.print("Enter User ID: ");
-                int userId = input.nextInt();
-                input.nextLine();
 
-                adminService.updateAdmin(id, name, password, dob, contact,userId);
+                adminService.updateAdmin(id, name, password, dob, contact, this.userId);
             }
-
             else if (choice == 3) {
-
                 System.out.print("Enter Admin ID: ");
                 int id = input.nextInt();
-
                 adminService.deleteAdmin(id);
             }
         }
@@ -199,14 +181,9 @@ public class AdminController {
 
                 System.out.print("Enter Contact Number: ");
                 String contact = input.nextLine();
-                
-                System.out.print("Enter User ID: ");
-                int userId = input.nextInt();
-                input.nextLine();
 
-                studentService.addStudent(id, name, dept, dob, contact,userId);
+                studentService.addStudent(id, name, dept, dob, contact, this.userId);
             }
-
             else if (choice == 2) { // Update Student
                 System.out.print("Enter Student ID: ");
                 int id = input.nextInt();
@@ -223,19 +200,12 @@ public class AdminController {
 
                 System.out.print("Enter New Contact Number: ");
                 String contact = input.nextLine();
-                
-                System.out.print("Enter User ID: ");
-                int userId = input.nextInt();
-                input.nextLine();
 
-                studentService.updateStudent(id, name, dept, dob, contact,userId);
+                studentService.updateStudent(id, name, dept, dob, contact, this.userId);
             }
-
             else if (choice == 3) {
-
                 System.out.print("Enter Student ID: ");
                 int id = input.nextInt();
-
                 studentService.deleteStudent(id);
             }
         }
@@ -273,14 +243,9 @@ public class AdminController {
 
                 System.out.print("Enter Contact Number: ");
                 String contact = input.nextLine();
-                
-                System.out.print("Enter User ID: ");
-                int userId = input.nextInt();
-                input.nextLine();
 
-                facultyService.addFaculty(id, name, dept, dob, contact,userId);
+                facultyService.addFaculty(id, name, dept, dob, contact, this.userId);
             }
-
             else if (choice == 2) { // Update Faculty
                 System.out.print("Enter Faculty ID: ");
                 int id = input.nextInt();
@@ -297,19 +262,12 @@ public class AdminController {
 
                 System.out.print("Enter New Contact Number: ");
                 String contact = input.nextLine();
-                
-                System.out.print("Enter User ID: ");
-                int userId = input.nextInt();
-                input.nextLine();
 
-                facultyService.updateFaculty(id, name, dept, dob, contact,userId);
+                facultyService.updateFaculty(id, name, dept, dob, contact, this.userId);
             }
-
             else if (choice == 3) {
-
                 System.out.print("Enter Faculty ID: ");
                 int id = input.nextInt();
-
                 facultyService.deleteFaculty(id);
             }
         }
@@ -320,11 +278,11 @@ public class AdminController {
 
         int choice = 0;
 
-        while (choice != 3) {
+        while (choice != 4) {
 
             System.out.println("\n--- Manage Course ---");
             System.out.println("1. Add Course");
-            System.out.println("2. Assign Course");
+            System.out.println("2. Assign Course to Faculty");
             System.out.println("3. Assign Student to Course");
             System.out.println("4. Exit");
 
@@ -332,7 +290,6 @@ public class AdminController {
             input.nextLine();
 
             if (choice == 1) {
-
                 System.out.print("Enter Course ID: ");
                 int courseId = input.nextInt();
                 input.nextLine();
@@ -342,9 +299,7 @@ public class AdminController {
 
                 adminService.addCourse(courseId, courseName);
             }
-
             else if (choice == 2) {
-
                 System.out.print("Enter Course ID: ");
                 int courseId = input.nextInt();
 
@@ -353,9 +308,6 @@ public class AdminController {
 
                 adminService.assignCourse(courseId, facultyId);
             }
-            
-           
-
             else if (choice == 3) {
                 System.out.print("Enter Student ID: ");
                 int studentId = input.nextInt();
@@ -388,12 +340,12 @@ public class AdminController {
 
         System.out.print("Enter Course ID: ");
         int courseId = input.nextInt();
-        
+
         System.out.print("Enter Faculty ID: ");
         int facultyId = input.nextInt();
         input.nextLine();
 
-        System.out.print("Enter Section : ");
+        System.out.print("Enter Section: ");
         String section = input.nextLine();
 
         adminService.addTimetable(id, facultyId, day, time, room, courseId, section);
@@ -438,11 +390,11 @@ public class AdminController {
 
         System.out.print("Enter Exam Date: ");
         String examDate = input.nextLine();
-        
-        System.out.println("Enter the Max Mark:");
-        int maxMark=input.nextInt();
 
-        adminService.scheduleExam(examId, courseId, examDate,maxMark);
+        System.out.println("Enter Max Marks:");
+        int maxMark = input.nextInt();
+
+        adminService.scheduleExam(examId, courseId, examDate, maxMark);
     }
 
     // ================= PUBLISH RESULT =================
@@ -450,9 +402,9 @@ public class AdminController {
 
         System.out.print("Enter Result ID to publish: ");
         int resultId = input.nextInt();
-        
-        System.out.print("Enter the Extra mark(optional):");
-        int extraMark=input.nextInt();
+
+        System.out.print("Enter Extra Marks (optional): ");
+        int extraMark = input.nextInt();
 
         adminService.publishResult(resultId, extraMark);
     }
@@ -486,7 +438,6 @@ public class AdminController {
 
                 java.util.Date date = java.sql.Date.valueOf(dateStr);
 
-                // 🔥 NEW INPUTS
                 System.out.print("Enter Role (ALL/STUDENT/FACULTY): ");
                 String role = input.nextLine();
 
@@ -496,15 +447,11 @@ public class AdminController {
                     System.out.print("Enter Target ID (or 0 for all in role): ");
                     int temp = input.nextInt();
                     input.nextLine();
-                    if (temp != 0) {
-                        targetId = temp;
-                    }
+                    if (temp != 0) targetId = temp;
                 }
 
                 adminService.addNotification(id, message, date, role, targetId);
-            }
-
-            else if (choice == 2) {
+            } else if (choice == 2) {
                 adminService.viewNotifications();
             }
         }
@@ -549,7 +496,6 @@ public class AdminController {
                 case 2:
                     System.out.print("Enter Book ID to remove: ");
                     int removeId = input.nextInt();
-
                     adminService.removeBook(removeId);
                     break;
 

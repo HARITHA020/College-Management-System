@@ -1,23 +1,23 @@
 package controller;
 
 import java.util.Scanner;
-
-import service.LibraryService;
 import service.StudentService;
 
 public class StudentController {
 
     private StudentService studentService;
     private Scanner scanner;
+    private int userId; // logged-in student ID
 
-    public StudentController() {
+    // ✅ Constructor to pass logged-in student ID
+    public StudentController(int userId) {
         this.studentService = new StudentService();
         this.scanner = new Scanner(System.in);
+        this.userId = userId;
     }
 
     public void showMenu() {
         int choice;
-        int studentId = 101; // This should ideally come from login session
         do {
             System.out.println("\n========== Student Menu ==========");
             System.out.println("1. View Courses");
@@ -38,34 +38,34 @@ public class StudentController {
 
             switch (choice) {
                 case 1:
-                    viewCourses(studentId);
+                    studentService.viewMyCourses(userId);
                     break;
                 case 2:
-                    viewTimetable(studentId);
+                    studentService.viewTimetable(userId);
                     break;
                 case 3:
-                    viewMarks(studentId);
+                    studentService.viewMarks(userId);
                     break;
                 case 4:
-                    viewAttendance(studentId);
+                    studentService.viewAttendance(userId);
                     break;
                 case 5:
-                    viewNotifications(studentId);
+                    studentService.viewNotifications(userId);
                     break;
                 case 6:
                     searchBook();
                     break;
                 case 7:
-                    borrowBook(studentId);
+                    borrowBook();
                     break;
                 case 8:
                     returnBook();
                     break;
                 case 9:
-                    viewMaterials(studentId);
+                    viewMaterials();
                     break;
                 case 10:
-                    viewAssignments(studentId);
+                    viewAssignments();
                     break;
                 case 0:
                     System.out.println("Logging out...");
@@ -77,67 +77,39 @@ public class StudentController {
         } while (choice != 0);
     }
 
-    // -------------------- Student Functionalities --------------------
-
-    public void viewCourses(int studentId) { 
-        studentService.viewMyCourses(studentId); 
-    }
-
-    public void viewTimetable(int studentId) { 
-        studentService.viewTimetable(studentId); 
-    }
-
-    public void viewMarks(int studentId) { 
-        studentService.viewMarks(studentId); 
-    }
-
-    public void viewAttendance(int studentId) { 
-        studentService.viewAttendance(studentId); 
-    }
-
-    public void viewNotifications(int studentId) { 
-        studentService.viewNotifications(studentId); 
-    }
-
-    public void searchBook() {
+    // -------------------- Book Functions --------------------
+    private void searchBook() {
         System.out.print("Enter keyword: ");
         String keyword = scanner.nextLine();
         studentService.searchBook(keyword);
     }
 
-    public void borrowBook(int studentId) {
+    private void borrowBook() {
         System.out.print("Enter Book ID: ");
         int bookId = scanner.nextInt();
         scanner.nextLine();
-
-        studentService.borrowBook(studentId, bookId);
+        studentService.borrowBook(userId, bookId);
     }
 
-    public void returnBook() {
+    private void returnBook() {
         System.out.print("Enter Record ID: ");
         int recordId = scanner.nextInt();
         scanner.nextLine();
-
         studentService.returnBook(recordId);
     }
 
-    // -------------------- New: Materials & Assignments --------------------
-
-    public void viewMaterials(int studentId) {
-        System.out.print("Enter Course ID to view materials: ");
+    // -------------------- Materials & Assignments --------------------
+    private void viewMaterials() {
+        System.out.print("Enter Course ID: ");
         int courseId = scanner.nextInt();
         scanner.nextLine();
-
-        // Pass studentId for validation (student must be enrolled)
-        studentService.viewMaterials(courseId, studentId, "STUDENT");
+        studentService.viewMaterials(courseId, userId, "STUDENT");
     }
 
-    public void viewAssignments(int studentId) {
-        System.out.print("Enter Course ID to view assignments: ");
+    private void viewAssignments() {
+        System.out.print("Enter Course ID: ");
         int courseId = scanner.nextInt();
         scanner.nextLine();
-
-        // Pass studentId for validation (student must be enrolled)
-        studentService.viewAssignments(courseId, studentId, "STUDENT");
+        studentService.viewAssignments(courseId, userId, "STUDENT");
     }
 }
