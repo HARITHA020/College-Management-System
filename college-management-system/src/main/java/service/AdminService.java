@@ -19,95 +19,60 @@ public class AdminService {
     private EnrollmentDAO enrollmentDAO = new EnrollmentDAO();
     private StudentDAO studentDao= new StudentDAO();
     private FacultyDAO facultyDao= new FacultyDAO();
+    private UserDAO userDAO=new UserDAO();
 
     // ================= ADMIN =================
-    public void addAdmin(int id, String name, String password, String dob, String contact,int userId) {
-        // Validate basic fields
-        if(id <= 0 || name == null || name.trim().isEmpty() || 
-           password == null || password.trim().isEmpty() || 
-           dob == null || dob.trim().isEmpty() || 
-           contact == null || contact.trim().isEmpty()) {
-            System.out.println("Invalid Admin data");
+    public void addAdminWithUser(String email, String password, String name, String dob, String contact) {
+
+        if (email == null || email.trim().isEmpty()) {
+            System.out.println("Email cannot be empty");
             return;
         }
 
-        // check duplicate
-        for(Administrator a : adminDao.getAllAdmins()) {
-            if(a.getId() == id) {
-                System.out.println("Admin with this ID already exists");
-                return;
-            }
-        }
-
-        // call DAO to add admin with new fields
-        adminDao.addAdmin(id, name, password, dob, contact,userId);
-        System.out.println("Admin Added Successfully");
-    }
-
-    public void updateAdmin(int id, String name, String password, String dob, String contact,int userId) {
-        // 🔹 1. Validate ID
-        if (id <= 0) {
-            System.out.println("Invalid Admin ID");
-            return;
-        }
-
-        // 🔹 2. Validate name
-        if (name == null || name.trim().isEmpty()) {
-            System.out.println("Admin name cannot be empty");
-            return;
-        }
-
-        // 🔹 3. Validate password
         if (password == null || password.trim().isEmpty()) {
             System.out.println("Password cannot be empty");
             return;
         }
 
-        if (password.length() < 4) {
-            System.out.println("Password must be at least 4 characters");
+        if (name == null || name.trim().isEmpty()) {
+            System.out.println("Admin name cannot be empty");
             return;
         }
 
-        // 🔹 4. Validate DOB & Contact
-        if (dob == null || dob.trim().isEmpty()) {
-            System.out.println("DOB cannot be empty");
+        if (userDAO.checkEmailExists(email)) {
+            System.out.println("Email already exists");
             return;
         }
 
-        if (contact == null || contact.trim().isEmpty()) {
-            System.out.println("Contact cannot be empty");
+        // 🔹 Create user
+        int userId = userDAO.createUser(email, password, "ADMIN");
+
+        if (userId == -1) {
+            System.out.println("User creation failed");
             return;
         }
 
-        // 🔹 5. Check if admin exists
-        boolean exists = false;
-        for (Administrator admin : adminDao.getAllAdmins()) {
-            if (admin.getId() == id) {
-                exists = true;
-                break;
-            }
-        }
+        // 🔹 Create admin
+        adminDao.addAdmin(name, dob, contact, userId);
 
-        if (!exists) {
-            System.out.println("Admin not found");
-            return;
-        }
-
-        // 🔹 6. Update
-        adminDao.updateAdmin(id, name, password, dob, contact,userId);
-        System.out.println("Admin Updated Successfully");
+        
     }
 
-    public void deleteAdmin(int id) {
+    // ✅ UPDATE ADMIN
+    public void updateAdmin(int id, String name, String dob, String contact) {
 
-        // 🔹 1. Validate ID
         if (id <= 0) {
             System.out.println("Invalid Admin ID");
             return;
         }
 
-        // 🔹 2. Check if admin exists
+        if (name == null || name.trim().isEmpty()) {
+            System.out.println("Admin name cannot be empty");
+            return;
+        }
+
         boolean exists = false;
+
         for (Administrator admin : adminDao.getAllAdmins()) {
             if (admin.getId() == id) {
                 exists = true;
@@ -120,20 +85,56 @@ public class AdminService {
             return;
         }
 
-        // 🔹 3. Delete
-        adminDao.deleteAdmin(id);
-        System.out.println("Admin Deleted Successfully");
+        adminDao.updateAdmin(id, name, dob, contact);
+        System.out.println("✅ Admin updated successfully");
     }
+
+    // ✅ DELETE ADMIN
+    public void deleteAdmin(int id) {
+
+        if (id <= 0) {
+            System.out.println("Invalid Admin ID");
+            return;
+        }
+
+        boolean exists = false;
+
+        for (Administrator admin : adminDao.getAllAdmins()) {
+            if (admin.getId() == id) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (!exists) {
+            System.out.println("Admin not found");
+            return;
+        }
+
+        adminDao.deleteAdmin(id);
+        System.out.println("✅ Admin deleted successfully");
+    }
+
+    // ✅ VIEW ADMIN
     public void viewAdmins() {
+
         List<Administrator> admins = adminDao.getAllAdmins();
-        if(admins.isEmpty()) {
+
+        if (admins.isEmpty()) {
             System.out.println("No admins available");
             return;
         }
+
         for (Administrator admin : admins) {
-            System.out.println("ID: " + admin.getId() + ", Name: " + admin.getName());
+            System.out.println(
+                "ID: " + admin.getId() +
+                ", Name: " + admin.getName() +
+                ", DOB: " + admin.getDob() +
+                ", Contact: " + admin.getContact()
+            );
         }
     }
+
 
     // ================= COURSE =================
     public void addCourse(int id, String name) {

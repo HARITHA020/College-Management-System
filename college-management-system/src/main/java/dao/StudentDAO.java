@@ -20,14 +20,14 @@ public class StudentDAO {
 	    return students;
 	}
 
-	public void updateStudent(int id, String name, String department, String dob, String contact,int userId) {
+	public void updateStudent(int id, String name, String department, String dob, String contact) {
 	    for(Student student : students) {
 	        if(student.getId() == id) {
 	            student.setName(name);
 	            student.setDepartment(department);
 	            student.setDob(dob);          // NEW
 	            student.setContact(contact); 
-	            student.setUserId(userId);
+	            
 	            System.out.println("Student Updated Successfully");
 	        }
 	    }
