@@ -58,7 +58,7 @@ public class FacultyService {
 
     // Faculty Management (Admin Purpose)
 
-    public void addFaculty(int id, String name, String department, String dob, String contact) {
+    public void addFaculty(int id, String name, String department, String dob, String contact,int userId) {
 
         if (id <= 0) {
             System.out.println("Invalid Faculty ID");
@@ -89,12 +89,11 @@ public class FacultyService {
             }
         }
 
-        Faculty faculty = new Faculty(id, name, department, dob, contact); // pass dob & contact
-        facultyDAO.addFaculty(faculty);
+        facultyDAO.addFaculty(id, name, department, dob, contact,userId);
         System.out.println("Faculty Added Successfully");
     }
 
-    public void updateFaculty(int id, String name, String department, String dob, String contact) {
+    public void updateFaculty(int id, String name, String department, String dob, String contact,int userId) {
 
         if (id <= 0) {
             System.out.println("Invalid Faculty ID");
@@ -130,7 +129,7 @@ public class FacultyService {
             return;
         }
 
-        facultyDAO.updateFaculty(id, name, department, dob, contact); // pass dob & contact
+        facultyDAO.updateFaculty(id, name, department, dob, contact,userId); // pass dob & contact
         System.out.println("Faculty Updated Successfully");
     }
 

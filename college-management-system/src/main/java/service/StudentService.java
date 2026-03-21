@@ -33,7 +33,7 @@ public class StudentService {
     
 
     // ===================== STUDENT CRUD =====================
-    public void addStudent(int id, String name, String department, String dob, String contact) {
+    public void addStudent(int id, String name, String department, String dob, String contact,int userId) {
         if (id <= 0) {
             System.out.println("Invalid Student ID");
             return;
@@ -62,11 +62,11 @@ public class StudentService {
             }
         }
 
-        Student student = new Student(id, name, department, dob, contact);
+        Student student = new Student(id, name, department, dob, contact,userId);
         studentDAO.addStudent(student);
         System.out.println("Student added successfully");
     }
-    public void updateStudent(int id, String name, String department, String dob, String contact) {
+    public void updateStudent(int id, String name, String department, String dob, String contact,int userId) {
         if (id <= 0) {
             System.out.println("Invalid Student ID");
             return;
@@ -100,7 +100,7 @@ public class StudentService {
             return;
         }
 
-        studentDAO.updateStudent(id, name, department, dob, contact);
+        studentDAO.updateStudent(id, name, department, dob, contact,userId);
         System.out.println("Student updated successfully");
     }
 

@@ -1,14 +1,14 @@
 package service;
 
 import dao.UserDAO;
+import model.User;
 
 public class AuthService {
 
     private UserDAO userDAO = new UserDAO();
 
-    public String checkRole(String email, String password) {
+    public User login(String email, String password) {
 
-        // 🔹 1. Null or empty check
         if (email == null || email.trim().isEmpty()) {
             System.out.println("Email cannot be empty");
             return null;
@@ -19,22 +19,18 @@ public class AuthService {
             return null;
         }
 
-        // 🔹 2. Basic email format check
         if (!email.contains("@")) {
             System.out.println("Invalid email format");
             return null;
         }
 
-        // 🔹 3. Check user in DAO
-        String role = userDAO.checkUser(email, password);
+        User user = userDAO.checkUser(email, password);
 
-        // 🔹 4. Invalid credentials check
-        if (role == null) {
+        if (user == null) {
             System.out.println("Invalid email or password");
             return null;
         }
 
-        // 🔹 5. Success
-        return role;
+        return user;
     }
 }

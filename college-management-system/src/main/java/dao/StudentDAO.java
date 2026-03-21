@@ -16,17 +16,18 @@ public class StudentDAO {
 	}
 	
 	public List<Student> getAllStudents(){
-	    students.add(new Student(101,"Balamurugan","CSE","2000-05-10","9876543210")); // include DOB & contact
+	    students.add(new Student(101,"Balamurugan","CSE","2000-05-10","9876543210",100001)); // include DOB & contact
 	    return students;
 	}
 
-	public void updateStudent(int id, String name, String department, String dob, String contact) {
+	public void updateStudent(int id, String name, String department, String dob, String contact,int userId) {
 	    for(Student student : students) {
 	        if(student.getId() == id) {
 	            student.setName(name);
 	            student.setDepartment(department);
 	            student.setDob(dob);          // NEW
-	            student.setContact(contact);  // NEW
+	            student.setContact(contact); 
+	            student.setUserId(userId);
 	            System.out.println("Student Updated Successfully");
 	        }
 	    }
@@ -43,6 +44,12 @@ public class StudentDAO {
         return null;
     }
 	
+	public Student getStudentByUserId(int userId) {
+	    for (Student student : students) {
+	        if (student.getUserId() == userId) return student;
+	    }
+	    return null;
+	}
 	
 	
 }

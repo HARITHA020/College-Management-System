@@ -21,7 +21,7 @@ public class AdminService {
     private FacultyDAO facultyDao= new FacultyDAO();
 
     // ================= ADMIN =================
-    public void addAdmin(int id, String name, String password, String dob, String contact) {
+    public void addAdmin(int id, String name, String password, String dob, String contact,int userId) {
         // Validate basic fields
         if(id <= 0 || name == null || name.trim().isEmpty() || 
            password == null || password.trim().isEmpty() || 
@@ -40,11 +40,11 @@ public class AdminService {
         }
 
         // call DAO to add admin with new fields
-        adminDao.addAdmin(id, name, password, dob, contact);
+        adminDao.addAdmin(id, name, password, dob, contact,userId);
         System.out.println("Admin Added Successfully");
     }
 
-    public void updateAdmin(int id, String name, String password, String dob, String contact) {
+    public void updateAdmin(int id, String name, String password, String dob, String contact,int userId) {
         // 🔹 1. Validate ID
         if (id <= 0) {
             System.out.println("Invalid Admin ID");
@@ -94,7 +94,7 @@ public class AdminService {
         }
 
         // 🔹 6. Update
-        adminDao.updateAdmin(id, name, password, dob, contact);
+        adminDao.updateAdmin(id, name, password, dob, contact,userId);
         System.out.println("Admin Updated Successfully");
     }
 

@@ -126,8 +126,12 @@ public class AdminController {
 
                 System.out.print("Enter Contact Number: ");
                 String contact = input.nextLine();
+                
+                System.out.print("Enter User ID: ");
+                int userId = input.nextInt();
+                input.nextLine();
 
-                adminService.addAdmin(id, name, password, dob, contact);
+                adminService.addAdmin(id, name, password, dob, contact,userId);
             }
             else if (choice == 2) { // Update Admin
                 System.out.print("Enter Admin ID: ");
@@ -145,8 +149,12 @@ public class AdminController {
 
                 System.out.print("Enter New Contact Number: ");
                 String contact = input.nextLine();
+                
+                System.out.print("Enter User ID: ");
+                int userId = input.nextInt();
+                input.nextLine();
 
-                adminService.updateAdmin(id, name, password, dob, contact);
+                adminService.updateAdmin(id, name, password, dob, contact,userId);
             }
 
             else if (choice == 3) {
@@ -191,8 +199,12 @@ public class AdminController {
 
                 System.out.print("Enter Contact Number: ");
                 String contact = input.nextLine();
+                
+                System.out.print("Enter User ID: ");
+                int userId = input.nextInt();
+                input.nextLine();
 
-                studentService.addStudent(id, name, dept, dob, contact);
+                studentService.addStudent(id, name, dept, dob, contact,userId);
             }
 
             else if (choice == 2) { // Update Student
@@ -211,8 +223,12 @@ public class AdminController {
 
                 System.out.print("Enter New Contact Number: ");
                 String contact = input.nextLine();
+                
+                System.out.print("Enter User ID: ");
+                int userId = input.nextInt();
+                input.nextLine();
 
-                studentService.updateStudent(id, name, dept, dob, contact);
+                studentService.updateStudent(id, name, dept, dob, contact,userId);
             }
 
             else if (choice == 3) {
@@ -257,8 +273,12 @@ public class AdminController {
 
                 System.out.print("Enter Contact Number: ");
                 String contact = input.nextLine();
+                
+                System.out.print("Enter User ID: ");
+                int userId = input.nextInt();
+                input.nextLine();
 
-                facultyService.addFaculty(id, name, dept, dob, contact);
+                facultyService.addFaculty(id, name, dept, dob, contact,userId);
             }
 
             else if (choice == 2) { // Update Faculty
@@ -277,8 +297,12 @@ public class AdminController {
 
                 System.out.print("Enter New Contact Number: ");
                 String contact = input.nextLine();
+                
+                System.out.print("Enter User ID: ");
+                int userId = input.nextInt();
+                input.nextLine();
 
-                facultyService.updateFaculty(id, name, dept, dob, contact);
+                facultyService.updateFaculty(id, name, dept, dob, contact,userId);
             }
 
             else if (choice == 3) {
