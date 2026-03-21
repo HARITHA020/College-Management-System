@@ -26,7 +26,20 @@ public class CourseDAO {
             }
         }
     }
+    
+    
+ // Get Course by ID
+    public Course getCourseById(int courseId) {
 
+        for (Course course : courses) {
+
+            if (course.getcourseId() == courseId) {
+                return course;
+            }
+        }
+
+        return null; // if not found
+    }
     // View all Courses
     public List<Course> getAllCourses() {
         return courses;

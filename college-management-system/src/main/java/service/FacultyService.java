@@ -15,6 +15,7 @@ import dao.AssignmentDAO;
 import dao.BookDAO;
 import dao.BorrowRecordDAO;
 import dao.TimetableDAO;
+import dao.AttendanceDAO;
 
 import model.Faculty;
 import model.Material;
@@ -28,6 +29,7 @@ import model.Assignment;
 import model.Book;
 import model.BorrowRecord;
 import model.Enrollment;
+import model.Attendance;
 public class FacultyService {
 
     private FacultyDAO facultyDAO;
@@ -41,6 +43,7 @@ public class FacultyService {
     private LibraryService libraryService; 
     private MaterialDAO materialDAO;
     private AssignmentDAO assignmentDAO;
+    private AttendanceDAO attendanceDao =new AttendanceDAO();
     public FacultyService() {
         facultyDAO = new FacultyDAO();
         studentDAO = new StudentDAO();
@@ -51,13 +54,39 @@ public class FacultyService {
         libraryService=new LibraryService();
         materialDAO = new MaterialDAO();
         assignmentDAO = new AssignmentDAO();
-        
     }
 
     // Faculty Management (Admin Purpose)
 
     public void addFaculty(int id, String name, String department) {
 
+        // 🔹 1. Validate ID
+        if (id <= 0) {
+            System.out.println("Invalid Faculty ID");
+            return;
+        }
+
+        // 🔹 2. Validate name
+        if (name == null || name.trim().isEmpty()) {
+            System.out.println("Faculty name cannot be empty");
+            return;
+        }
+
+        // 🔹 3. Validate department
+        if (department == null || department.trim().isEmpty()) {
+            System.out.println("Department cannot be empty");
+            return;
+        }
+
+        // 🔹 4. Check duplicate ID
+        for (Faculty f : facultyDAO.getAllFaculty()) {
+            if (f.getId() == id) {
+                System.out.println("Faculty with this ID already exists");
+                return;
+            }
+        }
+
+        // 🔹 5. Add faculty
         Faculty faculty = new Faculty(id, name, department);
         facultyDAO.addFaculty(faculty);
 
@@ -66,12 +95,66 @@ public class FacultyService {
 
     public void updateFaculty(int id, String name, String department) {
 
+        // 🔹 1. Validate ID
+        if (id <= 0) {
+            System.out.println("Invalid Faculty ID");
+            return;
+        }
+
+        // 🔹 2. Validate name
+        if (name == null || name.trim().isEmpty()) {
+            System.out.println("Faculty name cannot be empty");
+            return;
+        }
+
+        // 🔹 3. Validate department
+        if (department == null || department.trim().isEmpty()) {
+            System.out.println("Department cannot be empty");
+            return;
+        }
+
+        // 🔹 4. Check faculty exists
+        boolean exists = false;
+        for (Faculty f : facultyDAO.getAllFaculty()) {
+            if (f.getId() == id) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (!exists) {
+            System.out.println("Faculty not found");
+            return;
+        }
+
+        // 🔹 5. Update
         facultyDAO.updateFaculty(id, name, department);
         System.out.println("Faculty Updated Successfully");
     }
 
     public void deleteFaculty(int id) {
 
+        // 🔹 1. Validate ID
+        if (id <= 0) {
+            System.out.println("Invalid Faculty ID");
+            return;
+        }
+
+        // 🔹 2. Check faculty exists
+        boolean exists = false;
+        for (Faculty f : facultyDAO.getAllFaculty()) {
+            if (f.getId() == id) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (!exists) {
+            System.out.println("Faculty not found");
+            return;
+        }
+
+        // 🔹 3. Delete
         facultyDAO.deleteFaculty(id);
         System.out.println("Faculty Deleted Successfully");
     }
@@ -119,36 +202,68 @@ public class FacultyService {
 
     // Courses
 
-    public void viewCourses() {
+    public void viewMyCourses(int facultyId) {
 
-        List<Course> courses = courseDAO.getAllCourses();
+        // 🔹 1. Validate faculty ID
+        if (facultyId <= 0) {
+            System.out.println("Invalid Faculty ID");
+            return;
+        }
 
-        System.out.println("Course Details:");
+        boolean found = false;
 
-        for (Course c : courses) {
-            System.out.println(
-                    "Course ID: " + c.getcourseId() +
-                    " | Course Name: " + c.getcourseName()
-            );
+        System.out.println("\n--- My Courses ---");
+
+        // 🔹 2. Filter courses by facultyId
+        for (Course c : courseDAO.getAllCourses()) {
+
+            if (c.getFacultyid() == facultyId) {
+
+                System.out.println(
+                        "Course ID: " + c.getcourseId() +
+                        " | Course Name: " + c.getcourseName()
+                );
+
+                found = true;
+            }
+        }
+
+        // 🔹 3. If no course assigned
+        if (!found) {
+            System.out.println("No courses assigned to this faculty");
         }
     }
 
     // Attendance
 
-    public void markAttendance(int studentId, boolean present) {
+    public void markAttendance(int studentId, int courseId, boolean present) {
 
+        // 1. Validate student
         Student s = studentDAO.getStudentById(studentId);
-
         if (s == null) {
             System.out.println("Student not found");
             return;
         }
 
-        if (present)
-            System.out.println("Attendance: " + s.getName() + " PRESENT");
-        else
-            System.out.println("Attendance: " + s.getName() + " ABSENT");
+        // 2. Validate course
+        Course c = courseDAO.getCourseById(courseId);
+        if (c == null) {
+            System.out.println("Course not found");
+            return;
+        }
+
+        // 3. Create attendance record for today
+        Date today = new Date();
+        Attendance attendance = new Attendance(studentId, courseId, today, present);
+
+        // 4. Store attendance
+        attendanceDao.markAttendance(attendance);
+
+        // 5. Confirmation
+        System.out.println("Attendance marked for " + s.getName() + " in course " + c.getcourseName() +
+                " as " + (present ? "PRESENT" : "ABSENT"));
     }
+
 
     // Marks
     public void addResult(int studentId, int courseId, int marks) {
@@ -182,35 +297,49 @@ public class FacultyService {
 
         System.out.println("Marks Entered by Faculty (Not Published)");
     }
-    public void viewMarks() {
-
-        List<Exam> exams = examDAO.getAllExam();
-
-        System.out.println("Exam / Marks Records:");
-
-        for (Exam e : exams) {
-            System.out.println(
-                    "Exam ID: " + e.getExamId() +
-                    " | Course ID: " + e.getCourseId() +
-                    " | Date: " + e.getExamDate()
-            );
-        }
-    }
+   
 
     // Notification
 
-    public void viewNotification() {
-    	List<Notification> list = notificationDAO.getAllNotifications();
+    public void viewNotification(int facultyId) {
+
+        List<Notification> list = notificationDAO.getAllNotifications();
 
         if (list.isEmpty()) {
             System.out.println("No notifications available");
             return;
         }
 
+        boolean found = false;
+
         for (Notification n : list) {
-            System.out.println("ID: " + n.getNotificationId() +
-                    " | Message: " + n.getMessage() +
-                    " | Date: " + n.getDate());
+
+            // 1. Common notification
+            if (n.getTargetRole().equalsIgnoreCase("ALL")) {
+
+                System.out.println(n);
+                found = true;
+            }
+
+            // 2. Faculty notification
+            else if (n.getTargetRole().equalsIgnoreCase("FACULTY")) {
+
+                // If no specific target → all faculty
+                if (n.getTargetId() == null) {
+                    System.out.println(n);
+                    found = true;
+                }
+
+                // If specific faculty
+                else if (n.getTargetId() == facultyId) {
+                    System.out.println(n);
+                    found = true;
+                }
+            }
+        }
+
+        if (!found) {
+            System.out.println("No notifications for this faculty");
         }
     }
 
@@ -257,21 +386,121 @@ public class FacultyService {
         }
     }
     // Materials
-    public void uploadMaterial(int courseId, String title, String content) {
+    public void uploadMaterial(int courseId, String title, String content, int facultyId) {
 
+        // 🔹 1. Validate Course ID
+        if (courseId <= 0) {
+            System.out.println("Invalid Course ID");
+            return;
+        }
+
+        // 🔹 2. Check course exists
+        Course course = courseDAO.getCourseById(courseId);
+        if (course == null) {
+            System.out.println("Course not found");
+            return;
+        }
+
+        // 🔹 3. Check faculty is assigned to this course (VERY IMPORTANT 🔥)
+        if (course.getFacultyid() != facultyId) {
+            System.out.println("You are not assigned to this course");
+            return;
+        }
+
+        // 🔹 4. Validate Title
+        if (title == null || title.trim().isEmpty()) {
+            System.out.println("Title cannot be empty");
+            return;
+        }
+
+        // 🔹 5. Validate Content
+        if (content == null || content.trim().isEmpty()) {
+            System.out.println("Content cannot be empty");
+            return;
+        }
+
+        // 🔹 6. Length validation
+        if (title.length() > 100) {
+            System.out.println("Title too long (max 100 characters)");
+            return;
+        }
+
+        if (content.length() > 1000) {
+            System.out.println("Content too long (max 1000 characters)");
+            return;
+        }
+
+        // 🔹 7. Duplicate material check (same title for same course)
+        for (Material m : materialDAO.getAllMaterials()) {
+            if (m.getCourseId() == courseId &&
+                m.getTitle().equalsIgnoreCase(title.trim())) {
+
+                System.out.println("Material with same title already exists for this course");
+                return;
+            }
+        }
+
+        // 🔹 8. Generate ID safely
+        int newId = materialDAO.getAllMaterials().size() + 1;
+
+        // 🔹 9. Create & save
         Material m = new Material(
-            materialDAO.getAllMaterials().size() + 1,
+            newId,
             courseId,
-            title,
-            content
+            title.trim(),
+            content.trim()
         );
 
         materialDAO.addMaterial(m);
-        System.out.println("\nMaterial uploaded successfully");
+
+        System.out.println("Material uploaded successfully");
     }
 
-    public void viewMaterials(int courseId) {
+    public void viewMaterials(int courseId, int userId, String role) {
 
+        // 🔹 1. Validate courseId
+        if (courseId <= 0) {
+            System.out.println("Invalid Course ID");
+            return;
+        }
+
+        // 🔹 2. Check course exists
+        Course course = courseDAO.getCourseById(courseId);
+        if (course == null) {
+            System.out.println("Course not found");
+            return;
+        }
+
+        // 🔹 3. Access control (VERY IMPORTANT 🔥)
+
+        // If faculty → must be assigned
+        if (role.equalsIgnoreCase("FACULTY") &&
+            course.getFacultyid() != userId) {
+
+            System.out.println("You are not allowed to view materials of this course");
+            return;
+        }
+
+        // If student → must be enrolled
+        if (role.equalsIgnoreCase("STUDENT")) {
+
+            boolean enrolled = false;
+
+            for (Enrollment e : enrollmentDao.getAllEnrollments()) {
+                if (e.getStudentId() == userId &&
+                    e.getCourseId() == courseId) {
+                    enrolled = true;
+                    break;
+                }
+            }
+
+            if (!enrolled) {
+                System.out.println("You are not enrolled in this course");
+                return;
+            }
+        }
+
+        // 🔹 4. Display materials
         boolean found = false;
 
         for (Material m : materialDAO.getAllMaterials()) {
@@ -286,27 +515,128 @@ public class FacultyService {
             }
         }
 
+        // 🔹 5. No materials case
         if (!found) {
-            System.out.println("\nNo materials found");
+            System.out.println("No materials found for this course");
         }
     }
     
     // Assignments
-    public void createAssignment(int courseId, String title, String description) {
+    public void createAssignment(int courseId, String title, String description, int facultyId) {
 
+        // 🔹 1. Validate courseId
+        if (courseId <= 0) {
+            System.out.println("Invalid Course ID");
+            return;
+        }
+
+        // 🔹 2. Check course exists
+        Course course = courseDAO.getCourseById(courseId);
+        if (course == null) {
+            System.out.println("Course not found");
+            return;
+        }
+
+        // 🔹 3. Check faculty assigned to course (IMPORTANT 🔥)
+        if (course.getFacultyid() != facultyId) {
+            System.out.println("You are not assigned to this course");
+            return;
+        }
+
+        // 🔹 4. Validate title
+        if (title == null || title.trim().isEmpty()) {
+            System.out.println("Assignment title cannot be empty");
+            return;
+        }
+
+        // 🔹 5. Validate description
+        if (description == null || description.trim().isEmpty()) {
+            System.out.println("Assignment description cannot be empty");
+            return;
+        }
+
+        // 🔹 6. Length validation
+        if (title.length() > 100) {
+            System.out.println("Title too long (max 100 characters)");
+            return;
+        }
+
+        if (description.length() > 1000) {
+            System.out.println("Description too long (max 1000 characters)");
+            return;
+        }
+
+        // 🔹 7. Duplicate check (same title in same course)
+        for (Assignment a : assignmentDAO.getAllAssignments()) {
+            if (a.getCourseId() == courseId &&
+                a.getTitle().equalsIgnoreCase(title.trim())) {
+
+                System.out.println("Assignment with same title already exists for this course");
+                return;
+            }
+        }
+
+        // 🔹 8. Generate ID safely
+        int newId = assignmentDAO.getAllAssignments().size() + 1;
+
+        // 🔹 9. Create & store
         Assignment a = new Assignment(
-            assignmentDAO.getAllAssignments().size() + 1,
+            newId,
             courseId,
-            title,
-            description
+            title.trim(),
+            description.trim()
         );
 
         assignmentDAO.addAssignment(a);
-        System.out.println("\nAssignment created successfully");
+
+        System.out.println("Assignment created successfully");
     }
 
-    public void viewAssignments(int courseId) {
+    public void viewAssignments(int courseId, int userId, String role) {
 
+        // 🔹 1. Validate courseId
+        if (courseId <= 0) {
+            System.out.println("Invalid Course ID");
+            return;
+        }
+
+        // 🔹 2. Check course exists
+        Course course = courseDAO.getCourseById(courseId);
+        if (course == null) {
+            System.out.println("Course not found");
+            return;
+        }
+
+        // 🔹 3. Access control 🔥
+
+        // Faculty → must be assigned
+        if (role.equalsIgnoreCase("FACULTY") &&
+            course.getFacultyid() != userId) {
+
+            System.out.println("You are not allowed to view assignments of this course");
+            return;
+        }
+
+        // Student → must be enrolled
+        if (role.equalsIgnoreCase("STUDENT")) {
+
+            boolean enrolled = false;
+
+            for (Enrollment e : enrollmentDao.getAllEnrollments()) {
+                if (e.getStudentId() == userId &&
+                    e.getCourseId() == courseId) {
+                    enrolled = true;
+                    break;
+                }
+            }
+
+            if (!enrolled) {
+                System.out.println("You are not enrolled in this course");
+                return;
+            }
+        }
+
+        // 🔹 4. Display assignments
         boolean found = false;
 
         for (Assignment a : assignmentDAO.getAllAssignments()) {
@@ -321,9 +651,9 @@ public class FacultyService {
             }
         }
 
+        // 🔹 5. No data case
         if (!found) {
-            System.out.println("\nNo assignments found");
+            System.out.println("No assignments found for this course");
         }
     }
-
 }
