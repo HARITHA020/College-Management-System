@@ -33,108 +33,82 @@ public class StudentService {
     
 
     // ===================== STUDENT CRUD =====================
-    public void addStudent(int id, String name, String department, String dob, String contact,int userId) {
-        if (id <= 0) {
-            System.out.println("Invalid Student ID");
+    private UserDAO userDAO = new UserDAO();
+
+    public void addStudentWithUser(String email, String password, int id, String name, String department, String dob, String contact) {
+
+        if (userDAO.checkEmailExists(email)) {
+            System.out.println("Email already exists");
             return;
         }
-        if (name == null || name.trim().isEmpty()) {
-            System.out.println("Student name cannot be empty");
-            return;
-        }
-        if (department == null || department.trim().isEmpty()) {
-            System.out.println("Department cannot be empty");
-            return;
-        }
-        if (dob == null || dob.trim().isEmpty()) {
-            System.out.println("DOB cannot be empty");
-            return;
-        }
-        if (contact == null || contact.trim().isEmpty()) {
-            System.out.println("Contact cannot be empty");
+
+        int userId = userDAO.createUser(email, password, "STUDENT");
+
+        if (userId == -1) {
+            System.out.println("User creation failed");
             return;
         }
 
         for (Student s : studentDAO.getAllStudents()) {
             if (s.getId() == id) {
-                System.out.println("Student with this ID already exists");
+                System.out.println("Student already exists");
                 return;
             }
         }
 
-        Student student = new Student(id, name, department, dob, contact,userId);
+        Student student = new Student(id, name, department, dob, contact, userId);
         studentDAO.addStudent(student);
-        System.out.println("Student added successfully");
+
+        System.out.println("✅ Student added successfully");
     }
-    public void updateStudent(int id, String name, String department, String dob, String contact,int userId) {
-        if (id <= 0) {
-            System.out.println("Invalid Student ID");
-            return;
-        }
-        if (name == null || name.trim().isEmpty()) {
-            System.out.println("Student name cannot be empty");
-            return;
-        }
-        if (department == null || department.trim().isEmpty()) {
-            System.out.println("Department cannot be empty");
-            return;
-        }
-        if (dob == null || dob.trim().isEmpty()) {
-            System.out.println("DOB cannot be empty");
-            return;
-        }
-        if (contact == null || contact.trim().isEmpty()) {
-            System.out.println("Contact cannot be empty");
-            return;
-        }
+
+    public void updateStudent(int id, String name, String department, String dob, String contact) {
 
         boolean exists = false;
+
         for (Student s : studentDAO.getAllStudents()) {
             if (s.getId() == id) {
                 exists = true;
                 break;
             }
         }
+
         if (!exists) {
             System.out.println("Student not found");
             return;
         }
 
-        studentDAO.updateStudent(id, name, department, dob, contact,userId);
-        System.out.println("Student updated successfully");
+        studentDAO.updateStudent(id, name, department, dob, contact);
+        System.out.println("✅ Student updated successfully");
     }
 
     public void deleteStudent(int id) {
-        if (id <= 0) {
-            System.out.println("Invalid Student ID");
-            return;
-        }
-        boolean exists = false;
-        for (Student s : studentDAO.getAllStudents()) {
-            if (s.getId() == id) {
-                exists = true;
-                break;
-            }
-        }
-        if (!exists) {
-            System.out.println("Student not found");
-            return;
-        }
-        studentDAO.deleteStudent(id);
-        System.out.println("Student deleted successfully");
-    }
 
+        studentDAO.deleteStudent(id);
+        System.out.println("✅ Student deleted successfully");
+    }
+    
     public void viewStudents() {
+
         List<Student> students = studentDAO.getAllStudents();
+
         if (students == null || students.isEmpty()) {
             System.out.println("No students available");
             return;
         }
+
+        System.out.println("\n--- Student List ---");
+
         for (Student s : students) {
-            System.out.println("ID: " + s.getId() + " | Name: " + s.getName() + " | Dept: " + s.getDepartment());
+            System.out.println(
+                "ID: " + s.getId() +
+                ", Name: " + s.getName() +
+                ", Dept: " + s.getDepartment() +
+                ", DOB: " + s.getDob() +
+                ", Contact: " + s.getContact()
+            );
         }
     }
-
     // ===================== COURSES =====================
     public void viewMyCourses(int studentId) {
         if (studentId <= 0) {

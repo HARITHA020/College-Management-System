@@ -1,9 +1,6 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
+import java.sql.*;
 import db.DBConnection;
 import model.LoginResponse;
 
@@ -38,5 +35,52 @@ public class UserDAO {
         }
 
         return response;
+    }
+
+    // ✅ Check email exists
+    public boolean checkEmailExists(String email) {
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "SELECT * FROM users WHERE email=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, email);
+
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // ✅ Create new user
+    public int createUser(String email, String password, String role) {
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "INSERT INTO users(email, password, role) VALUES (?, ?, ?)";
+            PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+            ps.setString(1, email);
+            ps.setString(2, password);
+            ps.setString(3, role);
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    return rs.getInt(1); // ✅ user_id
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return -1;
     }
 }

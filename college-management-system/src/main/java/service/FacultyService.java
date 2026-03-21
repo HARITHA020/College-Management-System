@@ -15,6 +15,7 @@ import dao.AssignmentDAO;
 import dao.BookDAO;
 import dao.BorrowRecordDAO;
 import dao.TimetableDAO;
+import dao.UserDAO;
 import dao.AttendanceDAO;
 
 import model.Faculty;
@@ -44,6 +45,7 @@ public class FacultyService {
     private MaterialDAO materialDAO;
     private AssignmentDAO assignmentDAO;
     private AttendanceDAO attendanceDao =new AttendanceDAO();
+    private UserDAO userDAO=new UserDAO();
     public FacultyService() {
         facultyDAO = new FacultyDAO();
         studentDAO = new StudentDAO();
@@ -58,119 +60,64 @@ public class FacultyService {
 
     // Faculty Management (Admin Purpose)
 
-    public void addFaculty(int id, String name, String department, String dob, String contact,int userId) {
+    
 
-        if (id <= 0) {
-            System.out.println("Invalid Faculty ID");
-            return;
-        }
-        if (name == null || name.trim().isEmpty()) {
-            System.out.println("Faculty name cannot be empty");
-            return;
-        }
-        if (department == null || department.trim().isEmpty()) {
-            System.out.println("Department cannot be empty");
-            return;
-        }
-        if (dob == null || dob.trim().isEmpty()) {
-            System.out.println("DOB cannot be empty");
-            return;
-        }
-        if (contact == null || contact.trim().isEmpty()) {
-            System.out.println("Contact cannot be empty");
+    public void addFacultyWithUser(String email, String password, int id, String name, String department, String dob, String contact) {
+
+        if (userDAO.checkEmailExists(email)) {
+            System.out.println("Email already exists");
             return;
         }
 
-        // check duplicate
+        int userId = userDAO.createUser(email, password, "FACULTY");
+
+        if (userId == -1) {
+            System.out.println("User creation failed");
+            return;
+        }
+
         for (Faculty f : facultyDAO.getAllFaculty()) {
             if (f.getId() == id) {
-                System.out.println("Faculty with this ID already exists");
+                System.out.println("Faculty already exists");
                 return;
             }
         }
 
-        facultyDAO.addFaculty(id, name, department, dob, contact,userId);
-        System.out.println("Faculty Added Successfully");
+        facultyDAO.addFaculty(id, name, department, dob, contact, userId);
+
+        System.out.println("✅ Faculty added successfully");
     }
 
-    public void updateFaculty(int id, String name, String department, String dob, String contact,int userId) {
+    public void updateFaculty(int id, String name, String department, String dob, String contact) {
 
-        if (id <= 0) {
-            System.out.println("Invalid Faculty ID");
-            return;
-        }
-        if (name == null || name.trim().isEmpty()) {
-            System.out.println("Faculty name cannot be empty");
-            return;
-        }
-        if (department == null || department.trim().isEmpty()) {
-            System.out.println("Department cannot be empty");
-            return;
-        }
-        if (dob == null || dob.trim().isEmpty()) {
-            System.out.println("DOB cannot be empty");
-            return;
-        }
-        if (contact == null || contact.trim().isEmpty()) {
-            System.out.println("Contact cannot be empty");
-            return;
-        }
-
-        boolean exists = false;
-        for (Faculty f : facultyDAO.getAllFaculty()) {
-            if (f.getId() == id) {
-                exists = true;
-                break;
-            }
-        }
-
-        if (!exists) {
-            System.out.println("Faculty not found");
-            return;
-        }
-
-        facultyDAO.updateFaculty(id, name, department, dob, contact,userId); // pass dob & contact
-        System.out.println("Faculty Updated Successfully");
+        facultyDAO.updateFaculty(id, name, department, dob, contact);
+        System.out.println("✅ Faculty updated successfully");
     }
 
     public void deleteFaculty(int id) {
 
-        // 🔹 1. Validate ID
-        if (id <= 0) {
-            System.out.println("Invalid Faculty ID");
-            return;
-        }
-
-        // 🔹 2. Check faculty exists
-        boolean exists = false;
-        for (Faculty f : facultyDAO.getAllFaculty()) {
-            if (f.getId() == id) {
-                exists = true;
-                break;
-            }
-        }
-
-        if (!exists) {
-            System.out.println("Faculty not found");
-            return;
-        }
-
-        // 🔹 3. Delete
         facultyDAO.deleteFaculty(id);
-        System.out.println("Faculty Deleted Successfully");
+        System.out.println("✅ Faculty deleted successfully");
     }
-
-    public void viewFaculties() {
+    
+    public void viewFaculty() {
 
         List<Faculty> faculties = facultyDAO.getAllFaculty();
 
-        System.out.println("Faculty Details:");
+        if (faculties == null || faculties.isEmpty()) {
+            System.out.println("No faculty available");
+            return;
+        }
 
-        for (Faculty faculty : faculties) {
+        System.out.println("\n--- Faculty List ---");
+
+        for (Faculty f : faculties) {
             System.out.println(
-                    "Faculty Id: " + faculty.getId() +
-                    "\nFaculty Name: " + faculty.getName() +
-                    "\nFaculty Department: " + faculty.getDepartment()
+                "ID: " + f.getId() +
+                ", Name: " + f.getName() +
+                ", Dept: " + f.getDepartment() +
+                ", DOB: " + f.getDob() +
+                ", Contact: " + f.getContact()
             );
         }
     }
