@@ -1,27 +1,42 @@
 package dao;
 
-import java.util.ArrayList;
-import java.util.List;
-import model.User;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import db.DBConnection;
 import model.LoginResponse;
 
 public class UserDAO {
 
-    private List<User> users = new ArrayList<>();
-
-    public UserDAO() {
-        users.add(new User("admin@gmail.com", "admin123", "ADMIN", 1));
-        users.add(new User("faculty@gmail.com", "faculty123", "FACULTY", 2));
-        users.add(new User("student@gmail.com", "student123", "STUDENT", 3));
-    }
-
-    // 🔹 returns LoginResponse for login check
     public LoginResponse checkUser(String email, String password) {
-        for (User user : users) {
-            if (user.getEmail().equals(email) && user.getPassword().equals(password)) {
-                return new LoginResponse(user.getRole(), user.getUserId());
+
+        LoginResponse response = null;
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "SELECT role, user_id FROM users WHERE email=? AND password=?";
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setString(1, email);
+            ps.setString(2, password);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String role = rs.getString("role");
+                int userId = rs.getInt("user_id");
+
+                response = new LoginResponse(role, userId);
             }
+
+            con.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return null; // invalid login
+
+        return response;
     }
 }
