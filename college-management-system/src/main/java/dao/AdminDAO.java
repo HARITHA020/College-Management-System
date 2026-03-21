@@ -137,4 +137,27 @@ public class AdminDAO {
 
         return null;
     }
+    
+    public int getUserIdByAdminId(int adminId) {
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "SELECT user_id FROM administrators WHERE admin_id=?";
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setInt(1, adminId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("user_id");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
 }

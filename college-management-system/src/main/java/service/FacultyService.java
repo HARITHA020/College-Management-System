@@ -96,8 +96,21 @@ public class FacultyService {
 
     public void deleteFaculty(int id) {
 
-        facultyDAO.deleteFaculty(id);
-        System.out.println("✅ Faculty deleted successfully");
+        if (id <= 0) {
+            System.out.println("Invalid Faculty ID");
+            return;
+        }
+
+        int userId = facultyDAO.getUserIdByFacultyId(id);
+
+        if (userId == -1) {
+            System.out.println("Faculty not found");
+            return;
+        }
+
+        userDAO.deleteUser(userId);
+
+        System.out.println("✅ Faculty deleted successfully (CASCADE)");
     }
     
     public void viewFaculty() {

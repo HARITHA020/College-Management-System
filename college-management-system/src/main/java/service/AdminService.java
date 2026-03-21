@@ -97,24 +97,19 @@ public class AdminService {
             return;
         }
 
-        boolean exists = false;
+        // 🔹 1. Get user_id from admin table
+        int userId = adminDao.getUserIdByAdminId(id);
 
-        for (Administrator admin : adminDao.getAllAdmins()) {
-            if (admin.getId() == id) {
-                exists = true;
-                break;
-            }
-        }
-
-        if (!exists) {
+        if (userId == -1) {
             System.out.println("Admin not found");
             return;
         }
 
-        adminDao.deleteAdmin(id);
-        System.out.println("✅ Admin deleted successfully");
-    }
+        // 🔹 2. Delete USER (not admin)
+        userDAO.deleteUser(userId);
 
+        System.out.println("✅ Admin deleted successfully (CASCADE)");
+    }
     // ✅ VIEW ADMIN
     public void viewAdmins() {
 

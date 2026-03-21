@@ -1,8 +1,12 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import db.DBConnection;
 import model.Administrator;
 import model.Student;
 
@@ -51,5 +55,28 @@ public class StudentDAO {
 	    return null;
 	}
 	
+	
+	public int getUserIdByStudentId(int id) {
+
+	    try {
+	        Connection con = DBConnection.getConnection();
+
+	        String query = "SELECT user_id FROM students WHERE student_id=?";
+	        PreparedStatement ps = con.prepareStatement(query);
+
+	        ps.setInt(1, id);
+
+	        ResultSet rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            return rs.getInt("user_id");
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return -1;
+	}
 	
 }
