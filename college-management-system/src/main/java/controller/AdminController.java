@@ -110,8 +110,7 @@ public class AdminController {
             choice = input.nextInt();
             input.nextLine();
 
-            if (choice == 1) {
-
+            if (choice == 1) { // Add Admin
                 System.out.print("Enter Admin ID: ");
                 int id = input.nextInt();
                 input.nextLine();
@@ -122,11 +121,15 @@ public class AdminController {
                 System.out.print("Enter Password: ");
                 String password = input.nextLine();
 
-                adminService.addAdmin(id, name, password);
+                System.out.print("Enter DOB (yyyy-mm-dd): ");
+                String dob = input.nextLine();
+
+                System.out.print("Enter Contact Number: ");
+                String contact = input.nextLine();
+
+                adminService.addAdmin(id, name, password, dob, contact);
             }
-
-            else if (choice == 2) {
-
+            else if (choice == 2) { // Update Admin
                 System.out.print("Enter Admin ID: ");
                 int id = input.nextInt();
                 input.nextLine();
@@ -137,7 +140,13 @@ public class AdminController {
                 System.out.print("Enter New Password: ");
                 String password = input.nextLine();
 
-                adminService.updateAdmin(id, name, password);
+                System.out.print("Enter New DOB (yyyy-mm-dd): ");
+                String dob = input.nextLine();
+
+                System.out.print("Enter New Contact Number: ");
+                String contact = input.nextLine();
+
+                adminService.updateAdmin(id, name, password, dob, contact);
             }
 
             else if (choice == 3) {
@@ -166,8 +175,7 @@ public class AdminController {
             choice = input.nextInt();
             input.nextLine();
 
-            if (choice == 1) {
-
+            if (choice == 1) { // Add Student
                 System.out.print("Enter Student ID: ");
                 int id = input.nextInt();
                 input.nextLine();
@@ -178,11 +186,16 @@ public class AdminController {
                 System.out.print("Enter Department: ");
                 String dept = input.nextLine();
 
-                studentService.addStudent(id, name, dept);
+                System.out.print("Enter DOB (yyyy-mm-dd): ");
+                String dob = input.nextLine();
+
+                System.out.print("Enter Contact Number: ");
+                String contact = input.nextLine();
+
+                studentService.addStudent(id, name, dept, dob, contact);
             }
 
-            else if (choice == 2) {
-
+            else if (choice == 2) { // Update Student
                 System.out.print("Enter Student ID: ");
                 int id = input.nextInt();
                 input.nextLine();
@@ -193,7 +206,13 @@ public class AdminController {
                 System.out.print("Enter New Department: ");
                 String dept = input.nextLine();
 
-                studentService.updateStudent(id, name, dept);
+                System.out.print("Enter New DOB (yyyy-mm-dd): ");
+                String dob = input.nextLine();
+
+                System.out.print("Enter New Contact Number: ");
+                String contact = input.nextLine();
+
+                studentService.updateStudent(id, name, dept, dob, contact);
             }
 
             else if (choice == 3) {
@@ -222,8 +241,7 @@ public class AdminController {
             choice = input.nextInt();
             input.nextLine();
 
-            if (choice == 1) {
-
+            if (choice == 1) { // Add Faculty
                 System.out.print("Enter Faculty ID: ");
                 int id = input.nextInt();
                 input.nextLine();
@@ -234,11 +252,16 @@ public class AdminController {
                 System.out.print("Enter Faculty Department: ");
                 String dept = input.nextLine();
 
-                facultyService.addFaculty(id, name, dept);
+                System.out.print("Enter DOB (yyyy-mm-dd): ");
+                String dob = input.nextLine();
+
+                System.out.print("Enter Contact Number: ");
+                String contact = input.nextLine();
+
+                facultyService.addFaculty(id, name, dept, dob, contact);
             }
 
-            else if (choice == 2) {
-
+            else if (choice == 2) { // Update Faculty
                 System.out.print("Enter Faculty ID: ");
                 int id = input.nextInt();
                 input.nextLine();
@@ -249,7 +272,13 @@ public class AdminController {
                 System.out.print("Enter New Department: ");
                 String dept = input.nextLine();
 
-                facultyService.updateFaculty(id, name, dept);
+                System.out.print("Enter New DOB (yyyy-mm-dd): ");
+                String dob = input.nextLine();
+
+                System.out.print("Enter New Contact Number: ");
+                String contact = input.nextLine();
+
+                facultyService.updateFaculty(id, name, dept, dob, contact);
             }
 
             else if (choice == 3) {

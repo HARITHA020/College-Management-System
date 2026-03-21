@@ -16,18 +16,17 @@ public class StudentDAO {
 	}
 	
 	public List<Student> getAllStudents(){
-		students.add(new Student(101,"Balamurugan","CSE"));
-		return students;
+	    students.add(new Student(101,"Balamurugan","CSE","2000-05-10","9876543210")); // include DOB & contact
+	    return students;
 	}
 
-	public void updateStudent(int id, String name, String department) {
-		for(Student student : students) {
-
+	public void updateStudent(int id, String name, String department, String dob, String contact) {
+	    for(Student student : students) {
 	        if(student.getId() == id) {
-
 	            student.setName(name);
 	            student.setDepartment(department);
-
+	            student.setDob(dob);          // NEW
+	            student.setContact(contact);  // NEW
 	            System.out.println("Student Updated Successfully");
 	        }
 	    }

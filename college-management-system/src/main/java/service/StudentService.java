@@ -33,7 +33,7 @@ public class StudentService {
     
 
     // ===================== STUDENT CRUD =====================
-    public void addStudent(int id, String name, String department) {
+    public void addStudent(int id, String name, String department, String dob, String contact) {
         if (id <= 0) {
             System.out.println("Invalid Student ID");
             return;
@@ -46,18 +46,27 @@ public class StudentService {
             System.out.println("Department cannot be empty");
             return;
         }
+        if (dob == null || dob.trim().isEmpty()) {
+            System.out.println("DOB cannot be empty");
+            return;
+        }
+        if (contact == null || contact.trim().isEmpty()) {
+            System.out.println("Contact cannot be empty");
+            return;
+        }
+
         for (Student s : studentDAO.getAllStudents()) {
             if (s.getId() == id) {
                 System.out.println("Student with this ID already exists");
                 return;
             }
         }
-        Student student = new Student(id, name, department);
+
+        Student student = new Student(id, name, department, dob, contact);
         studentDAO.addStudent(student);
         System.out.println("Student added successfully");
     }
-
-    public void updateStudent(int id, String name, String department) {
+    public void updateStudent(int id, String name, String department, String dob, String contact) {
         if (id <= 0) {
             System.out.println("Invalid Student ID");
             return;
@@ -70,6 +79,15 @@ public class StudentService {
             System.out.println("Department cannot be empty");
             return;
         }
+        if (dob == null || dob.trim().isEmpty()) {
+            System.out.println("DOB cannot be empty");
+            return;
+        }
+        if (contact == null || contact.trim().isEmpty()) {
+            System.out.println("Contact cannot be empty");
+            return;
+        }
+
         boolean exists = false;
         for (Student s : studentDAO.getAllStudents()) {
             if (s.getId() == id) {
@@ -81,7 +99,8 @@ public class StudentService {
             System.out.println("Student not found");
             return;
         }
-        studentDAO.updateStudent(id, name, department);
+
+        studentDAO.updateStudent(id, name, department, dob, contact);
         System.out.println("Student updated successfully");
     }
 
