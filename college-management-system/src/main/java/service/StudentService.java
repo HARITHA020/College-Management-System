@@ -84,8 +84,21 @@ public class StudentService {
 
     public void deleteStudent(int id) {
 
-        studentDAO.deleteStudent(id);
-        System.out.println("✅ Student deleted successfully");
+        if (id <= 0) {
+            System.out.println("Invalid Student ID");
+            return;
+        }
+
+        int userId = studentDAO.getUserIdByStudentId(id);
+
+        if (userId == -1) {
+            System.out.println("Student not found");
+            return;
+        }
+
+        userDAO.deleteUser(userId);
+
+        System.out.println("✅ Student deleted successfully (CASCADE)");
     }
     
     public void viewStudents() {

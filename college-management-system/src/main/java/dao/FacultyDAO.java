@@ -1,8 +1,12 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import db.DBConnection;
 import model.Faculty;
 
 public class FacultyDAO {
@@ -39,5 +43,29 @@ public class FacultyDAO {
             if (faculty.getUserId() == userId) return faculty;
         }
         return null;
+    }
+    
+    //====admin purpose=========
+    public int getUserIdByFacultyId(int id) {
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "SELECT user_id FROM faculty WHERE faculty_id=?";
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("user_id");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return -1;
     }
 }
