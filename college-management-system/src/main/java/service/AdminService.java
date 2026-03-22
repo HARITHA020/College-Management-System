@@ -12,7 +12,7 @@ public class AdminService {
     private CourseDAO courseDao = new CourseDAO();
     private TimetableDAO timetableDao = new TimetableDAO();
     private ExamDAO examDao = new ExamDAO();
-    private NotificationDAO notificationDao = new NotificationDAO();
+    private NotificationDAO notificationDao=new NotificationDAO();
     private BookDAO bookDAO = new BookDAO();
     private BorrowRecordDAO borrowRecordDAO = new BorrowRecordDAO();
     private ResultDAO resultDAO = new ResultDAO();
@@ -225,14 +225,11 @@ public class AdminService {
     }
 
     // ================= TIMETABLE =================
-	public void addTimetable(int id, int facultyId, String day, String time, String room, int courseId,
+	public void addTimetable( int facultyId, String day, String time, String room, int courseId,
 			String section) {
 
 		// 🔹 1. Validate ID
-		if (id <= 0) {
-			System.out.println("Invalid Timetable ID");
-			return;
-		}
+		
 
         // 🔹 2. Validate faculty exists
 		boolean facultyExists = false;
@@ -299,13 +296,7 @@ public class AdminService {
 			return;
 		}
 
-        // 🔹 8. Check duplicate timetable ID
-		for (Timetable t : timetableDao.getAllTimetables()) {
-			if (t.gettimetableId() == id) {
-				System.out.println("Timetable ID already exists");
-				return;
-			}
-		}
+       
 
         // 🔹 9. Conflict check (VERY IMPORTANT 🔥)
 
@@ -335,7 +326,7 @@ public class AdminService {
 		}
 
         // 🔹 10. All valid → add timetable
-		timetableDao.addTimetable(id, facultyId, day, time, room, courseId, section);
+		timetableDao.addTimetable( facultyId, day, time, room, courseId, section);
 		System.out.println("Timetable Added Successfully");
 }
 
@@ -436,72 +427,46 @@ public class AdminService {
     }
 
     // ================= NOTIFICATION =================
-    public void addNotification(int id, String message, Date date, String role, Integer targetId) {
+    public void addNotification(String message, Date date, String role, Integer targetId) {
 
-        // 🔹 Validate ID
-        if (id <= 0) {
-            System.out.println("Invalid ID");
-            return;
-        }
-
-        // 🔹 Validate message
         if (message == null || message.trim().isEmpty()) {
             System.out.println("Message cannot be empty");
             return;
         }
-
-        // 🔹 Validate date
         if (date == null) {
             System.out.println("Date cannot be null");
             return;
         }
 
-        // 🔹 Validate role
-        if (!(role.equalsIgnoreCase("ALL") ||
-              role.equalsIgnoreCase("STUDENT") ||
-              role.equalsIgnoreCase("FACULTY"))) {
+        role = role.toUpperCase();
+        if (!(role.equals("ALL") || role.equals("STUDENT") || role.equals("FACULTY") || role.equals("ADMIN"))) {
             System.out.println("Invalid role");
             return;
         }
 
-        // 🔹 Duplicate ID check
-        for (Notification n : notificationDao.getAllNotifications()) {
-            if (n.getNotificationId() == id) {
-                System.out.println("Notification ID already exists");
-                return;
-            }
-        }
-
-        Notification notification = new Notification(id, message, date, role, targetId);
-
+        Notification notification = new Notification(message, date, role, targetId);
         notificationDao.addNotification(notification);
-
-        System.out.println("Notification added successfully");
     }
 
+    // View notifications
     public void viewNotifications() {
-
         List<Notification> list = notificationDao.getAllNotifications();
-
         if (list.isEmpty()) {
             System.out.println("No notifications available");
             return;
         }
 
         System.out.println("\n--- All Notifications (Admin View) ---");
-
         for (Notification n : list) {
-
-            System.out.println(
-                "ID: " + n.getNotificationId() +
-                " | Message: " + n.getMessage() +
-                " | Date: " + n.getDate() +
-                " | Role: " + n.getTargetRole() +
-                " | Target ID: " + 
-                (n.getTargetId() == null ? "ALL" : n.getTargetId())
-            );
+            System.out.println(n.toString());
         }
     }
+
+    // Delete notification
+    public void deleteNotification(int notificationId) {
+        notificationDao.deleteNotification(notificationId);
+    }
+    
 
     // ================= LIBRARY =================
     public void addBook(int id, String title, String author, String isbn) {
@@ -690,5 +655,12 @@ public class AdminService {
         else return "F";
     }
 }
+   
+
+
+
+
+
+
     
     

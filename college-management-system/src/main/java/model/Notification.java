@@ -4,14 +4,23 @@ import java.util.Date;
 
 public class Notification {
 
-    private int notificationId;
+    private int notificationId; // auto-incremented from DB
     private String message;
     private Date date;
-    private String targetRole; // ALL / STUDENT / FACULTY
-    private Integer targetId;  // optional
+    private String targetRole; // ALL / STUDENT / FACULTY / ADMIN
+    private Integer targetId;  // optional, null if ALL
 
     public Notification() {}
 
+    // Constructor without ID (for adding new notification)
+    public Notification(String message, Date date, String targetRole, Integer targetId) {
+        this.message = message;
+        this.date = date;
+        this.targetRole = targetRole;
+        this.targetId = targetId;
+    }
+
+    // Constructor with ID (for fetching from DB)
     public Notification(int notificationId, String message, Date date, String targetRole, Integer targetId) {
         this.notificationId = notificationId;
         this.message = message;
@@ -20,6 +29,7 @@ public class Notification {
         this.targetId = targetId;
     }
 
+    // Getters and Setters
     public int getNotificationId() { return notificationId; }
     public void setNotificationId(int notificationId) { this.notificationId = notificationId; }
 
@@ -41,6 +51,6 @@ public class Notification {
                " | Message: " + message +
                " | Date: " + date +
                " | Role: " + targetRole +
-               " | Target ID: " + targetId;
+               " | Target ID: " + (targetId == null ? "ALL" : targetId);
     }
 }

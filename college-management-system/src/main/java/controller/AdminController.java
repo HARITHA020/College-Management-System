@@ -350,10 +350,6 @@ public class AdminController {
 
         System.out.println("\n--- Add Timetable ---");
 
-        System.out.print("Enter Timetable ID: ");
-        int id = input.nextInt();
-        input.nextLine();
-
         System.out.print("Enter Day: ");
         String day = input.nextLine();
 
@@ -373,7 +369,7 @@ public class AdminController {
         System.out.print("Enter Section: ");
         String section = input.nextLine();
 
-        adminService.addTimetable(id, facultyId, day, time, room, courseId, section);
+        adminService.addTimetable(facultyId, day, time, room, courseId, section);
     }
 
     // ================= VIEW DETAILS =================
@@ -439,21 +435,18 @@ public class AdminController {
 
         int choice = 0;
 
-        while (choice != 3) {
+        while (choice != 4) {
 
             System.out.println("\n--- Notification Menu ---");
             System.out.println("1. Add Notification");
             System.out.println("2. View Notifications");
+            System.out.println("3. Delete Notifications");
             System.out.println("3. Exit");
 
             choice = input.nextInt();
             input.nextLine();
 
             if (choice == 1) {
-
-                System.out.print("Enter Notification ID: ");
-                int id = input.nextInt();
-                input.nextLine();
 
                 System.out.print("Enter Message: ");
                 String message = input.nextLine();
@@ -463,7 +456,7 @@ public class AdminController {
 
                 java.util.Date date = java.sql.Date.valueOf(dateStr);
 
-                System.out.print("Enter Role (ALL/STUDENT/FACULTY): ");
+                System.out.print("Enter Role (ALL/STUDENT/FACULTY/ADMIN): ");
                 String role = input.nextLine();
 
                 Integer targetId = null;
@@ -475,9 +468,14 @@ public class AdminController {
                     if (temp != 0) targetId = temp;
                 }
 
-                adminService.addNotification(id, message, date, role, targetId);
+                adminService.addNotification( message, date, role, targetId);
             } else if (choice == 2) {
                 adminService.viewNotifications();
+            }
+            else if ( choice == 3) {
+            	System.out.print("Enter the Notification Id to delete: ");
+                int id = input.nextInt();
+            	adminService.deleteNotification(id);
             }
         }
     }

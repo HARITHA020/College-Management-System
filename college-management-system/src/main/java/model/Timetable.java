@@ -10,6 +10,17 @@ public class Timetable {
     private int facultyId;
     private String section;
 
+    //for adding timetable
+    public Timetable( int facultyId, String day, String time, String room, int courseId, String section) {
+       
+        this.facultyId = facultyId;
+        this.day = day;
+        this.time = time;
+        this.room = room;
+        this.courseId = courseId;
+        this.section = section;
+    }
+    //for fecting timetable
     public Timetable(int id, int facultyId, String day, String time, String room, int courseId, String section) {
         this.id = id;
         this.facultyId = facultyId;
