@@ -62,7 +62,7 @@ public class FacultyService {
 
 	// Faculty Management (Admin Purpose)
 
-	public void addFacultyWithUser(String email, String password, int id, String name, String department, String dob,
+	public void addFacultyWithUser(String email, String password,String name, String department, String dob,
 			String contact) {
 
 		if (userDAO.checkEmailExists(email)) {
@@ -77,14 +77,10 @@ public class FacultyService {
 			return;
 		}
 
-// ✅ Use DAO method (no looping)
-		if (facultyDAO.isFacultyExists(id)) {
-			System.out.println("Faculty ID already exists");
-			return;
-		}
+
 
 // ✅ IMPORTANT CHANGE HERE
-		facultyDAO.addFacultyWithId(id, name, department, dob, contact, userId);
+		facultyDAO.addFaculty( name, department, dob, contact, userId);
 
 		System.out.println("✅ Faculty added successfully");
 	}

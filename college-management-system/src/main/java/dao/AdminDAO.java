@@ -24,6 +24,7 @@ public class AdminDAO {
 
             int rows = ps.executeUpdate();
 
+            
             if (rows > 0) {
                 System.out.println("✅ Admin added successfully");
             }

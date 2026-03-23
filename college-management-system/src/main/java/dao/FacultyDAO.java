@@ -32,30 +32,7 @@ public class FacultyDAO {
         }
     }
 
-    // 🔹 ADD FACULTY (MANUAL ID - OPTIONAL)
-    public void addFacultyWithId(int facultyId, String name, String department, String dob, String contact, int userId) {
-
-        String query = "INSERT INTO faculty(faculty_id, name, department, dob, contact, user_id) VALUES (?, ?, ?, ?, ?, ?)";
-
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(query)) {
-
-            ps.setInt(1, facultyId);
-            ps.setString(2, name);
-            ps.setString(3, department);
-            ps.setString(4, dob);
-            ps.setString(5, contact);
-            ps.setInt(6, userId);
-
-            ps.executeUpdate();
-
-            System.out.println("✅ Faculty added successfully (MANUAL ID)");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
+    
     // 🔹 UPDATE FACULTY
     public void updateFaculty(int facultyId, String name, String department, String dob, String contact) {
 
