@@ -243,29 +243,25 @@ public class AdminController {
 
             if (choice == 1) {
 
-                System.out.print("Enter Email: ");
+            	System.out.print("Enter Email: ");
                 String email = input.nextLine();
 
                 System.out.print("Enter Password: ");
                 String password = input.nextLine();
 
-                System.out.print("Enter Faculty ID: ");
-                int id = input.nextInt();
-                input.nextLine();
-
                 System.out.print("Enter Faculty Name: ");
                 String name = input.nextLine();
-
-                System.out.print("Enter Department: ");
-                String dept = input.nextLine();
-
+                
+                System.out.println("Enter the Faculty Department:");
+                String dep=input.nextLine();
+               
                 System.out.print("Enter DOB (yyyy-mm-dd): ");
                 String dob = input.nextLine();
 
                 System.out.print("Enter Contact Number: ");
                 String contact = input.nextLine();
 
-                facultyService.addFacultyWithUser(email, password, id, name, dept, dob, contact);
+                facultyService.addFacultyWithUser(email, password, name,dep, dob, contact);
             }
 
             else if (choice == 2) {
