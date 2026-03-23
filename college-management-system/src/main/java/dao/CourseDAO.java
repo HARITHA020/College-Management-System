@@ -1,47 +1,163 @@
 package dao;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import db.DBConnection;
 import model.Course;
 
 public class CourseDAO {
 
-    private List<Course> courses = new ArrayList<>();
+    // 🔹 ADD COURSE
+    public void addCourse(String courseName, int facultyId) {
+        try {
+            Connection con = DBConnection.getConnection();
 
-    // Add Course
-    public void addCourse(int course_Id, String course_Name) {
+            String query = "INSERT INTO courses(course_name, faculty_id) VALUES (?, ?)";
 
-        Course course = new Course(course_Id, course_Name);
-        courses.add(course);
-    }
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, courseName);
+            ps.setInt(2, facultyId);
 
-    // Assign Course to Faculty
-    public void assignCourse(int courseId, int facultyId) {
+            int rows = ps.executeUpdate();
 
-        for (Course course : courses) {
-
-            if (course.getcourseId() == courseId) {
-                course.setFacultyid(facultyId);
-                break;
+            if (rows > 0) {
+                System.out.println("✅ Course added successfully");
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-    
-    
- // Get Course by ID
+
+    // 🔹 UPDATE COURSE
+    public void updateCourse(int id, String courseName, int facultyId) {
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "UPDATE courses SET course_name=?, faculty_id=? WHERE course_id=?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, courseName);
+            ps.setInt(2, facultyId);
+            ps.setInt(3, id);
+
+            ps.executeUpdate();
+
+            System.out.println("✅ Course updated successfully");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 🔹 DELETE COURSE
+    public void deleteCourse(int id) {
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "DELETE FROM courses WHERE course_id=?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, id);
+
+            ps.executeUpdate();
+
+            System.out.println("✅ Course deleted successfully");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 🔹 GET ALL COURSES
+    public List<Course> getAllCourses() {
+
+        List<Course> courses = new ArrayList<>();
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "SELECT * FROM courses";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Course c = new Course(
+                        rs.getInt("course_id"),
+                        rs.getString("course_name"),
+                        rs.getInt("faculty_id")
+                );
+
+                courses.add(c);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return courses;
+    }
+
+    // 🔹 GET COURSE BY ID
     public Course getCourseById(int courseId) {
 
-        for (Course course : courses) {
+        try {
+            Connection con = DBConnection.getConnection();
 
-            if (course.getcourseId() == courseId) {
-                return course;
+            String query = "SELECT * FROM courses WHERE course_id=?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, courseId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Course(
+                        rs.getInt("course_id"),
+                        rs.getString("course_name"),
+                        rs.getInt("faculty_id")
+                );
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        return null; // if not found
+        return null;
     }
-    // View all Courses
-    public List<Course> getAllCourses() {
+
+    // 🔹 GET COURSES BY FACULTY ID
+    public List<Course> getCoursesByFacultyId(int facultyId) {
+
+        List<Course> courses = new ArrayList<>();
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "SELECT * FROM courses WHERE faculty_id=?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, facultyId);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Course c = new Course(
+                        rs.getInt("course_id"),
+                        rs.getString("course_name"),
+                        rs.getInt("faculty_id")
+                );
+
+                courses.add(c);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return courses;
     }
 }

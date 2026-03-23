@@ -1,32 +1,22 @@
 package model;
 
 public class Course {
+    private int courseId;
+    private String courseName;
+    private int facultyId;
 
-    private int id;
-    private String name;
-    private int faculty_id;
-
-
-
-	public Course(int course_Id, String course_Name) {
-		this.id=course_Id;
-		this.name=course_Name;
-	}
-
-	public int getcourseId() {
-        return id;
+    public Course(int courseId, String courseName, int facultyId) {
+        this.courseId   = courseId;
+        this.courseName = courseName;
+        this.facultyId  = facultyId;
     }
 
-    public String getcourseName() {
-        return name;
-    }
+    public int getCourseId()                    { return courseId; }
+    public void setCourseId(int courseId)       { this.courseId = courseId; }
 
-	public int getFacultyid() {
-		return faculty_id;
-	}
+    public String getCourseName()               { return courseName; }
+    public void setCourseName(String courseName){ this.courseName = courseName; }
 
-	public void setFacultyid(int faculty_id) {
-		this.faculty_id = faculty_id;
-	}
-    
+    public int getFacultyId()                   { return facultyId; }
+    public void setFacultyId(int facultyId)     { this.facultyId = facultyId; }
 }
