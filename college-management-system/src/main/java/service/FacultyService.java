@@ -133,11 +133,11 @@ public class FacultyService {
 
 		for (Course c : courseDAO.getAllCourses()) {
 
-			if (c.getFacultyid() == facultyId) {
+			if (c.getFacultyId() == facultyId) {
 
 				for (Enrollment e : enrollmentDao.getAllEnrollments()) {
 
-					if (e.getCourseId() == c.getcourseId()) {
+					if (e.getCourseId() == c.getCourseId()) {
 
 						for (Student s : studentDAO.getAllStudents()) {
 
@@ -168,9 +168,9 @@ public class FacultyService {
 		// 🔹 2. Filter courses by facultyId
 		for (Course c : courseDAO.getAllCourses()) {
 
-			if (c.getFacultyid() == facultyId) {
+			if (c.getFacultyId() == facultyId) {
 
-				System.out.println("Course ID: " + c.getcourseId() + " | Course Name: " + c.getcourseName());
+				System.out.println("Course ID: " + c.getCourseId() + " | Course Name: " + c.getCourseName());
 
 				found = true;
 			}
@@ -208,7 +208,7 @@ public class FacultyService {
 		attendanceDao.markAttendance(attendance);
 
 		// 5. Confirmation
-		System.out.println("Attendance marked for " + s.getName() + " in course " + c.getcourseName() + " as "
+		System.out.println("Attendance marked for " + s.getName() + " in course " + c.getCourseName() + " as "
 				+ (present ? "PRESENT" : "ABSENT"));
 	}
 
@@ -343,7 +343,7 @@ public class FacultyService {
 		}
 
 		// 🔹 3. Check faculty is assigned to this course (VERY IMPORTANT 🔥)
-		if (course.getFacultyid() != facultyId) {
+		if (course.getFacultyId() != facultyId) {
 			System.out.println("You are not assigned to this course");
 			return;
 		}
@@ -409,7 +409,7 @@ public class FacultyService {
 		// 🔹 3. Access control (VERY IMPORTANT 🔥)
 
 		// If faculty → must be assigned
-		if (role.equalsIgnoreCase("FACULTY") && course.getFacultyid() != userId) {
+		if (role.equalsIgnoreCase("FACULTY") && course.getFacultyId() != userId) {
 
 			System.out.println("You are not allowed to view materials of this course");
 			return;
@@ -471,7 +471,7 @@ public class FacultyService {
 		}
 
 		// 🔹 3. Check faculty assigned to course (IMPORTANT 🔥)
-		if (course.getFacultyid() != facultyId) {
+		if (course.getFacultyId() != facultyId) {
 			System.out.println("You are not assigned to this course");
 			return;
 		}
@@ -537,7 +537,7 @@ public class FacultyService {
 		// 🔹 3. Access control 🔥
 
 		// Faculty → must be assigned
-		if (role.equalsIgnoreCase("FACULTY") && course.getFacultyid() != userId) {
+		if (role.equalsIgnoreCase("FACULTY") && course.getFacultyId() != userId) {
 
 			System.out.println("You are not allowed to view assignments of this course");
 			return;

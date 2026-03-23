@@ -9,16 +9,16 @@ import model.Student;
 
 public class StudentDAO {
 
-    // 🔹 ADD STUDENT
+    // 🔹 ADD STUDENT (AUTO_INCREMENT → no ID)
     public void addStudent(String name, String dob, String contact, String department, int userId) {
-        try {
-            Connection con = DBConnection.getConnection();
 
-            String query = "INSERT INTO students(name, dob, contact, department, user_id) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO students(name, dob, contact, department, user_id) VALUES (?, ?, ?, ?, ?)";
 
-            PreparedStatement ps = con.prepareStatement(query);
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
             ps.setString(1, name);
-            ps.setString(2, dob);
+            ps.setDate(2, Date.valueOf(dob)); // ✅ FIXED
             ps.setString(3, contact);
             ps.setString(4, department);
             ps.setInt(5, userId);
@@ -36,21 +36,25 @@ public class StudentDAO {
 
     // 🔹 UPDATE STUDENT
     public void updateStudent(int id, String name, String dob, String contact, String department) {
-        try {
-            Connection con = DBConnection.getConnection();
 
-            String query = "UPDATE students SET name=?, dob=?, contact=?, department=? WHERE student_id=?";
+        String query = "UPDATE students SET name=?, dob=?, contact=?, department=? WHERE student_id=?";
 
-            PreparedStatement ps = con.prepareStatement(query);
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
             ps.setString(1, name);
-            ps.setString(2, dob);
+            ps.setDate(2, Date.valueOf(dob)); // ✅ FIXED
             ps.setString(3, contact);
             ps.setString(4, department);
             ps.setInt(5, id);
 
-            ps.executeUpdate();
+            int rows = ps.executeUpdate();
 
-            System.out.println("✅ Student updated successfully");
+            if (rows > 0) {
+                System.out.println("✅ Student updated successfully");
+            } else {
+                System.out.println("⚠️ Student not found");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,17 +63,21 @@ public class StudentDAO {
 
     // 🔹 DELETE STUDENT
     public void deleteStudent(int id) {
-        try {
-            Connection con = DBConnection.getConnection();
 
-            String query = "DELETE FROM students WHERE student_id=?";
+        String query = "DELETE FROM students WHERE student_id=?";
 
-            PreparedStatement ps = con.prepareStatement(query);
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
             ps.setInt(1, id);
 
-            ps.executeUpdate();
+            int rows = ps.executeUpdate();
 
-            System.out.println("✅ Student deleted successfully");
+            if (rows > 0) {
+                System.out.println("✅ Student deleted successfully");
+            } else {
+                System.out.println("⚠️ Student not found");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,15 +89,14 @@ public class StudentDAO {
 
         List<Student> students = new ArrayList<>();
 
-        try {
-            Connection con = DBConnection.getConnection();
+        String query = "SELECT * FROM students";
 
-            String query = "SELECT * FROM students";
-
-            PreparedStatement ps = con.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
+
                 Student s = new Student(
                         rs.getInt("student_id"),
                         rs.getString("name"),
@@ -109,17 +116,44 @@ public class StudentDAO {
         return students;
     }
 
+    // 🔹 GET STUDENT BY ID (IMPORTANT)
+    public Student getStudentById(int id) {
+
+        String query = "SELECT * FROM students WHERE student_id=?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Student(
+                        rs.getInt("student_id"),
+                        rs.getString("name"),
+                        rs.getString("dob"),
+                        rs.getString("contact"),
+                        rs.getString("department"),
+                        rs.getInt("user_id")
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     // 🔹 GET STUDENT BY USER ID
     public Student getStudentByUserId(int userId) {
 
-        try {
-            Connection con = DBConnection.getConnection();
+        String query = "SELECT * FROM students WHERE user_id=?";
 
-            String query = "SELECT * FROM students WHERE user_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
 
-            PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, userId);
-
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -143,14 +177,12 @@ public class StudentDAO {
     // 🔹 GET USER ID BY STUDENT ID
     public int getUserIdByStudentId(int studentId) {
 
-        try {
-            Connection con = DBConnection.getConnection();
+        String query = "SELECT user_id FROM students WHERE student_id=?";
 
-            String query = "SELECT user_id FROM students WHERE student_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
 
-            PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, studentId);
-
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {

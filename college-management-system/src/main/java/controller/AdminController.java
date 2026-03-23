@@ -311,14 +311,13 @@ public class AdminController {
             input.nextLine();
 
             if (choice == 1) {
-                System.out.print("Enter Course ID: ");
-                int courseId = input.nextInt();
-                input.nextLine();
-
                 System.out.print("Enter Course Name: ");
                 String courseName = input.nextLine();
 
-                adminService.addCourse(courseId, courseName);
+                System.out.print("Enter Faculty ID: ");
+                int facultyId = input.nextInt();
+
+                adminService.addCourse(courseName, facultyId);
             }
             else if (choice == 2) {
                 System.out.print("Enter Course ID: ");

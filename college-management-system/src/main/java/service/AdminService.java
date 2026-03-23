@@ -132,13 +132,8 @@ public class AdminService {
 
 
     // ================= COURSE =================
-    public void addCourse(int id, String name) {
-        if(id <= 0 || name == null || name.trim().isEmpty()) {
-            System.out.println("Invalid course data");
-            return;
-        }
-        courseDao.addCourse(id, name);
-        System.out.println("Course Added Successfully");
+    public void addCourse(String courseName, int facultyId) {
+        courseDao.addCourse(facultyId, courseName);
     }
 
     public void assignCourse(int courseId, int facultyId) {
@@ -146,7 +141,7 @@ public class AdminService {
         // 🔹 Step 1: Validate course exists
         boolean courseExists = false;
         for (Course c : courseDao.getAllCourses()) {
-            if (c.getcourseId() == courseId) {
+            if (c.getCourseId() == courseId) {
                 courseExists = true;
                 break;
             }
@@ -196,7 +191,7 @@ public class AdminService {
         // 🔹 Step 2: Validate course exists
         boolean courseExists = false;
         for (Course c : courseDao.getAllCourses()) {
-            if (c.getcourseId() == courseId) {
+            if (c.getCourseId() == courseId) {
                 courseExists = true;
                 break;
             }
@@ -218,9 +213,9 @@ public class AdminService {
             return;
         }
         for (Course c : courses) {
-            System.out.println("ID: " + c.getcourseId() +
-                    ", Name: " + c.getcourseName() +
-                    ", Faculty ID: " + c.getFacultyid());
+            System.out.println("ID: " + c.getCourseId() +
+                    ", Name: " + c.getCourseName() +
+                    ", Faculty ID: " + c.getFacultyId());
         }
     }
 
@@ -248,7 +243,7 @@ public class AdminService {
         // 🔹 3. Validate course exists
 		boolean courseExists = false;
 		for (Course c : courseDao.getAllCourses()) {
-			if (c.getcourseId() == courseId) {
+			if (c.getCourseId() == courseId) {
 				courseExists = true;
 				break;
 			}
@@ -357,7 +352,7 @@ public class AdminService {
         // 🔹 2. Validate course exists
         boolean courseExists = false;
         for (Course c : courseDao.getAllCourses()) {
-            if (c.getcourseId() == courseId) {
+            if (c.getCourseId() == courseId) {
                 courseExists = true;
                 break;
             }
@@ -633,7 +628,7 @@ public class AdminService {
             Student s = studentDao.getStudentById(r.getStudentId());
             Course c = courseDao.getCourseById(r.getCourseId());
             String studentName = (s != null) ? s.getName() : "Unknown";
-            String courseName = (c != null) ? c.getcourseName() : "Unknown";
+            String courseName = (c != null) ? c.getCourseName() : "Unknown";
 
             System.out.println("Result ID: " + r.getResultId() +
                     " | Student: " + studentName +

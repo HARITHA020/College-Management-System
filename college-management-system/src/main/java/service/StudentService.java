@@ -55,9 +55,7 @@ public class StudentService {
                 return;
             }
         }
-
-        Student student = new Student(id, name, department, dob, contact, userId);
-        studentDAO.addStudent(student);
+        studentDAO.addStudent(name, department, dob, contact, userId);
 
         System.out.println("✅ Student added successfully");
     }
@@ -135,10 +133,10 @@ public class StudentService {
         }
         for (Enrollment e : enrollments) {
             for (Course c : courseDAO.getAllCourses()) {
-                if (c.getcourseId() == e.getCourseId()) {
-                    System.out.println("Course ID: " + c.getcourseId() +
-                            " | Name: " + c.getcourseName() +
-                            " | Faculty ID: " + c.getFacultyid());
+                if (c.getCourseId() == e.getCourseId()) {
+                    System.out.println("Course ID: " + c.getCourseId() +
+                            " | Name: " + c.getCourseName() +
+                            " | Faculty ID: " + c.getFacultyId());
                 }
             }
         }
@@ -178,7 +176,7 @@ public class StudentService {
 
             // Find course name
             for (Course c : courseDAO.getAllCourses()) {
-                if (c.getcourseId() == courseId) {
+                if (c.getCourseId() == courseId) {
                     course = c;
                     break;
                 }
@@ -188,14 +186,14 @@ public class StudentService {
 
             List<Exam> courseExams = examDAO.getExamsByCourse(courseId); // assume we add this method
             if (courseExams == null || courseExams.isEmpty()) {
-                System.out.println("Course: " + course.getcourseName() + " | No exams yet");
+                System.out.println("Course: " + course.getCourseName() + " | No exams yet");
                 continue;
             }
 
             double totalMarks = 0;
             double maxTotal = 0;
 
-            System.out.println("\nCourse: " + course.getcourseName() + " (ID: " + courseId + ")");
+            System.out.println("\nCourse: " + course.getCourseName() + " (ID: " + courseId + ")");
             for (Exam ex : courseExams) {
                 Integer mark = ex.getStudentMarks(studentId); // assume Exam has a Map<Integer, Integer> of student marks
                 if (mark == null) mark = 0;
@@ -221,13 +219,13 @@ public class StudentService {
         System.out.println("Attendance Report for: " + s.getName());
         List<Course> courses = courseDAO.getAllCourses();
         for (Course c : courses) {
-            List<Attendance> records = attendanceDao.getAttendanceByStudentAndCourse(studentId, c.getcourseId());
+            List<Attendance> records = attendanceDao.getAttendanceByStudentAndCourse(studentId, c.getCourseId());
 
             int totalClasses = records.size();
             long attendedClasses = records.stream().filter(Attendance::isPresent).count();
             double percentage = totalClasses == 0 ? 0 : ((double) attendedClasses / totalClasses) * 100;
 
-            System.out.println("Course: " + c.getcourseName());
+            System.out.println("Course: " + c.getCourseName());
             System.out.println("Total Classes: " + totalClasses);
             System.out.println("Attended: " + attendedClasses);
             System.out.printf("Attendance Percentage: %.2f%%\n", percentage);

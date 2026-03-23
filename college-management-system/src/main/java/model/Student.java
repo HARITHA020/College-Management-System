@@ -17,7 +17,15 @@ public class Student {
         this.contact = contact;
         this.userId = userId;
     }
-
+    
+    public Student( String name, String department, String dob, String contact, int userId) {
+       
+        this.name = name;
+        this.department = department;
+        this.dob = dob;
+        this.contact = contact;
+        this.userId = userId;
+    }
     // Getters
     public int getId() { return id; }
     public String getName() { return name; }
