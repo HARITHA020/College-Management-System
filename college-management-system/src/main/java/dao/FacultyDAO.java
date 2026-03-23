@@ -1,8 +1,6 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,50 +9,165 @@ import model.Faculty;
 
 public class FacultyDAO {
 
-    private List<Faculty> faculties = new ArrayList<>();
+    // 🔹 ADD FACULTY (AUTO_INCREMENT - RECOMMENDED)
+    public void addFaculty(String name, String department, String dob, String contact, int userId) {
 
-    public void addFaculty(int id, String name,String Department, String dob, String contact, int userId) {
-        faculties.add(new Faculty(id, name, dob, Department, contact, userId));
+        String query = "INSERT INTO faculty(name, department, dob, contact, user_id) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setString(1, name);
+            ps.setString(2, department);
+            ps.setString(3, dob);
+            ps.setString(4, contact);
+            ps.setInt(5, userId);
+
+            ps.executeUpdate();
+
+            System.out.println("✅ Faculty added successfully (AUTO ID)");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    // 🔹 ADD FACULTY (MANUAL ID - OPTIONAL)
+    public void addFacultyWithId(int facultyId, String name, String department, String dob, String contact, int userId) {
+
+        String query = "INSERT INTO faculty(faculty_id, name, department, dob, contact, user_id) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, facultyId);
+            ps.setString(2, name);
+            ps.setString(3, department);
+            ps.setString(4, dob);
+            ps.setString(5, contact);
+            ps.setInt(6, userId);
+
+            ps.executeUpdate();
+
+            System.out.println("✅ Faculty added successfully (MANUAL ID)");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 🔹 UPDATE FACULTY
+    public void updateFaculty(int facultyId, String name, String department, String dob, String contact) {
+
+        String query = "UPDATE faculty SET name=?, department=?, dob=?, contact=? WHERE faculty_id=?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setString(1, name);
+            ps.setString(2, department);
+            ps.setString(3, dob);
+            ps.setString(4, contact);
+            ps.setInt(5, facultyId);
+
+            ps.executeUpdate();
+
+            System.out.println("✅ Faculty updated successfully");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 🔹 DELETE FACULTY
+    public void deleteFaculty(int facultyId) {
+
+        String query = "DELETE FROM faculty WHERE faculty_id=?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, facultyId);
+
+            ps.executeUpdate();
+
+            System.out.println("✅ Faculty deleted successfully");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 🔹 GET ALL FACULTY
     public List<Faculty> getAllFaculty() {
-        return faculties;
-    }
 
-    public void updateFaculty(int id, String name, String department, String dob, String contact) {
-        for (Faculty faculty : faculties) {
-            if (faculty.getId() == id) {
-                faculty.setName(name);
-                faculty.setDepartment(department);
-                faculty.setDob(dob);          // New
-                faculty.setContact(contact); 
-                
-                System.out.println("Faculty Updated Successfully");
+        List<Faculty> list = new ArrayList<>();
+        String query = "SELECT * FROM faculty";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                Faculty f = new Faculty(
+                        rs.getInt("faculty_id"),
+                        rs.getString("name"),
+                        rs.getString("department"),
+                        rs.getString("dob"),
+                        rs.getString("contact"),
+                        rs.getInt("user_id")
+                );
+
+                list.add(f);
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        return list;
     }
 
-    public void deleteFaculty(int id) {
-        faculties.removeIf(faculty -> faculty.getId() == id);
-    }
-    
+    // 🔹 GET FACULTY BY USER ID
     public Faculty getFacultyByUserId(int userId) {
-        for (Faculty faculty : faculties) {
-            if (faculty.getUserId() == userId) return faculty;
+
+        String query = "SELECT * FROM faculty WHERE user_id=?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Faculty(
+                        rs.getInt("faculty_id"),
+                        rs.getString("name"),
+                        rs.getString("department"),
+                        rs.getString("dob"),
+                        rs.getString("contact"),
+                        rs.getInt("user_id")
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return null;
     }
-    
-    //====admin purpose=========
-    public int getUserIdByFacultyId(int id) {
 
-        try {
-            Connection con = DBConnection.getConnection();
+    // 🔹 GET USER ID BY FACULTY ID
+    public int getUserIdByFacultyId(int facultyId) {
 
-            String query = "SELECT user_id FROM faculty WHERE faculty_id=?";
-            PreparedStatement ps = con.prepareStatement(query);
+        String query = "SELECT user_id FROM faculty WHERE faculty_id=?";
 
-            ps.setInt(1, id);
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, facultyId);
 
             ResultSet rs = ps.executeQuery();
 
@@ -67,5 +180,26 @@ public class FacultyDAO {
         }
 
         return -1;
+    }
+
+    // 🔹 CHECK FACULTY EXISTS (useful if using manual ID)
+    public boolean isFacultyExists(int facultyId) {
+
+        String query = "SELECT faculty_id FROM faculty WHERE faculty_id=?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, facultyId);
+
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }
