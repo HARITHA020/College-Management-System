@@ -299,13 +299,15 @@ public class AdminController {
 
         int choice = 0;
 
-        while (choice != 4) {
+        while (choice != 6) {
 
             System.out.println("\n--- Manage Course ---");
             System.out.println("1. Add Course");
             System.out.println("2. Assign Course to Faculty");
             System.out.println("3. Assign Student to Course");
-            System.out.println("4. Exit");
+            System.out.println("4. View the Enrollment Details");
+            System.out.println("5. Delete Enrollments"); 
+            System.out.println("6. Exit");
 
             choice = input.nextInt();
             input.nextLine();
@@ -336,6 +338,17 @@ public class AdminController {
                 int courseId = input.nextInt();
 
                 adminService.assignStudentToCourse(studentId, courseId);
+            }
+            else if(choice==4) {
+            	 adminService.viewEnrollmentDetails();
+            }
+            else if(choice==5) {
+            	System.out.print("Enter Student ID: ");
+                int studentId = input.nextInt();
+
+                System.out.print("Enter Course ID: ");
+                int courseId = input.nextInt();
+            	adminService.DeleteEnrollments(studentId,courseId);
             }
         }
     }

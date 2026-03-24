@@ -218,6 +218,14 @@ public class AdminService {
                     ", Faculty ID: " + c.getFacultyId());
         }
     }
+    
+    public void viewEnrollmentDetails() {
+    	enrollmentDAO.viewEnrollmentDetails();
+    }
+    
+    public void DeleteEnrollments(int studentId,int courseId) {
+    	enrollmentDAO.deleteEnrollment(studentId, courseId);
+    }
 
     // ================= TIMETABLE =================
 	public void addTimetable( int facultyId, String day, String time, String room, int courseId,
@@ -649,6 +657,8 @@ public class AdminService {
         else if (marks >= 50) return "C";
         else return "F";
     }
+
+	
 }
    
 

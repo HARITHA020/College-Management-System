@@ -120,6 +120,17 @@ public class StudentService {
             );
         }
     }
+    public int getStudentIdByUserId(int userId) {
+
+        Student s = studentDAO.getStudentByUserId(userId);
+
+        if (s == null) {
+            System.out.println("Student not found for this user");
+            return -1;
+        }
+
+        return s.getId();
+    }
     // ===================== COURSES =====================
     public void viewMyCourses(int studentId) {
         if (studentId <= 0) {

@@ -7,13 +7,15 @@ public class StudentController {
 
     private StudentService studentService;
     private Scanner scanner;
-    private int userId; // logged-in student ID
+    private int studentId; // logged-in student ID
 
     // ✅ Constructor to pass logged-in student ID
     public StudentController(int userId) {
         this.studentService = new StudentService();
         this.scanner = new Scanner(System.in);
-        this.userId = userId;
+
+        // ✅ Convert userId → studentId
+        this.studentId = studentService.getStudentIdByUserId(userId);
     }
 
     public void showMenu() {
@@ -38,19 +40,19 @@ public class StudentController {
 
             switch (choice) {
                 case 1:
-                    studentService.viewMyCourses(userId);
+                    studentService.viewMyCourses(studentId);
                     break;
                 case 2:
-                    studentService.viewTimetable(userId);
+                    studentService.viewTimetable(studentId);
                     break;
                 case 3:
-                    studentService.viewMarks(userId);
+                    studentService.viewMarks(studentId);
                     break;
                 case 4:
-                    studentService.viewAttendance(userId);
+                    studentService.viewAttendance(studentId);
                     break;
                 case 5:
-                    studentService.viewNotifications(userId);
+                    studentService.viewNotifications(studentId);
                     break;
                 case 6:
                     searchBook();
@@ -88,7 +90,7 @@ public class StudentController {
         System.out.print("Enter Book ID: ");
         int bookId = scanner.nextInt();
         scanner.nextLine();
-        studentService.borrowBook(userId, bookId);
+        studentService.borrowBook(studentId, bookId);
     }
 
     private void returnBook() {
@@ -103,13 +105,13 @@ public class StudentController {
         System.out.print("Enter Course ID: ");
         int courseId = scanner.nextInt();
         scanner.nextLine();
-        studentService.viewMaterials(courseId, userId, "STUDENT");
+        studentService.viewMaterials(courseId, studentId, "STUDENT");
     }
 
     private void viewAssignments() {
         System.out.print("Enter Course ID: ");
         int courseId = scanner.nextInt();
         scanner.nextLine();
-        studentService.viewAssignments(courseId, userId, "STUDENT");
+        studentService.viewAssignments(courseId, studentId, "STUDENT");
     }
 }
