@@ -127,9 +127,9 @@ public class FacultyController {
                     break;
 
                 case 13:
-                    System.out.println("Enter Record ID:");
-                    int recordId = scanner.nextInt();
-                    facultyService.returnBook(recordId);
+                    System.out.print("Enter Book ID to return: ");
+                    int book_Id = scanner.nextInt();
+                    facultyService.returnBook(book_Id, userId); // pass facultyId here
                     break;
 
                 case 0:

@@ -1,8 +1,6 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +16,7 @@ public class ResultDAO {
             String query = "INSERT INTO results(student_id, exam_id, marks, grade, published) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, r.getStudentId());
-            ps.setInt(2, r.getCourseId());
+            ps.setInt(2, r.getExamId()); // ✅ corrected
             ps.setInt(3, r.getMarks());
             ps.setString(4, r.getGrade());
             ps.setBoolean(5, r.isPublished());
@@ -124,7 +122,7 @@ public class ResultDAO {
         List<Result> results = new ArrayList<>();
         try {
             Connection con = DBConnection.getConnection();
-            String query = "SELECT * FROM results WHERE exam_id=?";
+            String query = "SELECT r.* FROM results r JOIN exams e ON r.exam_id = e.exam_id WHERE e.course_id=?";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, courseId);
             ResultSet rs = ps.executeQuery();
@@ -147,5 +145,27 @@ public class ResultDAO {
             e.printStackTrace();
         }
         return results;
+    }
+
+    // Helper: get exam ID by course
+    public int getExamIdByCourse(int courseId) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "SELECT exam_id FROM exams WHERE course_id=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, courseId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int examId = rs.getInt("exam_id");
+                rs.close();
+                ps.close();
+                return examId;
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }

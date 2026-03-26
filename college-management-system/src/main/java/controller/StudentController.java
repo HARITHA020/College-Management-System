@@ -94,10 +94,10 @@ public class StudentController {
     }
 
     private void returnBook() {
-        System.out.print("Enter Record ID: ");
-        int recordId = scanner.nextInt();
+        System.out.print("Enter Book ID to return: ");
+        int bookId = scanner.nextInt();
         scanner.nextLine();
-        studentService.returnBook(recordId);
+        studentService.returnBook(bookId, studentId); // pass studentId here
     }
 
     // -------------------- Materials & Assignments --------------------

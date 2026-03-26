@@ -10,22 +10,30 @@ import model.BorrowRecord;
 public class BorrowRecordDAO {
 
     // 🔹 BORROW BOOK
-    public void borrowBook(int studentId, int bookId, String borrowDate) {
+    public void borrowBook(BorrowRecord record) {
         try {
             Connection con = DBConnection.getConnection();
 
-            String query = "INSERT INTO borrow_records(student_id, book_id, borrow_date, return_date) VALUES (?, ?, ?, NULL)";
+            String query = "INSERT INTO borrow_records(student_id, faculty_id, book_id, borrow_date, return_date) VALUES (?, ?, ?, ?, NULL)";
 
             PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1, studentId);
-            ps.setInt(2, bookId);
-            ps.setString(3, borrowDate);
+            if (record.getStudentId() != null)
+                ps.setInt(1, record.getStudentId());
+            else
+                ps.setNull(1, Types.INTEGER);
+
+            if (record.getFacultyId() != null)
+                ps.setInt(2, record.getFacultyId());
+            else
+                ps.setNull(2, Types.INTEGER);
+
+            ps.setInt(3, record.getBookId());
+            ps.setString(4, record.getBorrowDate());
 
             int rows = ps.executeUpdate();
 
             if (rows > 0) {
-                // mark book as unavailable
-                updateBookAvailability(bookId, false);
+                updateBookAvailability(record.getBookId(), false);
                 System.out.println("✅ Book borrowed successfully");
             }
 
@@ -39,19 +47,15 @@ public class BorrowRecordDAO {
         try {
             Connection con = DBConnection.getConnection();
 
-            // get book_id before updating
             int bookId = getBookIdByRecordId(recordId);
 
             String query = "UPDATE borrow_records SET return_date=? WHERE record_id=?";
-
             PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, returnDate);
             ps.setInt(2, recordId);
-
             ps.executeUpdate();
 
             if (bookId != -1) {
-                // mark book as available again
                 updateBookAvailability(bookId, true);
             }
 
@@ -62,174 +66,80 @@ public class BorrowRecordDAO {
         }
     }
 
-    // 🔹 GET ALL BORROW RECORDS
-    public List<BorrowRecord> getAllRecords() {
-
-        List<BorrowRecord> records = new ArrayList<>();
-
-        try {
-            Connection con = DBConnection.getConnection();
-
-            String query = "SELECT * FROM borrow_records";
-
-            PreparedStatement ps = con.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                BorrowRecord r = new BorrowRecord(
-                        rs.getInt("record_id"),
-                        rs.getInt("student_id"),
-                        rs.getInt("book_id"),
-                        rs.getString("borrow_date"),
-                        rs.getString("return_date")
-                );
-
-                records.add(r);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return records;
-    }
-
-    // 🔹 GET RECORDS BY STUDENT ID
-    public List<BorrowRecord> getRecordsByStudentId(int studentId) {
-
-        List<BorrowRecord> records = new ArrayList<>();
-
-        try {
-            Connection con = DBConnection.getConnection();
-
-            String query = "SELECT * FROM borrow_records WHERE student_id=?";
-
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1, studentId);
-
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                BorrowRecord r = new BorrowRecord(
-                        rs.getInt("record_id"),
-                        rs.getInt("student_id"),
-                        rs.getInt("book_id"),
-                        rs.getString("borrow_date"),
-                        rs.getString("return_date")
-                );
-
-                records.add(r);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return records;
-    }
-
     // 🔹 GET RECORD BY ID
     public BorrowRecord getRecordById(int recordId) {
-
         try {
             Connection con = DBConnection.getConnection();
-
             String query = "SELECT * FROM borrow_records WHERE record_id=?";
-
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, recordId);
-
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 return new BorrowRecord(
                         rs.getInt("record_id"),
-                        rs.getInt("student_id"),
+                        rs.getObject("student_id") != null ? rs.getInt("student_id") : null,
+                        rs.getObject("faculty_id") != null ? rs.getInt("faculty_id") : null,
                         rs.getInt("book_id"),
                         rs.getString("borrow_date"),
                         rs.getString("return_date")
                 );
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
-    // 🔹 GET ACTIVE BORROWS (not yet returned)
-    public List<BorrowRecord> getActiveRecords() {
-
-        List<BorrowRecord> records = new ArrayList<>();
-
-        try {
-            Connection con = DBConnection.getConnection();
-
-            String query = "SELECT * FROM borrow_records WHERE return_date IS NULL";
-
-            PreparedStatement ps = con.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                BorrowRecord r = new BorrowRecord(
-                        rs.getInt("record_id"),
-                        rs.getInt("student_id"),
-                        rs.getInt("book_id"),
-                        rs.getString("borrow_date"),
-                        rs.getString("return_date")
-                );
-
-                records.add(r);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return records;
-    }
-
-    // ── Private Helpers ───────────────────────────────────
-
-    // get book_id from a record (used during return)
-    private int getBookIdByRecordId(int recordId) {
-        try {
-            Connection con = DBConnection.getConnection();
-
-            String query = "SELECT book_id FROM borrow_records WHERE record_id=?";
-
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1, recordId);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt("book_id");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return -1;
-    }
-
-    // toggle book availability in books table
+    // 🔹 UPDATE BOOK AVAILABILITY
     private void updateBookAvailability(int bookId, boolean available) {
         try {
             Connection con = DBConnection.getConnection();
-
             String query = "UPDATE books SET available=? WHERE book_id=?";
-
             PreparedStatement ps = con.prepareStatement(query);
             ps.setBoolean(1, available);
             ps.setInt(2, bookId);
-
             ps.executeUpdate();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private int getBookIdByRecordId(int recordId) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "SELECT book_id FROM borrow_records WHERE record_id=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, recordId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt("book_id");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    // 🔹 GET ACTIVE BORROWS
+    public List<BorrowRecord> getActiveRecords() {
+        List<BorrowRecord> records = new ArrayList<>();
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "SELECT * FROM borrow_records WHERE return_date IS NULL";
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                records.add(new BorrowRecord(
+                        rs.getInt("record_id"),
+                        rs.getObject("student_id") != null ? rs.getInt("student_id") : null,
+                        rs.getObject("faculty_id") != null ? rs.getInt("faculty_id") : null,
+                        rs.getInt("book_id"),
+                        rs.getString("borrow_date"),
+                        rs.getString("return_date")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return records;
     }
 }

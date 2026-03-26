@@ -3,15 +3,16 @@ package model;
 public class Result {
     private int resultId;
     private int studentId;
-    private int courseId;
+    private int examId;  // ✅ Changed from courseId to examId
     private int marks;
     private String grade;
     private boolean published;
 
-    public Result(int resultId, int studentId, int courseId, int marks, String grade) {
+    // Constructor
+    public Result(int resultId, int studentId, int examId, int marks, String grade) {
         this.resultId = resultId;
         this.studentId = studentId;
-        this.courseId = courseId;
+        this.examId = examId; // ✅ correctly use examId
         this.marks = marks;
         this.grade = grade;
         this.published = false; // default not published
@@ -20,7 +21,7 @@ public class Result {
     // Getters and setters
     public int getResultId() { return resultId; }
     public int getStudentId() { return studentId; }
-    public int getCourseId() { return courseId; }
+    public int getExamId() { return examId; }  // ✅ getter
     public int getMarks() { return marks; }
     public String getGrade() { return grade; }
     public boolean isPublished() { return published; }

@@ -1,6 +1,9 @@
 package service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dao.*;
 import model.*;
@@ -17,6 +20,7 @@ public class StudentService {
     private MaterialDAO materialDAO;
     private AssignmentDAO assignmentDAO;
     private AttendanceDAO attendanceDao;
+    private ResultDAO resultDAO;
 
     public StudentService() {
         this.studentDAO = new StudentDAO();
@@ -29,6 +33,7 @@ public class StudentService {
         this.materialDAO = new MaterialDAO();
         this.assignmentDAO = new AssignmentDAO();
         this.attendanceDao= new AttendanceDAO();
+        this.resultDAO=new ResultDAO();
     }
     
 
@@ -172,45 +177,50 @@ public class StudentService {
 
     // ===================== MARKS / EXAMS =====================
     public void viewMarks(int studentId) {
-        List<Enrollment> enrollments = enrollmentDao.getEnrollmentsByStudent(studentId);
+        List<Result> results = resultDAO.getResultsByStudent(studentId);
 
-        if (enrollments == null || enrollments.isEmpty()) {
-            System.out.println("No enrolled courses for marks");
+        if (results == null || results.isEmpty()) {
+            System.out.println("No results available for this student.");
             return;
         }
 
         System.out.println("\n--- Marks Report ---");
 
-        for (Enrollment e : enrollments) {
-            int courseId = e.getCourseId();
-            Course course = null;
+        // Group results by course
+        Map<Integer, List<Result>> courseResultsMap = new HashMap<>();
 
-            // Find course name
-            for (Course c : courseDAO.getAllCourses()) {
-                if (c.getCourseId() == courseId) {
-                    course = c;
-                    break;
-                }
-            }
+        for (Result r : results) {
+            if (!r.isPublished()) continue; // show only published results
 
-            if (course == null) continue;
+            Exam exam = examDAO.getExamById(r.getExamId()); // get exam from examId
+            if (exam == null) continue;
 
-            List<Exam> courseExams = examDAO.getExamsByCourse(courseId); // assume we add this method
-            if (courseExams == null || courseExams.isEmpty()) {
-                System.out.println("Course: " + course.getCourseName() + " | No exams yet");
-                continue;
-            }
+            int courseId = exam.getCourseId(); // get courseId from exam
+            courseResultsMap.computeIfAbsent(courseId, k -> new ArrayList<>()).add(r);
+        }
+
+        for (Map.Entry<Integer, List<Result>> entry : courseResultsMap.entrySet()) {
+            int courseId = entry.getKey();
+            List<Result> courseResults = entry.getValue();
+
+            Course course = courseDAO.getCourseById(courseId);
+            String courseName = (course != null) ? course.getCourseName() : "Unknown Course";
 
             double totalMarks = 0;
             double maxTotal = 0;
 
-            System.out.println("\nCourse: " + course.getCourseName() + " (ID: " + courseId + ")");
-            for (Exam ex : courseExams) {
-                Integer mark = ex.getStudentMarks(studentId); // assume Exam has a Map<Integer, Integer> of student marks
-                if (mark == null) mark = 0;
-                System.out.println("Exam ID: " + ex.getExamId() + " | Marks: " + mark + "/" + ex.getMaxMarks());
-                totalMarks += mark;
-                maxTotal += ex.getMaxMarks();
+            System.out.println("\nCourse: " + courseName + " (ID: " + courseId + ")");
+
+            for (Result r : courseResults) {
+                Exam exam = examDAO.getExamById(r.getExamId());
+                int maxMarks = (exam != null) ? exam.getMaxMarks() : 100;
+
+                System.out.println("Exam ID: " + r.getExamId() +
+                                   " | Marks: " + r.getMarks() + "/" + maxMarks +
+                                   " | Grade: " + r.getGrade());
+
+                totalMarks += r.getMarks();
+                maxTotal += maxMarks;
             }
 
             System.out.println("Total: " + totalMarks + "/" + maxTotal);
@@ -218,7 +228,6 @@ public class StudentService {
             System.out.printf("Percentage: %.2f%%\n", percentage);
         }
     }
-
     // ===================== ATTENDANCE =====================
     public void viewAttendance(int studentId) {
         Student s = studentDAO.getStudentById(studentId);
@@ -332,7 +341,7 @@ public class StudentService {
         libraryService.borrowBook(studentId, "STUDENT", bookId);
     }
 
-    public void returnBook(int recordId) {
-        libraryService.returnBook(recordId);
+    public void returnBook(int bookId, int studentId) {
+        libraryService.returnBook(studentId, "student", bookId);
     }
 }
