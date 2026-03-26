@@ -215,34 +215,43 @@ public class FacultyService {
 	// Marks
 	public void addResult(int studentId, int courseId, int marks) {
 
-		if (studentId <= 0 || courseId <= 0) {
-			System.out.println("Invalid data");
-			return;
-		}
+        if (studentId <= 0 || courseId <= 0) {
+            System.out.println("Invalid data");
+            return;
+        }
 
-		if (marks < 0 || marks > 100) {
-			System.out.println("Invalid marks");
-			return;
-		}
+        if (marks < 0 || marks > 100) {
+            System.out.println("Invalid marks");
+            return;
+        }
 
-		String grade;
+        // ✅ Get exam ID for the course
+        int examId = resultDAO.getExamIdByCourse(courseId);
+        if (examId == -1) {
+            System.out.println("No exam found for this course");
+            return;
+        }
 
-		if (marks >= 90)
-			grade = "A";
-		else if (marks >= 75)
-			grade = "B";
-		else if (marks >= 50)
-			grade = "C";
-		else
-			grade = "Fail";
+        // Determine grade
+        String grade;
+        if (marks >= 90)
+            grade = "A";
+        else if (marks >= 75)
+            grade = "B";
+        else if (marks >= 50)
+            grade = "C";
+        else
+            grade = "Fail";
 
-		Result result = new Result(resultDAO.getAllResults().size() + 1, studentId, courseId, marks, grade);
+        // Create Result object
+        Result result = new Result(0, studentId, examId, marks, grade);
+        result.setPublished(false); // Not published yet
 
-		resultDAO.addResult(result);
+        // Save to DB
+        resultDAO.addResult(result);
 
-		System.out.println("Marks Entered by Faculty (Not Published)");
-	}
-
+        System.out.println("Marks entered successfully (Not Published)");
+    }
 	// Notification
 
 	public void viewNotification(int facultyId) {
@@ -299,8 +308,8 @@ public class FacultyService {
 	}
 
 	// Return Book
-	public void returnBook(int recordId) {
-		libraryService.returnBook(recordId);
+	public void returnBook(int bookId, int facultyId) {
+	    libraryService.returnBook(facultyId, "faculty", bookId);
 	}
 
 	// Timetable

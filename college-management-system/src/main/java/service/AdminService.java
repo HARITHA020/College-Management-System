@@ -411,7 +411,7 @@ public class AdminService {
         }
 
         // 🔹 6. All valid → schedule exam
-        examDao.addExam(examId, courseId, examDate, maxMark);
+        examDao.scheduleExam( courseId, examDate, maxMark);
 
         System.out.println("Exam Scheduled Successfully");
     }
@@ -526,9 +526,8 @@ public class AdminService {
         isbn = isbn.trim();
 
         // 🔹 9. Create Book
-        Book book = new Book(id, title, author, isbn, true);
 
-        bookDAO.addBook(book);
+        bookDAO.addBook(title, author, isbn);
 
         System.out.println("Book added successfully");
     }
@@ -557,7 +556,7 @@ public class AdminService {
         }
 
         // 🔹 3. Optional: Check if book is issued
-        if (!foundBook.isAvailability()) {
+        if (!foundBook.isAvailable()) {
             System.out.println("Cannot remove: Book is currently issued");
             return;
         }
@@ -579,12 +578,12 @@ public class AdminService {
                     " | Title: " + b.getTitle() +
                     " | Author: " + b.getAuthor() +
                     " | ISBN: " + b.getIsbn() +
-                    " | Available: " + b.isAvailability());
+                    " | Available: " + b.isAvailable());
         }
     }
 
     public void viewBorrowRecords() {
-        List<BorrowRecord> records = borrowRecordDAO.getAllRecords();
+        List<BorrowRecord> records = borrowRecordDAO.getActiveRecords();
         if(records.isEmpty()) {
             System.out.println("No borrow records");
             return;
@@ -592,7 +591,6 @@ public class AdminService {
         for (BorrowRecord r : records) {
             System.out.println("Record ID: " + r.getRecordId() +
                     " | Student ID: " + r.getStudentId() +
-                    " | Faculty ID:  "+r.getFacultyId()+
                     " | Book ID: " + r.getBookId() +
                     " | Borrow Date: " + r.getBorrowDate() +
                     " | Return Date: " + r.getReturnDate());
@@ -600,6 +598,7 @@ public class AdminService {
     }
     
     //=================Result==================
+ // Publish result with extra marks
     public void publishResult(int resultId, int extraMarks) {
 
         Result r = resultDAO.getResultById(resultId);
@@ -616,7 +615,7 @@ public class AdminService {
 
         r.setPublished(true);
         System.out.println("Result published successfully for Student ID " + r.getStudentId() +
-                " in Course ID " + r.getCourseId() +
+                " in Exam ID " + r.getExamId() +  // ✅ updated
                 " with marks: " + r.getMarks() +
                 " and Grade: " + r.getGrade());
     }
@@ -634,7 +633,11 @@ public class AdminService {
         System.out.println("---------------------------------------------------");
         for (Result r : results) {
             Student s = studentDao.getStudentById(r.getStudentId());
-            Course c = courseDao.getCourseById(r.getCourseId());
+
+            // Get course via exam
+            Exam e = examDao.getExamById(r.getExamId());
+            Course c = (e != null) ? courseDao.getCourseById(e.getCourseId()) : null;
+
             String studentName = (s != null) ? s.getName() : "Unknown";
             String courseName = (c != null) ? c.getCourseName() : "Unknown";
 
@@ -657,7 +660,6 @@ public class AdminService {
         else if (marks >= 50) return "C";
         else return "F";
     }
-
 	
 }
    
