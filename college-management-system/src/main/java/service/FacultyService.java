@@ -33,6 +33,73 @@ public class FacultyService {
         materialDAO = new MaterialDAO();
         assignmentDAO = new AssignmentDAO();
     }
+    
+ // Faculty Management (Admin Purpose)
+
+ 	public void addFacultyWithUser(String email, String password,String name, String department, String dob,
+ 			String contact) {
+
+ 		if (userDAO.checkEmailExists(email)) {
+ 			System.out.println("Email already exists");
+ 			return;
+ 		}
+
+ 		int userId = userDAO.createUser(email, password, "FACULTY");
+
+ 		if (userId == -1) {
+ 			System.out.println("User creation failed");
+ 			return;
+ 		}
+
+
+
+ // ✅ IMPORTANT CHANGE HERE
+ 		facultyDAO.addFaculty( name, department, dob, contact, userId);
+
+ 		System.out.println("✅ Faculty added successfully");
+ 	}
+
+ 	public void updateFaculty(int id, String name, String department, String dob, String contact) {
+
+ 		facultyDAO.updateFaculty(id, name, department, dob, contact);
+ 		System.out.println("✅ Faculty updated successfully");
+ 	}
+
+ 	public void deleteFaculty(int id) {
+
+ 		if (id <= 0) {
+ 			System.out.println("Invalid Faculty ID");
+ 			return;
+ 		}
+
+ 		int userId = facultyDAO.getUserIdByFacultyId(id);
+
+ 		if (userId == -1) {
+ 			System.out.println("Faculty not found");
+ 			return;
+ 		}
+
+ 		userDAO.deleteUser(userId);
+
+ 		System.out.println("✅ Faculty deleted successfully (CASCADE)");
+ 	}
+
+ 	public void viewFaculty() {
+
+ 		List<Faculty> faculties = facultyDAO.getAllFaculty();
+
+ 		if (faculties == null || faculties.isEmpty()) {
+ 			System.out.println("No faculty available");
+ 			return;
+ 		}
+
+ 		System.out.println("\n--- Faculty List ---");
+
+ 		for (Faculty f : faculties) {
+ 			System.out.println("ID: " + f.getId() + ", Name: " + f.getName() + ", Dept: " + f.getDepartment()
+ 					+ ", DOB: " + f.getDob() + ", Contact: " + f.getContact());
+ 		}
+ 	}
 
     // ✅ Convert userId → facultyId
     private int getFacultyIdFromUserId(int userId) {
