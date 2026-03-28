@@ -1,7 +1,10 @@
 package service;
 
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import dao.*;
 import model.*;
@@ -119,14 +122,18 @@ public class AdminService {
             System.out.println("No admins available");
             return;
         }
+        
+        System.out.printf("%-5s %-20s %-15s %-15s\n",
+                "ID", "Name", "DOB", "Contact");
+
+        System.out.println("------------------------------------------------------------");
 
         for (Administrator admin : admins) {
-            System.out.println(
-                "ID: " + admin.getId() +
-                ", Name: " + admin.getName() +
-                ", DOB: " + admin.getDob() +
-                ", Contact: " + admin.getContact()
-            );
+            System.out.printf("%-5d %-20s %-15s %-15s\n",
+                    admin.getId(),
+                    admin.getName(),
+                    admin.getDob(),
+                    admin.getContact());
         }
     }
 
@@ -207,15 +214,25 @@ public class AdminService {
     }
 
     public void viewCourses() {
+
         List<Course> courses = courseDao.getAllCourses();
-        if(courses.isEmpty()) {
+
+        if (courses.isEmpty()) {
             System.out.println("No courses available");
             return;
         }
+        System.out.printf("%-10s %-25s %-15s %-20s\n",
+                "Course ID", "Course Name", "Faculty ID", "FacultyName");
+
+        System.out.println("----------------------------------------------------------------");
+
         for (Course c : courses) {
-            System.out.println("ID: " + c.getCourseId() +
-                    ", Name: " + c.getCourseName() +
-                    ", Faculty ID: " + c.getFacultyId());
+        	Faculty f = facultyDao.getFacultyById(c.getFacultyId());
+        	System.out.printf("%-10d %-25s %-15d %-20s\n",
+        	        c.getCourseId(),
+        	        c.getCourseName(),
+        	        c.getFacultyId(),
+        	        f.getName());
         }
     }
     
@@ -228,123 +245,100 @@ public class AdminService {
     }
 
     // ================= TIMETABLE =================
-	public void addTimetable( int facultyId, String day, String time, String room, int courseId,
-			String section) {
+    public void addTimetable(int facultyId, String day, int period, String room, int courseId, String section) {
 
-		// 🔹 1. Validate ID
-		
-
-        // 🔹 2. Validate faculty exists
-		boolean facultyExists = false;
-		for (Faculty f : facultyDao.getAllFaculty()) {
-			if (f.getId() == facultyId) {
-				facultyExists = true;
-				break;
-			}
-		}
-
-		if (!facultyExists) {
-			System.out.println("Faculty does not exist");
-			return;
-		}
-
-        // 🔹 3. Validate course exists
-		boolean courseExists = false;
-		for (Course c : courseDao.getAllCourses()) {
-			if (c.getCourseId() == courseId) {
-				courseExists = true;
-				break;
-			}
-		}
-
-		if (!courseExists) {
-			System.out.println("Course does not exist");
-			return;
-		}
-
-        // 🔹 4. Validate day
-		if (day == null || day.trim().isEmpty()) {
-			System.out.println("Day cannot be empty");
-			return;
-		}
-
-		String d = day.toLowerCase();
-		if (!(d.equals("monday") || d.equals("tuesday") || d.equals("wednesday") || d.equals("thursday")
-				|| d.equals("friday") || d.equals("saturday"))) {
-			System.out.println("Invalid day");
-			return;
-		}
-
-        // 🔹 5. Validate time
-		if (time == null || time.trim().isEmpty()) {
-			System.out.println("Time cannot be empty");
-			return;
-		}
-
-        // (Simple format check: 10:00-11:00)
-		if (!time.matches("\\d{2}:\\d{2}-\\d{2}:\\d{2}")) {
-			System.out.println("Invalid time format (Use HH:MM-HH:MM)");
-			return;
-		}
-
-        // 🔹 6. Validate room
-		if (room == null || room.trim().isEmpty()) {
-			System.out.println("Room cannot be empty");
-			return;
-		}
-
-        // 🔹 7. Validate section
-		if (section == null || section.trim().isEmpty()) {
-			System.out.println("Section cannot be empty");
-			return;
-		}
-
-       
-
-        // 🔹 9. Conflict check (VERY IMPORTANT 🔥)
-
-		for (Timetable t : timetableDao.getAllTimetables()) {
-
-       // Same faculty same time
-			if (t.getFacultyId() == facultyId && t.getDay().equalsIgnoreCase(day) && t.getTime().equals(time)) {
-
-				System.out.println("Faculty already has class at this time");
-				return;
-			}
-
-       // Same room same time
-			if (t.getRoom().equalsIgnoreCase(room) && t.getDay().equalsIgnoreCase(day) && t.getTime().equals(time)) {
-
-				System.out.println("Room already occupied at this time");
-				return;
-			}
-
-       // Same section same time
-			if (t.getSection().equalsIgnoreCase(section) && t.getDay().equalsIgnoreCase(day)
-					&& t.getTime().equals(time)) {
-
-				System.out.println("Section already has class at this time");
-				return;
-			}
-		}
-
-        // 🔹 10. All valid → add timetable
-		timetableDao.addTimetable( facultyId, day, time, room, courseId, section);
-		System.out.println("Timetable Added Successfully");
-}
-
-    public void viewTimetable() {
-        List<Timetable> list = timetableDao.getAllTimetables();
-        if(list.isEmpty()) {
-            System.out.println("No timetable available");
+        if (period < 1 || period > 6) {
+            System.out.println("Invalid period");
             return;
         }
+
+        for (Timetable t : timetableDao.getAllTimetables()) {
+
+            if (t.getFacultyId() == facultyId &&
+                t.getDay().equalsIgnoreCase(day) &&
+                t.getPeriod() == period) {
+                System.out.println("Faculty busy");
+                return;
+            }
+
+            if (t.getRoom().equalsIgnoreCase(room) &&
+                t.getDay().equalsIgnoreCase(day) &&
+                t.getPeriod() == period) {
+                System.out.println("Room occupied");
+                return;
+            }
+
+            if (t.getSection().equalsIgnoreCase(section) &&
+                t.getDay().equalsIgnoreCase(day) &&
+                t.getPeriod() == period) {
+                System.out.println("Section already has class");
+                return;
+            }
+        }
+
+        timetableDao.addTimetable(facultyId, day, period, room, courseId, section);
+    }
+
+    // VIEW ALL
+    public void viewTimetable() {
+
+        List<Timetable> list = timetableDao.getAllTimetables();
+
+        if (list.isEmpty()) {
+            System.out.println("No timetable");
+            return;
+        }
+
+        System.out.printf("%-5s %-10s %-7s %-10s %-10s %-10s\n",
+                "ID", "Day", "Period", "Room", "Course", "Section");
+
+        System.out.println("-----------------------------------------------------");
+
         for (Timetable t : list) {
-            System.out.println("ID: " + t.gettimetableId() +
-                    ", Day: " + t.getDay() +
-                    ", Time: " + t.getTime() +
-                    ", Room: " + t.getRoom() +
-                    ", Course ID: " + t.getCourseId());
+            System.out.printf("%-5d %-10s %-7d %-10s %-10d %-10s\n",
+                    t.gettimetableId(),
+                    t.getDay(),
+                    t.getPeriod(),
+                    t.getRoom(),
+                    t.getCourseId(),
+                    t.getSection());
+        }
+    }
+
+    // 🔥 VIEW BY DATE + SECTION
+    public void viewByDate(String dateInput, String section) {
+
+        try {
+            LocalDate date = LocalDate.parse(dateInput);
+            String day = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+
+            List<Timetable> list = timetableDao.getAllTimetables();
+
+            System.out.println("\nDate: " + dateInput + " (" + day + ")");
+            System.out.println("Section: " + section);
+
+            boolean found = false;
+
+            for (Timetable t : list) {
+
+                if (t.getDay().equalsIgnoreCase(day) &&
+                    t.getSection().equalsIgnoreCase(section)) {
+
+                    System.out.println("Period: " + t.getPeriod() +
+                            ", Room: " + t.getRoom() +
+                            ", Course: " + t.getCourseId() +
+                            ", Faculty: " + t.getFacultyId());
+
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                System.out.println("No data found");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Invalid date format (YYYY-MM-DD)");
         }
     }
 
@@ -472,47 +466,32 @@ public class AdminService {
     
 
     // ================= LIBRARY =================
-    public void addBook(int id, String title, String author, String isbn) {
-
-        // 🔹 1. Validate ID
-        if (id <= 0) {
-            System.out.println("Invalid Book ID");
-            return;
-        }
-
-        // 🔹 2. Check duplicate ID
-        for (Book b : bookDAO.getAllBooks()) {
-            if (b.getBookId() == id) {
-                System.out.println("Book ID already exists");
-                return;
-            }
-        }
-
-        // 🔹 3. Validate Title
+    public void addBook(String title, String author, String isbn) {
+        // 🔹 1. Validate Title
         if (title == null || title.trim().isEmpty()) {
             System.out.println("Title cannot be empty");
             return;
         }
 
-        // 🔹 4. Validate Author
+        // 🔹 2. Validate Author
         if (author == null || author.trim().isEmpty()) {
             System.out.println("Author cannot be empty");
             return;
         }
 
-        // 🔹 5. Validate ISBN
+        // 🔹 3. Validate ISBN
         if (isbn == null || isbn.trim().isEmpty()) {
             System.out.println("ISBN cannot be empty");
             return;
         }
 
-        // 🔹 6. ISBN format check (basic)
+        // 🔹 4. ISBN format check (basic)
         if (!isbn.matches("\\d{10}|\\d{13}")) {
             System.out.println("Invalid ISBN (must be 10 or 13 digits)");
             return;
         }
 
-        // 🔹 7. Duplicate ISBN check (VERY IMPORTANT 🔥)
+        // 🔹 5. Duplicate ISBN check (VERY IMPORTANT 🔥)
         for (Book b : bookDAO.getAllBooks()) {
             if (b.getIsbn().equals(isbn)) {
                 System.out.println("Book with same ISBN already exists");
@@ -520,12 +499,12 @@ public class AdminService {
             }
         }
 
-        // 🔹 8. Trim clean data
+        // 🔹 6. Trim clean data
         title = title.trim();
         author = author.trim();
         isbn = isbn.trim();
 
-        // 🔹 9. Create Book
+        // 🔹 7. Create Book
 
         bookDAO.addBook(title, author, isbn);
 
@@ -564,7 +543,6 @@ public class AdminService {
         // 🔹 4. Remove
         bookDAO.removeBook(id);
 
-        System.out.println("Book removed successfully");
     }
 
     public void viewAllBooks() {
@@ -610,16 +588,20 @@ public class AdminService {
         // Add extra marks
         r.setMarks(r.getMarks() + extraMarks);
 
-        // Update grade based on new marks
+        // Update grade
         r.setGrade(calculateGrade(r.getMarks()));
 
+        // Set published
         r.setPublished(true);
+
+        // ✅ VERY IMPORTANT: SAVE TO DB
+        resultDAO.updateResult(r);
+
         System.out.println("Result published successfully for Student ID " + r.getStudentId() +
-                " in Exam ID " + r.getExamId() +  // ✅ updated
+                " in Exam ID " + r.getExamId() +
                 " with marks: " + r.getMarks() +
                 " and Grade: " + r.getGrade());
     }
-
     // View all results
     public void viewAllResults() {
         List<Result> results = resultDAO.getAllResults();

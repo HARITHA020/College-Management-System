@@ -11,6 +11,7 @@ import model.*;
 public class StudentService {
 
     private StudentDAO studentDAO;
+    private FacultyDAO facultyDAO;
     private CourseDAO courseDAO;
     private TimetableDAO timetableDAO;
     private ExamDAO examDAO;
@@ -24,6 +25,7 @@ public class StudentService {
 
     public StudentService() {
         this.studentDAO = new StudentDAO();
+        this.facultyDAO=new FacultyDAO();
         this.courseDAO = new CourseDAO();
         this.timetableDAO = new TimetableDAO();
         this.examDAO = new ExamDAO();
@@ -147,13 +149,24 @@ public class StudentService {
             System.out.println("No enrolled courses found");
             return;
         }
+        System.out.printf("%-10s %-15s %-20s %-15s %-20s\n",
+                "Course ID", "Student Name", "Course Name", "Faculty ID", "Faculty Name");
+
+        System.out.println("-----------------------------------------------------------------------------------");
+
         for (Enrollment e : enrollments) {
-            for (Course c : courseDAO.getAllCourses()) {
-                if (c.getCourseId() == e.getCourseId()) {
-                    System.out.println("Course ID: " + c.getCourseId() +
-                            " | Name: " + c.getCourseName() +
-                            " | Faculty ID: " + c.getFacultyId());
-                }
+
+            Course c = courseDAO.getCourseById(e.getCourseId());
+            Student s = studentDAO.getStudentById(e.getStudentId());
+            Faculty f=facultyDAO.getFacultyById(c.getFacultyId());
+
+            if (c != null && s != null) {
+                System.out.printf("%-10d %-15s %-20s %-15d %-20s\n",
+                        c.getCourseId(),
+                        s.getName(),
+                        c.getCourseName(),
+                        c.getFacultyId(),
+                        f.getName());
             }
         }
     }

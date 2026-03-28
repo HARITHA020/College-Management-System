@@ -59,14 +59,16 @@ public class BookDAO {
         try {
             Connection con = DBConnection.getConnection();
 
-            String query = "DELETE FROM books WHERE book_id=?";
-
+            String query = "UPDATE books SET available = false WHERE book_id=?";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, bookId);
 
-            ps.executeUpdate();
+            int rows = ps.executeUpdate();
 
-            System.out.println("✅ Book removed successfully");
+            if (rows > 0)
+                System.out.println("Book marked as unavailable");
+            else
+                System.out.println("Book not found");
 
         } catch (Exception e) {
             e.printStackTrace();

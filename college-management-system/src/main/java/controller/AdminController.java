@@ -23,7 +23,7 @@ public class AdminController {
 
         int choice = 0;
 
-        while (choice != 12) {
+        while (choice != 11) {
 
             System.out.println("\n===== ADMIN MENU =====");
             System.out.println("1. Manage Admin");
@@ -34,10 +34,9 @@ public class AdminController {
             System.out.println("6. Schedule exam");
             System.out.println("7. Send notification");
             System.out.println("8. Manage Library");
-            System.out.println("9. View Details");
-            System.out.println("10. Publish Result");   
-            System.out.println("11. View All Results"); 
-            System.out.println("12. Logout");
+            System.out.println("9. Publish Result");   
+            System.out.println("10. View All Results"); 
+            System.out.println("11. Logout");
 
             System.out.print("Enter your choice: ");
             choice = input.nextInt();
@@ -70,15 +69,12 @@ public class AdminController {
                     manageLibrary();
                     break;
                 case 9:
-                    viewDetails();
-                    break;
-                case 10:
                     publishResult();
                     break;
-                case 11:
+                case 10:
                     adminService.viewAllResults();
                     break;
-                case 12:
+                case 11:
                     System.out.println("Logging out...");
                     return;
                 default:
@@ -92,13 +88,14 @@ public class AdminController {
 
         int choice = 0;
 
-        while (choice != 4) {
+        while (choice != 5) {
 
             System.out.println("\n--- Manage Admin ---");
             System.out.println("1. Add Admin");
             System.out.println("2. Update Admin");
             System.out.println("3. Delete Admin");
-            System.out.println("4. Exit");
+            System.out.println("4. View Admins");
+            System.out.println("5. Exit");
 
             choice = input.nextInt();
             input.nextLine();
@@ -148,6 +145,7 @@ public class AdminController {
 
                 adminService.deleteAdmin(id);
             }
+            else if (choice == 4) adminService.viewAdmins();
         }
     }
 
@@ -156,13 +154,14 @@ public class AdminController {
 
         int choice = 0;
 
-        while (choice != 4) {
+        while (choice != 5) {
 
             System.out.println("\n--- Manage Student ---");
             System.out.println("1. Add Student");
             System.out.println("2. Update Student");
             System.out.println("3. Delete Student");
-            System.out.println("4. Exit");
+            System.out.println("4. View Students");
+            System.out.println("5. Exit");
 
             choice = input.nextInt();
             input.nextLine();
@@ -222,6 +221,7 @@ public class AdminController {
 
                 studentService.deleteStudent(id);
             }
+            else if (choice == 4) studentService.viewStudents();
         }
     }
 
@@ -230,13 +230,14 @@ public class AdminController {
 
         int choice = 0;
 
-        while (choice != 4) {
+        while (choice != 5) {
 
             System.out.println("\n--- Manage Faculty ---");
             System.out.println("1. Add Faculty");
             System.out.println("2. Update Faculty");
             System.out.println("3. Delete Faculty");
-            System.out.println("4. Exit");
+            System.out.println("4. View Students");
+            System.out.println("5. Exit");
 
             choice = input.nextInt();
             input.nextLine();
@@ -292,6 +293,7 @@ public class AdminController {
 
                 facultyService.deleteFaculty(id);
             }
+            else if (choice == 4) facultyService.viewFaculty();
         }
     }
     // ================= COURSE =================
@@ -299,15 +301,16 @@ public class AdminController {
 
         int choice = 0;
 
-        while (choice != 6) {
+        while (choice != 7) {
 
             System.out.println("\n--- Manage Course ---");
             System.out.println("1. Add Course");
             System.out.println("2. Assign Course to Faculty");
             System.out.println("3. Assign Student to Course");
-            System.out.println("4. View the Enrollment Details");
-            System.out.println("5. Delete Enrollments"); 
-            System.out.println("6. Exit");
+            System.out.println("4. View Courses");
+            System.out.println("5. View the Enrollment Details");
+            System.out.println("6. Delete Enrollments");
+            System.out.println("7. Exit");
 
             choice = input.nextInt();
             input.nextLine();
@@ -339,10 +342,13 @@ public class AdminController {
 
                 adminService.assignStudentToCourse(studentId, courseId);
             }
-            else if(choice==4) {
-            	 adminService.viewEnrollmentDetails();
+            else if (choice == 4) {
+            	adminService.viewCourses();
             }
             else if(choice==5) {
+            	 adminService.viewEnrollmentDetails();
+            }
+            else if(choice==6) {
             	System.out.print("Enter Student ID: ");
                 int studentId = input.nextInt();
 
@@ -356,75 +362,98 @@ public class AdminController {
     // ================= TIMETABLE =================
     public void manageTimetable() {
 
-        System.out.println("\n--- Add Timetable ---");
-
-        System.out.print("Enter Day: ");
-        String day = input.nextLine();
-
-        System.out.print("Enter Time: ");
-        String time = input.nextLine();
-
-        System.out.print("Enter Room Number: ");
-        String room = input.nextLine();
-
-        System.out.print("Enter Course ID: ");
-        int courseId = input.nextInt();
-
-        System.out.print("Enter Faculty ID: ");
-        int facultyId = input.nextInt();
-        input.nextLine();
-
-        System.out.print("Enter Section: ");
-        String section = input.nextLine();
-
-        adminService.addTimetable(facultyId, day, time, room, courseId, section);
-    }
-
-    // ================= VIEW DETAILS =================
-    public void viewDetails() {
-
         int choice = 0;
 
-        while (choice != 7) {
+        while (choice != 4) {
 
-            System.out.println("\n--- View Details ---");
-            System.out.println("1. View Students");
-            System.out.println("2. View Faculties");
-            System.out.println("3. View Admins");
-            System.out.println("4. View Courses");
-            System.out.println("5. View Timetable");
-            System.out.println("6. View ExamSchedules");
-            System.out.println("7. Exit");
+            System.out.println("\n--- TIMETABLE MENU ---");
+            System.out.println("1. Add Timetable");
+            System.out.println("2. View All");
+            System.out.println("3. View by Date & Section");
+            System.out.println("4. Exit");
 
             choice = input.nextInt();
+            input.nextLine();
 
-            if (choice == 1) studentService.viewStudents();
-            else if (choice == 2) facultyService.viewFaculty();
-            else if (choice == 3) adminService.viewAdmins();
-            else if (choice == 4) adminService.viewCourses();
-            else if (choice == 5) adminService.viewTimetable();
-            else if (choice == 6) adminService.viewSchedules();
+            switch (choice) {
+
+                case 1:
+                    System.out.print("Day: ");
+                    String day = input.nextLine();
+
+                    System.out.print("Period: ");
+                    int period = input.nextInt();
+
+                    System.out.print("Room: ");
+                    input.nextLine();
+                    String room = input.nextLine();
+
+                    System.out.print("Course ID: ");
+                    int courseId = input.nextInt();
+
+                    System.out.print("Faculty ID: ");
+                    int facultyId = input.nextInt();
+                    input.nextLine();
+
+                    System.out.print("Section: ");
+                    String section = input.nextLine();
+
+                    adminService.addTimetable(facultyId, day, period, room, courseId, section);
+                    break;
+
+                case 2:
+                    adminService.viewTimetable();
+                    break;
+
+                case 3:
+                    System.out.print("Enter Date (YYYY-MM-DD): ");
+                    String date = input.nextLine();
+
+                    System.out.print("Enter Section: ");
+                    String sec = input.nextLine();
+
+                    adminService.viewByDate(date, sec);
+                    break;
+            }
         }
     }
 
+
     // ================= EXAM =================
-    public void examSchedule() {
+	public void examSchedule() {
+		int choice = 0;
 
-        System.out.print("Enter Exam ID: ");
-        int examId = input.nextInt();
+		while (choice != 3) {
 
-        System.out.print("Enter Course ID: ");
-        int courseId = input.nextInt();
-        input.nextLine();
+			System.out.println("\n--- Manage Exam ---");
+			System.out.println("1. Add Exam");
+			System.out.println("2. View Exams");
+			System.out.println("3. Exit");
 
-        System.out.print("Enter Exam Date: ");
-        String examDate = input.nextLine();
+			choice = input.nextInt();
+			input.nextLine();
 
-        System.out.println("Enter Max Marks:");
-        int maxMark = input.nextInt();
+			if (choice == 1) {
 
-        adminService.scheduleExam(examId, courseId, examDate, maxMark);
-    }
+				System.out.print("Enter Exam ID: ");
+				int examId = input.nextInt();
+
+				System.out.print("Enter Course ID: ");
+				int courseId = input.nextInt();
+				input.nextLine();
+
+				System.out.print("Enter Exam Date: ");
+				String examDate = input.nextLine();
+
+				System.out.println("Enter Max Marks:");
+				int maxMark = input.nextInt();
+
+				adminService.scheduleExam(examId, courseId, examDate, maxMark);
+			} else if (choice == 2) {
+				adminService.viewSchedules();
+			}
+		}
+	}
 
     // ================= PUBLISH RESULT =================
     private void publishResult() {
@@ -449,7 +478,7 @@ public class AdminController {
             System.out.println("1. Add Notification");
             System.out.println("2. View Notifications");
             System.out.println("3. Delete Notifications");
-            System.out.println("3. Exit");
+            System.out.println("4. Exit");
 
             choice = input.nextInt();
             input.nextLine();
@@ -508,10 +537,6 @@ public class AdminController {
             switch (choice) {
 
                 case 1:
-                    System.out.print("Enter Book ID: ");
-                    int id = input.nextInt();
-                    input.nextLine();
-
                     System.out.print("Enter Title: ");
                     String title = input.nextLine();
 
@@ -521,7 +546,7 @@ public class AdminController {
                     System.out.print("Enter ISBN: ");
                     String isbn = input.nextLine();
 
-                    adminService.addBook(id, title, author, isbn);
+                    adminService.addBook(title, author, isbn);
                     break;
 
                 case 2:
