@@ -1,18 +1,60 @@
 package dao;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import db.DBConnection;
 import model.Assignment;
 
 public class AssignmentDAO {
 
-    private List<Assignment> assignments = new ArrayList<>();
-
+    //ADD ASSIGNMENT
     public void addAssignment(Assignment a) {
-        assignments.add(a);
+
+        String sql = "INSERT INTO assignments (course_id, title, description) VALUES (?, ?, ?)";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, a.getCourseId());
+            ps.setString(2, a.getTitle());
+            ps.setString(3, a.getDescription());
+
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    //GET ALL ASSIGNMENTS
     public List<Assignment> getAllAssignments() {
-        return assignments;
+
+        List<Assignment> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM assignments";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                Assignment a = new Assignment(
+                        rs.getInt("assignment_id"),  
+                        rs.getInt("course_id"),
+                        rs.getString("title"),
+                        rs.getString("description")
+                );
+
+                list.add(a);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 }
