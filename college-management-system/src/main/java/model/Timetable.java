@@ -3,56 +3,39 @@ package model;
 public class Timetable {
 
     private int id;
+    private int facultyId;
     private String day;
-    private String time;
+    private int period;
     private String room;
     private int courseId;
-    private int facultyId;
     private String section;
 
-    //for adding timetable
-    public Timetable( int facultyId, String day, String time, String room, int courseId, String section) {
-       
+    // Constructor for insert
+    public Timetable(int facultyId, String day, int period, String room, int courseId, String section) {
         this.facultyId = facultyId;
         this.day = day;
-        this.time = time;
+        this.period = period;
         this.room = room;
         this.courseId = courseId;
         this.section = section;
     }
-    //for fecting timetable
-    public Timetable(int id, int facultyId, String day, String time, String room, int courseId, String section) {
+
+    // Constructor for fetch
+    public Timetable(int id, int facultyId, String day, int period, String room, int courseId, String section) {
         this.id = id;
         this.facultyId = facultyId;
         this.day = day;
-        this.time = time;
+        this.period = period;
         this.room = room;
         this.courseId = courseId;
         this.section = section;
     }
-    public int gettimetableId() {
-        return id;
-    }
 
-    public String getDay() {
-        return day;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public String getRoom() {
-        return room;
-    }
-    public String getSection() {
-        return section;
-    } 
-    public int getFacultyId() {
-        return facultyId;
-    }
-
-    public int getCourseId() {
-        return courseId;
-    }
+    public int gettimetableId() { return id; }
+    public int getFacultyId() { return facultyId; }
+    public String getDay() { return day; }
+    public int getPeriod() { return period; }
+    public String getRoom() { return room; }
+    public int getCourseId() { return courseId; }
+    public String getSection() { return section; }
 }

@@ -105,7 +105,34 @@ public class FacultyDAO {
 
         return list;
     }
+    // get the faculty details by faculty id
+    public Faculty getFacultyById(int facultyId) {
 
+        String query = "SELECT * FROM faculty WHERE faculty_id=?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, facultyId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Faculty(
+                        rs.getInt("faculty_id"),
+                        rs.getString("name"),
+                        rs.getString("department"),
+                        rs.getString("dob"),
+                        rs.getString("contact"),
+                        rs.getInt("user_id")
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
     // 🔹 GET FACULTY BY USER ID
     public Faculty getFacultyByUserId(int userId) {
 

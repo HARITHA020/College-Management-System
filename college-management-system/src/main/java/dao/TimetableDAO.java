@@ -1,73 +1,62 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.sql.*;
+import java.util.*;
 import db.DBConnection;
-import model.Administrator;
 import model.Timetable;
 
 public class TimetableDAO {
 
-   
+    // ADD
+    public void addTimetable(int facultyId, String day, int period, String room, int courseId, String section) {
 
-    public void addTimetable( int facultyId, String day, String time, String room, int courseId, String section) {
+        try (Connection con = DBConnection.getConnection()) {
 
-    	 try {
-             Connection con = DBConnection.getConnection();
+            String query = "INSERT INTO timetable(faculty_id, course_id, day, period, room, section) VALUES (?, ?, ?, ?, ?, ?)";
+            PreparedStatement ps = con.prepareStatement(query);
 
-             String query = "INSERT INTO timetable(faculty_id,course_id,day,time_slot,room,section) VALUES (?, ?, ?, ?,?,?)";
+            ps.setInt(1, facultyId);
+            ps.setInt(2, courseId);
+            ps.setString(3, day);
+            ps.setInt(4, period);
+            ps.setString(5, room);
+            ps.setString(6, section);
 
-             PreparedStatement ps = con.prepareStatement(query);
-             ps.setInt(1,facultyId );
-             ps.setInt(2, courseId);
-             ps.setString(3, day);
-             ps.setString(4, time);
-             ps.setString(5, room);
-             ps.setString(6, section);
+            ps.executeUpdate();
+            System.out.println("✅ Timetable added");
 
-             int rows = ps.executeUpdate();
-
-             if (rows > 0) {
-                 System.out.println("✅ timetable added successfully");
-             }
-
-         } catch (Exception e) {
-             e.printStackTrace();
-         }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    // GET ALL
     public List<Timetable> getAllTimetables() {
-        List<Timetable> timetables=new ArrayList<>();
-        try {
-            Connection con = DBConnection.getConnection();
+
+        List<Timetable> list = new ArrayList<>();
+
+        try (Connection con = DBConnection.getConnection()) {
 
             String query = "SELECT * FROM timetable";
-
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
-                Timetable timetable = new Timetable(
+                list.add(new Timetable(
                         rs.getInt("timetable_id"),
                         rs.getInt("faculty_id"),
                         rs.getString("day"),
-                        rs.getString("time_slot"),
+                        rs.getInt("period"),
                         rs.getString("room"),
                         rs.getInt("course_id"),
                         rs.getString("section")
-                );
-
-                timetables.add(timetable);
+                ));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return timetables;
-        
+        return list;
     }
 }

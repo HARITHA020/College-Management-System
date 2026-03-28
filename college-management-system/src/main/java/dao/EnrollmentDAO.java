@@ -163,22 +163,27 @@ public class EnrollmentDAO {
                 "JOIN faculty f ON c.faculty_id = f.faculty_id";
 
         try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(query);
-             ResultSet rs = ps.executeQuery()) {
+        	     PreparedStatement ps = con.prepareStatement(query);
+        	     ResultSet rs = ps.executeQuery()) {
 
-        	System.out.println("\n--- Enrollment Details ---");
+        	    System.out.println("\n--- Enrollment Details ---");
 
-        	while (rs.next()) {
-        	    System.out.println(
-        	        "EnrollID: " + rs.getInt("enrollment_id") +
-        	        " | StudentID: " + rs.getInt("student_id") +
-        	        " | Student: " + rs.getString("student_name") +
-        	        " | CourseID: " + rs.getInt("course_id") +
-        	        " | Course: " + rs.getString("course_name") +
-        	        " | FacultyID: " + rs.getInt("faculty_id") +
-        	        " | Faculty: " + rs.getString("faculty_name")
-        	    );
-        	}
+        	    System.out.printf("%-10s %-10s %-15s %-10s %-20s %-10s %-20s\n",
+        	            "EnrollID", "StudID", "Student", "CourseID", "Course", "FacID", "Faculty");
+
+        	    System.out.println("---------------------------------------------------------------------------------------------");
+
+        	    while (rs.next()) {
+        	        System.out.printf("%-10d %-10d %-15s %-10d %-20s %-10d %-20s\n",
+        	                rs.getInt("enrollment_id"),
+        	                rs.getInt("student_id"),
+        	                rs.getString("student_name"),
+        	                rs.getInt("course_id"),
+        	                rs.getString("course_name"),
+        	                rs.getInt("faculty_id"),
+        	                rs.getString("faculty_name")
+        	        );
+        	    }
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -55,6 +55,27 @@ public class ResultDAO {
         }
         return results;
     }
+    
+    //update  result in the db
+    public void updateResult(Result r) {
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "UPDATE results SET marks=?, grade=?, published=? WHERE result_id=?";
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setInt(1, r.getMarks());
+            ps.setString(2, r.getGrade());
+            ps.setBoolean(3, r.isPublished());
+            ps.setInt(4, r.getResultId());
+
+            ps.executeUpdate();
+
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // Get result by ID
     public Result getResultById(int resultId) {
