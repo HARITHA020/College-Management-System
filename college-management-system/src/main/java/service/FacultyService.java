@@ -155,12 +155,12 @@ public class FacultyService {
 
         if (!found) System.out.println("No timetable assigned");
     }
-
-    // ================= MATERIAL =================
+    // ===============MATERIALS================ //
     public void uploadMaterial(int courseId, String title, String content, int userId) {
 
         int facultyId = getFacultyIdFromUserId(userId);
 
+        // 1. Validate course
         Course course = courseDAO.getCourseById(courseId);
 
         if (course == null) {
@@ -168,14 +168,25 @@ public class FacultyService {
             return;
         }
 
+        // 2. Check faculty assignment
         if (course.getFacultyId() != facultyId) {
             System.out.println("You are not assigned to this course");
             return;
         }
 
-        int newId = materialDAO.getAllMaterials().size() + 1;
+        // 3. Duplicate check 
+        for (Material m : materialDAO.getAllMaterials()) {
+            if (m.getCourseId() == courseId &&
+                m.getTitle().equalsIgnoreCase(title.trim())) {
 
-        Material m = new Material(newId, courseId, title, content);
+                System.out.println("Material already exists");
+                return;
+            }
+        }
+
+        // 4. Create object
+        Material m = new Material(0, courseId, title.trim(), content.trim());
+
         materialDAO.addMaterial(m);
 
         System.out.println("Material uploaded successfully");
@@ -201,8 +212,6 @@ public class FacultyService {
 
         for (Material m : materialDAO.getAllMaterials()) {
             if (m.getCourseId() == courseId) {
-
-                // ✅ UPDATED OUTPUT FORMAT
                 System.out.println("----------------------------");
                 System.out.println("Title   : " + m.getTitle());
                 System.out.println("Content : " + m.getContent());
