@@ -41,6 +41,20 @@ public class AttendanceDAO {
             e.printStackTrace();
         }
     }
+    
+    // deletion
+    public void deleteByStudentId(int studentId) {
+        String query = "DELETE FROM attendance WHERE student_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, studentId);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // ===================== GET BY COURSE =====================
     public List<Attendance> getAttendanceByCourse(int courseId) {

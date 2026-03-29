@@ -245,6 +245,18 @@ public class AdminService {
     }
 
     // ================= TIMETABLE =================
+    public String getTimeByPeriod(int period) {
+
+        switch (period) {
+            case 1: return "9:00 - 10:00";
+            case 2: return "10:00 - 11:00";
+            case 3: return "11:00 - 12:00";
+            case 4: return "12:00 - 1:00";
+            case 5: return "2:00 - 3:00";
+            case 6: return "3:00 - 4:00";
+            default: return "Invalid";
+        }
+    }
     public void addTimetable(int facultyId, String day, int period, String room, int courseId, String section) {
 
         if (period < 1 || period > 6) {
@@ -289,16 +301,17 @@ public class AdminService {
             return;
         }
 
-        System.out.printf("%-5s %-10s %-7s %-10s %-10s %-10s\n",
-                "ID", "Day", "Period", "Room", "Course", "Section");
+        System.out.printf("%-5s %-10s %-7s %-15s %-10s %-10s %-10s\n",
+                "ID", "Day", "Period", "Time", "Room", "Course", "Section");
 
-        System.out.println("-----------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------");
 
         for (Timetable t : list) {
-            System.out.printf("%-5d %-10s %-7d %-10s %-10d %-10s\n",
+            System.out.printf("%-5d %-10s %-7d %-15s %-10s %-10d %-10s\n",
                     t.gettimetableId(),
                     t.getDay(),
                     t.getPeriod(),
+                    getTimeByPeriod(t.getPeriod()), // ✅ ADDED
                     t.getRoom(),
                     t.getCourseId(),
                     t.getSection());
@@ -324,10 +337,13 @@ public class AdminService {
                 if (t.getDay().equalsIgnoreCase(day) &&
                     t.getSection().equalsIgnoreCase(section)) {
 
-                    System.out.println("Period: " + t.getPeriod() +
+                    System.out.println(
+                            "Period: " + t.getPeriod() +
+                            " (" + getTimeByPeriod(t.getPeriod()) + ")" + // ✅ ADDED
                             ", Room: " + t.getRoom() +
                             ", Course: " + t.getCourseId() +
-                            ", Faculty: " + t.getFacultyId());
+                            ", Faculty: " + t.getFacultyId()
+                    );
 
                     found = true;
                 }

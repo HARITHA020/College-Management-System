@@ -118,6 +118,22 @@ public class BorrowRecordDAO {
         }
         return -1;
     }
+    
+    //deletion
+    public void deleteByStudentId(int studentId) {
+
+        String query = "DELETE FROM borrow_records WHERE student_id=?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, studentId);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // 🔹 GET ACTIVE BORROWS
     public List<BorrowRecord> getActiveRecords() {

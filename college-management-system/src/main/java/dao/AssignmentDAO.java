@@ -27,6 +27,21 @@ public class AssignmentDAO {
             e.printStackTrace();
         }
     }
+    
+    public boolean deleteAssignment(int materialId) {
+        try (Connection con = DBConnection.getConnection()) {
+            String query = "DELETE FROM assignments WHERE assignment_id = ?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, materialId);
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     //GET ALL ASSIGNMENTS
     public List<Assignment> getAllAssignments() {

@@ -23,15 +23,13 @@ public class FacultyController {
             System.out.println("3. Mark Attendance");
             System.out.println("4. Enter Marks");
             System.out.println("5. View Timetable");
-            System.out.println("6. Upload Material");
-            System.out.println("7. View Materials");
-            System.out.println("8. Create Assignment");
-            System.out.println("9. View Assignments");
-            System.out.println("10. View Notifications");
-            System.out.println("11. Search Book");
-            System.out.println("12. Borrow Book");
-            System.out.println("13. Return Book");
-            System.out.println("14. Logout");
+            System.out.println("6. Manage Material");
+            System.out.println("7. Manage Assignment");
+            System.out.println("8. View Notifications");
+            System.out.println("9. Search Book");
+            System.out.println("10. Borrow Book");
+            System.out.println("11. Return Book");
+            System.out.println("12. Logout");
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
@@ -79,60 +77,106 @@ public class FacultyController {
                     break;
 
                 case 6:
-                    System.out.println("Enter Course ID:");
-                    int cId = scanner.nextInt();
-                    scanner.nextLine();
+                    int choices = 0;
 
-                    System.out.println("Enter Material Title:");
-                    String title = scanner.nextLine();
+                    while (choices != 4) {
 
-                    System.out.println("Enter Content:");
-                    String content = scanner.nextLine();
+                        System.out.println("\n--- Manage Material ---");
+                        System.out.println("1. Upload Material");
+                        System.out.println("2. View Material");
+                        System.out.println("3. Delete Material");
+                        System.out.println("4. Exit");
 
-                    facultyService.uploadMaterial(cId, title, content, userId);
-                    break;
+                        choices = scanner.nextInt();
+                        scanner.nextLine();
 
-                case 7:
-                    System.out.println("Enter Course ID:");
-                    int courseId1 = scanner.nextInt();
-                    scanner.nextLine();
+                        if (choices == 1) {
+                            System.out.println("Enter Course ID:");
+                            int cId = scanner.nextInt();
+                            scanner.nextLine();
 
-                    facultyService.viewMaterials(courseId1, userId, "FACULTY");
-                    break;
+                            System.out.println("Enter Material Title:");
+                            String title = scanner.nextLine();
 
+                            System.out.println("Enter Content:");
+                            String content = scanner.nextLine();
+
+                            facultyService.uploadMaterial(cId, title, content, userId);
+
+                        } else if (choices == 2) {
+                            System.out.println("Enter Course ID:");
+                            int courseId1 = scanner.nextInt();
+                            scanner.nextLine();
+
+                            facultyService.viewMaterials(courseId1, userId, "FACULTY");
+
+                        } else if (choices == 3) {
+                        	System.out.println("Enter Material ID to remove:");
+                        	int materialId = scanner.nextInt();
+                        	scanner.nextLine();
+
+                        	facultyService.deleteMaterial(materialId, userId, "FACULTY");
+                        }
+                    }
+                    break; 
+
+				case 7:
+					int choices1 = 0;
+
+					while (choices1 != 4) {
+
+						System.out.println("\n--- Manage Assignments ---");
+						System.out.println("1. Upload Assignments");
+						System.out.println("2. View Assignments");
+						System.out.println("3. Delete Assignments");
+						System.out.println("4. Exit");
+
+						choices1 = scanner.nextInt();
+						scanner.nextLine();
+						if (choices1 == 1) {
+
+							System.out.println("Enter Course ID:");
+							int courseId2 = scanner.nextInt();
+							scanner.nextLine();
+
+							System.out.println("Enter Assignment Title:");
+							String atitle = scanner.nextLine();
+
+							System.out.println("Enter Description:");
+							String desc = scanner.nextLine();
+
+							facultyService.createAssignment(courseId2, atitle, desc, userId);
+							
+						} else if (choices1 == 2) {
+							System.out.println("Enter Course ID:");
+							int courseId3 = scanner.nextInt();
+							scanner.nextLine();
+
+							facultyService.viewAssignments(courseId3, userId, "FACULTY");
+							
+
+						} else if (choices1 == 3) {
+							System.out.println("Enter Assignment ID to remove:");
+							int assignId = scanner.nextInt();
+							scanner.nextLine();
+
+							facultyService.deleteAssignment(assignId, userId, "FACULTY");
+							
+						}
+					}
+					break;
+					
                 case 8:
-                    System.out.println("Enter Course ID:");
-                    int courseId2 = scanner.nextInt();
-                    scanner.nextLine();
-
-                    System.out.println("Enter Assignment Title:");
-                    String atitle = scanner.nextLine();
-
-                    System.out.println("Enter Description:");
-                    String desc = scanner.nextLine();
-
-                    facultyService.createAssignment(courseId2, atitle, desc, userId);
-                    break;
-
-                case 9:
-                    System.out.println("Enter Course ID:");
-                    int courseId3 = scanner.nextInt();
-                    scanner.nextLine();
-
-                    facultyService.viewAssignments(courseId3, userId, "FACULTY");
-                    break;
-
-                case 10:
                     facultyService.viewNotification(userId);
                     break;
 
-                case 11:
+                case 9:
                     System.out.print("Enter keyword: ");
                     String keyword = scanner.nextLine();
                     facultyService.searchBook(keyword);
                     break;
 
-                case 12:
+                case 10:
                     System.out.println("Enter Book ID:");
                     int bookId = scanner.nextInt();
                     scanner.nextLine();
@@ -140,7 +184,7 @@ public class FacultyController {
                     facultyService.borrowBook(userId, bookId);
                     break;
 
-                case 13:
+                case 11:
                     System.out.print("Enter Book ID to return: ");
                     int book_Id = scanner.nextInt();
                     scanner.nextLine();
@@ -148,7 +192,7 @@ public class FacultyController {
                     facultyService.returnBook(book_Id, userId);
                     break;
 
-                case 14: // ✅ FIXED
+                case 12: // ✅ FIXED
                     System.out.println("Logging out...");
                     return;
 

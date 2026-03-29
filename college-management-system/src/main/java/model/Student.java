@@ -7,31 +7,37 @@ public class Student {
     private String department;
     private String dob;
     private String contact;
-    private int userId;  // Link to User table
+    private String section;   // ✅ NEW FIELD
+    private int userId;
 
-    public Student(int id, String name, String department, String dob, String contact, int userId) {
+    // ✅ Constructor with ID
+    public Student(int id, String name, String department, String dob, String contact, String section, int userId) {
         this.id = id;
         this.name = name;
         this.department = department;
         this.dob = dob;
         this.contact = contact;
+        this.section = section;   // ✅ added
         this.userId = userId;
     }
-    
-    public Student( String name, String department, String dob, String contact, int userId) {
-       
+
+    // ✅ Constructor without ID
+    public Student(String name, String department, String dob, String contact, String section, int userId) {
         this.name = name;
         this.department = department;
         this.dob = dob;
         this.contact = contact;
+        this.section = section;   // ✅ added
         this.userId = userId;
     }
+
     // Getters
     public int getId() { return id; }
     public String getName() { return name; }
     public String getDepartment() { return department; }
     public String getDob() { return dob; }
     public String getContact() { return contact; }
+    public String getSection() { return section; }   // ✅ NEW
     public int getUserId() { return userId; }
 
     // Setters
@@ -40,13 +46,14 @@ public class Student {
     public void setDepartment(String department) { this.department = department; }
     public void setDob(String dob) { this.dob = dob; }
     public void setContact(String contact) { this.contact = contact; }
+    public void setSection(String section) { this.section = section; } // ✅ NEW
     public void setUserId(int userId) { this.userId = userId; }
 
     @Override
     public String toString() {
         return String.format(
-            "Student [ID: %d | Name: %-20s | Department: %s | DOB: %s | Contact: %s | UserID: %d]",
-            id, name, department, dob, contact, userId
+            "Student [ID: %d | Name: %-20s | Dept: %s | Section: %s | DOB: %s | Contact: %s | UserID: %d]",
+            id, name, department, section, dob, contact, userId
         );
     }
 }

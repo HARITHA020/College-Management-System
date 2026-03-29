@@ -27,6 +27,20 @@ public class MaterialDAO {
             e.printStackTrace();
         }
     }
+    public boolean deleteMaterialById(int materialId) {
+        try (Connection con = DBConnection.getConnection()) {
+            String query = "DELETE FROM materials WHERE material_id = ?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, materialId);
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     // GET ALL MATERIALS
     public List<Material> getAllMaterials() {
