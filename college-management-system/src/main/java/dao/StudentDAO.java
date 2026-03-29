@@ -10,56 +10,58 @@ import model.Student;
 public class StudentDAO {
 
     // 🔹 ADD STUDENT (AUTO_INCREMENT → no ID)
-    public void addStudent(String name, String dob, String contact, String department, int userId) {
+	public void addStudent(String name, String dob, String contact, String department, String section, int userId) {
 
-        String query = "INSERT INTO students(name, dob, contact, department, user_id) VALUES (?, ?, ?, ?, ?)";
+	    String query = "INSERT INTO students(name, dob, contact, department, section, user_id) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(query)) {
+	    try (Connection con = DBConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(query)) {
 
-            ps.setString(1, name);
-            ps.setDate(2, Date.valueOf(dob)); // ✅ FIXED
-            ps.setString(3, contact);
-            ps.setString(4, department);
-            ps.setInt(5, userId);
+	        ps.setString(1, name);
+	        ps.setDate(2, Date.valueOf(dob));
+	        ps.setString(3, contact);
+	        ps.setString(4, department);
+	        ps.setString(5, section);   // ✅ NEW
+	        ps.setInt(6, userId);
 
-            int rows = ps.executeUpdate();
+	        int rows = ps.executeUpdate();
 
-            if (rows > 0) {
-                System.out.println("✅ Student added successfully");
-            }
+	        if (rows > 0) {
+	            System.out.println("✅ Student added successfully");
+	        }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
 
     // 🔹 UPDATE STUDENT
-    public void updateStudent(int id, String name, String dob, String contact, String department) {
+	public void updateStudent(int id, String name, String dob, String contact, String department, String section) {
 
-        String query = "UPDATE students SET name=?, dob=?, contact=?, department=? WHERE student_id=?";
+	    String query = "UPDATE students SET name=?, dob=?, contact=?, department=?, section=? WHERE student_id=?";
 
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(query)) {
+	    try (Connection con = DBConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(query)) {
 
-            ps.setString(1, name);
-            ps.setDate(2, Date.valueOf(dob)); // ✅ FIXED
-            ps.setString(3, contact);
-            ps.setString(4, department);
-            ps.setInt(5, id);
+	        ps.setString(1, name);
+	        ps.setDate(2, Date.valueOf(dob));
+	        ps.setString(3, contact);
+	        ps.setString(4, department);
+	        ps.setString(5, section);  // ✅ NEW
+	        ps.setInt(6, id);
 
-            int rows = ps.executeUpdate();
+	        int rows = ps.executeUpdate();
 
-            if (rows > 0) {
-                System.out.println("✅ Student updated successfully");
-            } else {
-                System.out.println("⚠️ Student not found");
-            }
+	        if (rows > 0) {
+	            System.out.println("✅ Student updated successfully");
+	        } else {
+	            System.out.println("⚠️ Student not found");
+	        }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
 
     // 🔹 DELETE STUDENT
     public void deleteStudent(int id) {
@@ -97,15 +99,15 @@ public class StudentDAO {
 
             while (rs.next()) {
 
-                Student s = new Student(
-                        rs.getInt("student_id"),
-                        rs.getString("name"),
-                        rs.getString("dob"),
-                        rs.getString("contact"),
-                        rs.getString("department"),
-                        rs.getInt("user_id")
-                );
-
+            	Student s = new Student(
+            	        rs.getInt("student_id"),
+            	        rs.getString("name"),
+            	        rs.getString("department"),
+            	        rs.getString("dob"),
+            	        rs.getString("contact"),
+            	        rs.getString("section"),   // ✅ NEW
+            	        rs.getInt("user_id")
+            	);
                 students.add(s);
             }
 
@@ -128,14 +130,15 @@ public class StudentDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                return new Student(
-                        rs.getInt("student_id"),
-                        rs.getString("name"),
-                        rs.getString("dob"),
-                        rs.getString("contact"),
-                        rs.getString("department"),
-                        rs.getInt("user_id")
-                );
+            	return new Student(
+            	        rs.getInt("student_id"),
+            	        rs.getString("name"),
+            	        rs.getString("department"),
+            	        rs.getString("dob"),
+            	        rs.getString("contact"),
+            	        rs.getString("section"),   // ✅ NEW
+            	        rs.getInt("user_id")
+            	);
             }
 
         } catch (Exception e) {
@@ -165,6 +168,7 @@ public class StudentDAO {
                     rs.getString("department"),
                     rs.getString("dob"),
                     rs.getString("contact"),
+                    rs.getString("section"),
                     rs.getInt("user_id")
                 );
             }
@@ -194,6 +198,7 @@ public class StudentDAO {
                         rs.getString("dob"),
                         rs.getString("contact"),
                         rs.getString("department"),
+                        rs.getString("section"),
                         rs.getInt("user_id")
                 );
             }

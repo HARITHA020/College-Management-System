@@ -22,6 +22,7 @@ public class StudentService {
     private AssignmentDAO assignmentDAO;
     private AttendanceDAO attendanceDao;
     private ResultDAO resultDAO;
+    private BorrowRecordDAO borrowDAO;
 
     public StudentService() {
         this.studentDAO = new StudentDAO();
@@ -36,76 +37,73 @@ public class StudentService {
         this.assignmentDAO = new AssignmentDAO();
         this.attendanceDao= new AttendanceDAO();
         this.resultDAO=new ResultDAO();
+        this.borrowDAO=new BorrowRecordDAO();
     }
     
 
     // ===================== STUDENT CRUD =====================
     private UserDAO userDAO = new UserDAO();
 
-    public void addStudentWithUser(String email, String password, int id, String name, String department, String dob, String contact) {
+	public void addStudentWithUser(String email, String password,  String name, String department, String dob,
+			String contact, String section) {
 
-        if (userDAO.checkEmailExists(email)) {
-            System.out.println("Email already exists");
-            return;
-        }
+		if (userDAO.checkEmailExists(email)) {
+			System.out.println("Email already exists");
+			return;
+		}
 
-        int userId = userDAO.createUser(email, password, "STUDENT");
+		int userId = userDAO.createUser(email, password, "STUDENT");
 
-        if (userId == -1) {
-            System.out.println("User creation failed");
-            return;
-        }
+		if (userId == -1) {
+			System.out.println("User creation failed");
+			return;
+		}
 
-        for (Student s : studentDAO.getAllStudents()) {
-            if (s.getId() == id) {
-                System.out.println("Student already exists");
-                return;
-            }
-        }
-        studentDAO.addStudent(name, department, dob, contact, userId);
 
-        System.out.println("✅ Student added successfully");
-    }
+         // ✅ FIXED ORDER + section added
+		studentDAO.addStudent(name, dob, contact, department, section, userId);
+	}
+	public void updateStudent(int id, String name, String department, String dob, String contact, String section) {
 
-    public void updateStudent(int id, String name, String department, String dob, String contact) {
+	    boolean exists = false;
 
-        boolean exists = false;
+	    for (Student s : studentDAO.getAllStudents()) {
+	        if (s.getId() == id) {
+	            exists = true;
+	            break;
+	        }
+	    }
 
-        for (Student s : studentDAO.getAllStudents()) {
-            if (s.getId() == id) {
-                exists = true;
-                break;
-            }
-        }
+	    if (!exists) {
+	        System.out.println("Student not found");
+	        return;
+	    }
 
-        if (!exists) {
-            System.out.println("Student not found");
-            return;
-        }
+	    // ✅ UPDATED
+	    studentDAO.updateStudent(id, name, dob, contact, department, section);
 
-        studentDAO.updateStudent(id, name, department, dob, contact);
-        System.out.println("✅ Student updated successfully");
-    }
+	}
 
-    public void deleteStudent(int id) {
+	public void deleteStudent(int id) {
 
-        if (id <= 0) {
-            System.out.println("Invalid Student ID");
-            return;
-        }
+	    int userId = studentDAO.getUserIdByStudentId(id);
 
-        int userId = studentDAO.getUserIdByStudentId(id);
+	    if (userId == -1) {
+	        System.out.println("Student not found");
+	        return;
+	    }
 
-        if (userId == -1) {
-            System.out.println("Student not found");
-            return;
-        }
+	    try {
+	        enrollmentDao.deleteByStudentId(id);   // ✅ FIX NAME
+	        attendanceDao.deleteByStudentId(id);
+	        borrowDAO.deleteByStudentId(id);
 
-        userDAO.deleteUser(userId);
+	        userDAO.deleteUser(userId);
 
-        System.out.println("✅ Student deleted successfully (CASCADE)");
-    }
-    
+	    } catch (Exception e) {
+	        System.out.println("❌ Delete failed: " + e.getMessage());
+	    }
+	}
     public void viewStudents() {
 
         List<Student> students = studentDAO.getAllStudents();
@@ -115,16 +113,23 @@ public class StudentService {
             return;
         }
 
-        System.out.println("\n--- Student List ---");
+        System.out.println("\n-------------------- STUDENT LIST --------------------------------------------");
 
+        // ✅ Table Header
+        System.out.printf("%-5s %-20s %-15s %-10s %-12s %-15s\n",
+                "ID", "Name", "Department", "Section", "DOB", "Contact");
+
+        System.out.println("--------------------------------------------------------------------------------");
+
+        // ✅ Table Rows
         for (Student s : students) {
-            System.out.println(
-                "ID: " + s.getId() +
-                ", Name: " + s.getName() +
-                ", Dept: " + s.getDepartment() +
-                ", DOB: " + s.getDob() +
-                ", Contact: " + s.getContact()
-            );
+            System.out.printf("%-5d %-20s %-15s %-10s %-12s %-15s\n",
+                    s.getId(),
+                    s.getName(),
+                    s.getDepartment(),
+                    s.getSection(),
+                    s.getDob(),
+                    s.getContact());
         }
     }
     public int getStudentIdByUserId(int userId) {
@@ -171,22 +176,63 @@ public class StudentService {
         }
     }
 
-    // ===================== TIMETABLE =====================
-    public void viewTimetable(int studentId) {
-        List<Enrollment> enrollments = enrollmentDao.getEnrollmentsByStudent(studentId);
-        if (enrollments == null || enrollments.isEmpty()) {
-            System.out.println("No enrolled courses found for timetable");
-            return;
-        }
-        for (Enrollment e : enrollments) {
-            for (Timetable t : timetableDAO.getAllTimetables()) {
-                if (t.getCourseId() == e.getCourseId()) {
-                    System.out.println("Day: " + t.getDay() + " | Time: " + t.getTime() +
-                            " | Room: " + t.getRoom() + " | Section: " + t.getSection());
-                }
-            }
-        }
-    }
+ // ================= TIMETABLE =================
+
+ // 🔥 Time mapping
+ public String getTimeByPeriod(int period) {
+
+     switch (period) {
+         case 1: return "9:00 - 10:00";
+         case 2: return "10:00 - 11:00";
+         case 3: return "11:00 - 12:00";
+         case 4: return "12:00 - 1:00";
+         case 5: return "2:00 - 3:00";
+         case 6: return "3:00 - 4:00";
+         default: return "Invalid";
+     }
+ }
+
+	// 🔥 Student Timetable View
+	public void viewTimetable(int studentId) {
+
+		List<Enrollment> enrollments = enrollmentDao.getEnrollmentsByStudent(studentId);
+
+		if (enrollments == null || enrollments.isEmpty()) {
+			System.out.println("No enrolled courses found for timetable");
+			return;
+		}
+
+		// ✅ Get student section
+		String section = studentDAO.getStudentById(studentId).getSection();
+
+		List<Timetable> list = timetableDAO.getAllTimetables();
+
+		// ✅ Header
+		System.out.printf("%-10s %-20s %-10s %-10s\n", "Day", "Period(Time)", "Room", "Course");
+
+		System.out.println("----------------------------------------------------------");
+
+		boolean found = false;
+
+		for (Enrollment e : enrollments) {
+
+			for (Timetable t : list) {
+
+				if (t.getCourseId() == e.getCourseId() && t.getSection().equalsIgnoreCase(section)) {
+
+					System.out.printf("%-10s %-20s %-10s %-10d\n", t.getDay(),
+							"P" + t.getPeriod() + " (" + getTimeByPeriod(t.getPeriod()) + ")", // 🔥 FIX
+							t.getRoom(), t.getCourseId());
+
+					found = true;
+				}
+			}
+		}
+
+		if (!found) {
+			System.out.println("No timetable available for your section");
+		}
+	}
 
     // ===================== MARKS / EXAMS =====================
     public void viewMarks(int studentId) {

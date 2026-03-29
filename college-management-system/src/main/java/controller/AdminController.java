@@ -174,10 +174,6 @@ public class AdminController {
                 System.out.print("Enter Password: ");
                 String password = input.nextLine();
 
-                System.out.print("Enter Student ID: ");
-                int id = input.nextInt();
-                input.nextLine();
-
                 System.out.print("Enter Student Name: ");
                 String name = input.nextLine();
 
@@ -189,8 +185,11 @@ public class AdminController {
 
                 System.out.print("Enter Contact Number: ");
                 String contact = input.nextLine();
+                
+                System.out.println("Enter Section (A/B/C):");
+                String section = input.nextLine();
 
-                studentService.addStudentWithUser(email, password, id, name, dept, dob, contact);
+                studentService.addStudentWithUser(email, password,name, dept, dob, contact,section);
             }
 
             else if (choice == 2) {
@@ -210,8 +209,11 @@ public class AdminController {
 
                 System.out.print("Enter New Contact: ");
                 String contact = input.nextLine();
+                
+                System.out.print("Enter New Section: ");
+                String section = input.nextLine();
 
-                studentService.updateStudent(id, name, dept, dob, contact);
+                studentService.updateStudent(id, name, dept, dob, contact,section);
             }
 
             else if (choice == 3) {

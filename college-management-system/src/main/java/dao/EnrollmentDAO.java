@@ -42,6 +42,19 @@ public class EnrollmentDAO {
             e.printStackTrace();
         }
     }
+    //deletion
+    public void deleteByStudentId(int studentId) {
+        String query = "DELETE FROM enrollments WHERE student_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, studentId);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // 🔹 GET ALL ENROLLMENTS
     public List<Enrollment> getAllEnrollments() {

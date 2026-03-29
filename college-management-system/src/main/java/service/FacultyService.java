@@ -51,12 +51,9 @@ public class FacultyService {
  			return;
  		}
 
-
-
  // ✅ IMPORTANT CHANGE HERE
  		facultyDAO.addFaculty( name, department, dob, contact, userId);
 
- 		System.out.println("✅ Faculty added successfully");
  	}
 
  	public void updateFaculty(int id, String name, String department, String dob, String contact) {
@@ -86,19 +83,30 @@ public class FacultyService {
 
  	public void viewFaculty() {
 
- 		List<Faculty> faculties = facultyDAO.getAllFaculty();
+ 	    List<Faculty> faculties = facultyDAO.getAllFaculty();
 
- 		if (faculties == null || faculties.isEmpty()) {
- 			System.out.println("No faculty available");
- 			return;
- 		}
+ 	    if (faculties == null || faculties.isEmpty()) {
+ 	        System.out.println("No faculty available");
+ 	        return;
+ 	    }
 
- 		System.out.println("\n--- Faculty List ---");
+ 	    System.out.println("\n---------------------- FACULTY LIST ----------------------");
 
- 		for (Faculty f : faculties) {
- 			System.out.println("ID: " + f.getId() + ", Name: " + f.getName() + ", Dept: " + f.getDepartment()
- 					+ ", DOB: " + f.getDob() + ", Contact: " + f.getContact());
- 		}
+ 	    // Header
+ 	    System.out.printf("%-5s %-20s %-15s %-12s %-15s\n",
+ 	            "ID", "Name", "Department", "DOB", "Contact");
+
+ 	    System.out.println("----------------------------------------------------------");
+
+ 	    // Data
+ 	    for (Faculty f : faculties) {
+ 	        System.out.printf("%-5d %-20s %-15s %-12s %-15s\n",
+ 	                f.getId(),
+ 	                f.getName(),
+ 	                f.getDepartment(),
+ 	                f.getDob(),
+ 	                f.getContact());
+ 	    }
  	}
 
     // ✅ Convert userId → facultyId
@@ -204,23 +212,58 @@ public class FacultyService {
         System.out.println("Marks added (Not Published)");
     }
 
-    // ================= TIMETABLE =================
+ // ================= TIMETABLE =================
+
+    public String getTimeByPeriod(int period) {
+
+        switch (period) {
+            case 1: return "9:00 - 10:00";
+            case 2: return "10:00 - 11:00";
+            case 3: return "11:00 - 12:00";
+            case 4: return "12:00 - 1:00";
+            case 5: return "2:00 - 3:00";
+            case 6: return "3:00 - 4:00";
+            default: return "Invalid";
+        }
+    }
+
     public void viewTimetable(int userId) {
 
         int facultyId = getFacultyIdFromUserId(userId);
 
+        List<Timetable> list = timetableDAO.getAllTimetables();
+
+        if (list.isEmpty()) {
+            System.out.println("No timetable available");
+            return;
+        }
+
+        // ✅ Updated header
+        System.out.printf("%-10s %-20s %-10s %-10s\n",
+                "Day", "Period(Time)", "Room", "Course");
+
+        System.out.println("----------------------------------------------------------");
+
         boolean found = false;
 
-        for (Timetable t : timetableDAO.getAllTimetables()) {
+        for (Timetable t : list) {
+
             if (t.getFacultyId() == facultyId) {
-                System.out.println(t.getDay() + " " + t.getTime() +
-                        " → Course: " + t.getCourseId() +
-                        " → Room: " + t.getRoom());
+
+                // ✅ Updated row with time
+                System.out.printf("%-10s %-20s %-10s %-10d\n",
+                        t.getDay(),
+                        "P" + t.getPeriod() + " (" + getTimeByPeriod(t.getPeriod()) + ")",
+                        t.getRoom(),
+                        t.getCourseId());
+
                 found = true;
             }
         }
 
-        if (!found) System.out.println("No timetable assigned");
+        if (!found) {
+            System.out.println("No timetable assigned");
+        }
     }
     // ===============MATERIALS================ //
     public void uploadMaterial(int courseId, String title, String content, int userId) {
@@ -279,7 +322,8 @@ public class FacultyService {
 
         for (Material m : materialDAO.getAllMaterials()) {
             if (m.getCourseId() == courseId) {
-                System.out.println("----------------------------");
+                System.out.println("--------------------------------------------");
+                System.out.println("Material Id: "+ m.getId());
                 System.out.println("Title   : " + m.getTitle());
                 System.out.println("Content : " + m.getContent());
 
@@ -289,7 +333,21 @@ public class FacultyService {
 
         if (!found) System.out.println("No materials found");
     }
+    
+    public void deleteMaterial(int materialId, int userId, String role) {
+        if (!role.equalsIgnoreCase("FACULTY")) {
+            System.out.println("Access denied");
+            return;
+        }
 
+        boolean deleted = materialDAO.deleteMaterialById(materialId);
+
+        if (deleted) {
+            System.out.println("✅ Material deleted successfully");
+        } else {
+            System.out.println("❌ No material found with this ID");
+        }
+    }
     // ================= ASSIGNMENT =================
     public void createAssignment(int courseId, String title, String desc, int userId) {
 
@@ -335,6 +393,7 @@ public class FacultyService {
 
         for (Assignment a : assignmentDAO.getAllAssignments()) {
             if (a.getCourseId() == courseId) {
+            	System.out.println("Assignment Id: " + a.getId());
                 System.out.println("Title: " + a.getTitle());
                 System.out.println("Desc: " + a.getDescription());
                 found = true;
@@ -344,6 +403,21 @@ public class FacultyService {
         if (!found) System.out.println("No assignments");
     }
 
+    public void deleteAssignment(int AssignmentId, int userId, String role) {
+
+        if (!role.equalsIgnoreCase("FACULTY")) {
+            System.out.println("Access denied");
+            return;
+        }
+
+        boolean deleted = assignmentDAO.deleteAssignment(AssignmentId);
+
+        if (deleted) {
+            System.out.println("✅ Assignment deleted successfully");
+        } else {
+            System.out.println("❌ No assignment found to delete");
+        }
+    }
     // ================= NOTIFICATION =================
     public void viewNotification(int facultyId) {
         List<Notification> list = notificationDAO.getAllNotifications();
