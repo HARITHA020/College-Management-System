@@ -109,64 +109,82 @@ public class FacultyService {
  	    }
  	}
 
-    // ✅ Convert userId → facultyId
-    public int getFacultyIdFromUserId(int userId) {
-        Faculty f = facultyDAO.getFacultyByUserId(userId);
-        if (f == null) return -1;
-        return f.getId();
-    }
-
+   
     // ================= STUDENTS =================
-    public void viewMyStudents(int userId) {
+ 	public void viewMyStudents(int userId) {
 
-        int facultyId = getFacultyIdFromUserId(userId);
-        boolean found = false;
+ 	    int facultyId = userId; // already facultyId
+ 	    boolean found = false;
 
-        for (Course c : courseDAO.getAllCourses()) {
+ 	    System.out.println("\n------------------- MY STUDENTS -------------------");
 
-            if (c.getFacultyId() == facultyId) {
+ 	    System.out.printf("%-12s %-20s %-20s\n", 
+ 	            "Student ID", "Name", "Course");
 
-                List<Enrollment> enrollments = enrollmentDao.getEnrollmentsByCourse(c.getCourseId());
+ 	    System.out.println("---------------------------------------------------");
 
-                for (Enrollment e : enrollments) {
+ 	    for (Course c : courseDAO.getAllCourses()) {
 
-                    Student s = studentDAO.getStudentById(e.getStudentId());
+ 	        if (c.getFacultyId() == facultyId) {
 
-                    if (s != null) {
-                        System.out.println("Student ID: " + s.getId() +
-                                           " | Name: " + s.getName() +
-                                           " | Course: " + c.getCourseName());
-                        found = true;
-                    }
-                }
-            }
-        }
+ 	            List<Enrollment> enrollments = enrollmentDao.getEnrollmentsByCourse(c.getCourseId());
 
-        if (!found) {
-            System.out.println("No students found for your courses");
-        }
-    }
+ 	            for (Enrollment e : enrollments) {
+
+ 	                Student s = studentDAO.getStudentById(e.getStudentId());
+
+ 	                if (s != null) {
+ 	                    // ✅ Table Row
+ 	                    System.out.printf("%-12d %-20s %-20s\n",
+ 	                            s.getId(),
+ 	                            s.getName(),
+ 	                            c.getCourseName());
+
+ 	                    found = true;
+ 	                }
+ 	            }
+ 	        }
+ 	    }
+
+ 	    if (!found) {
+ 	        System.out.println("No students found for your courses");
+ 	    }
+
+ 	    System.out.println("---------------------------------------------------");
+ 	}
 
     // ================= COURSES =================
-    public void viewMyCourses(int userId) {
+ 	public void viewMyCourses(int userId) {
 
-        int facultyId = getFacultyIdFromUserId(userId);
+ 	    int facultyId = userId; // already facultyId
+ 	    boolean found = false;
 
-        boolean found = false;
+ 	    System.out.println("\n---------- MY COURSES -------------");
 
-        System.out.println("\n--- My Courses ---");
+ 	    System.out.printf("%-12s %-25s\n",
+ 	            "Course ID", "Course Name");
 
-        for (Course c : courseDAO.getAllCourses()) {
-            if (c.getFacultyId() == facultyId) {
-                System.out.println("Course ID: " + c.getCourseId() + " | Course Name: " + c.getCourseName());
-                found = true;
-            }
-        }
+ 	    System.out.println("--------------------------------------");
 
-        if (!found) {
-            System.out.println("No courses assigned");
-        }
-    }
+ 	    for (Course c : courseDAO.getAllCourses()) {
+
+ 	        if (c.getFacultyId() == facultyId) {
+
+ 	            // ✅ Table Row
+ 	            System.out.printf("%-12d %-25s\n",
+ 	                    c.getCourseId(),
+ 	                    c.getCourseName());
+
+ 	            found = true;
+ 	        }
+ 	    }
+
+ 	    if (!found) {
+ 	        System.out.println("No courses assigned");
+ 	    }
+
+ 	    System.out.println("--------------------------------------");
+ 	}
 
     // ================= ATTENDANCE =================
     public void markAttendance(int studentId, int courseId, boolean present) {
@@ -245,7 +263,7 @@ public class FacultyService {
 
     public void viewTimetable(int userId) {
 
-        int facultyId = getFacultyIdFromUserId(userId);
+    	int facultyId = userId; // already facultyId
 
         List<Timetable> list = timetableDAO.getAllTimetables();
 
@@ -284,7 +302,7 @@ public class FacultyService {
     // ===============MATERIALS================ //
     public void uploadMaterial(int courseId, String title, String content, int userId) {
 
-        int facultyId = getFacultyIdFromUserId(userId);
+    	int facultyId = userId; // already facultyId
 
         // 1. Validate course
         Course course = courseDAO.getCourseById(courseId);
@@ -320,8 +338,7 @@ public class FacultyService {
 
     public void viewMaterials(int courseId, int userId, String role) {
 
-        int facultyId = getFacultyIdFromUserId(userId);
-
+        int facultyId = userId; // already facultyId
         Course course = courseDAO.getCourseById(courseId);
 
         if (course == null) {
@@ -335,19 +352,33 @@ public class FacultyService {
         }
 
         boolean found = false;
+        System.out.println("\n------------------- MATERIALS -------------------");
+        System.out.printf("%-12s %-25s %-35s\n",
+                "Material ID", "Title", "Content");
+
+        System.out.println("----------------------------------------------------");
 
         for (Material m : materialDAO.getAllMaterials()) {
+
             if (m.getCourseId() == courseId) {
-                System.out.println("--------------------------------------------");
-                System.out.println("Material Id: "+ m.getId());
-                System.out.println("Title   : " + m.getTitle());
-                System.out.println("Content : " + m.getContent());
+                String content = m.getContent();
+                if (content.length() > 30) {
+                    content = content.substring(0, 30) + "...";
+                }
+                System.out.printf("%-12d %-25s %-35s\n",
+                        m.getId(),
+                        m.getTitle(),
+                        content);
 
                 found = true;
             }
         }
 
-        if (!found) System.out.println("No materials found");
+        if (!found) {
+            System.out.println("No materials found");
+        }
+
+        System.out.println("-----------------------------------------------------");
     }
     
     public void deleteMaterial(int materialId, int userId, String role) {
@@ -367,7 +398,7 @@ public class FacultyService {
     // ================= ASSIGNMENT =================
     public void createAssignment(int courseId, String title, String desc, int userId) {
 
-        int facultyId = getFacultyIdFromUserId(userId);
+    	int facultyId = userId; // already facultyId
 
         Course course = courseDAO.getCourseById(courseId);
 
@@ -391,7 +422,7 @@ public class FacultyService {
 
     public void viewAssignments(int courseId, int userId, String role) {
 
-        int facultyId = getFacultyIdFromUserId(userId);
+        int facultyId = userId; // already facultyId
 
         Course course = courseDAO.getCourseById(courseId);
 
@@ -407,16 +438,33 @@ public class FacultyService {
 
         boolean found = false;
 
+        System.out.println("\n------------------- ASSIGNMENTS -------------------");
+        System.out.printf("%-15s %-25s %-35s\n",
+                "Assignment ID", "Title", "Description");
+
+        System.out.println("------------------------------------------------------------------------------");
+
         for (Assignment a : assignmentDAO.getAllAssignments()) {
+
             if (a.getCourseId() == courseId) {
-            	System.out.println("Assignment Id: " + a.getId());
-                System.out.println("Title: " + a.getTitle());
-                System.out.println("Desc: " + a.getDescription());
+                String desc = a.getDescription();
+                if (desc.length() > 30) {
+                    desc = desc.substring(0, 30) + "...";
+                }
+                System.out.printf("%-15d %-25s %-35s\n",
+                        a.getId(),
+                        a.getTitle(),
+                        desc);
+
                 found = true;
             }
         }
 
-        if (!found) System.out.println("No assignments");
+        if (!found) {
+            System.out.println("No assignments");
+        }
+
+        System.out.println("------------------------------------------------------------------------------");
     }
 
     public void deleteAssignment(int AssignmentId, int userId, String role) {
@@ -436,16 +484,42 @@ public class FacultyService {
     }
     // ================= NOTIFICATION =================
     public void viewNotification(int facultyId) {
+
         List<Notification> list = notificationDAO.getAllNotifications();
+
+        boolean found = false;
+
+        System.out.println("\n------------------- NOTIFICATIONS ----------------------------------");
+        System.out.printf("%-15s %-20s %-40s\n",
+                "ID", "Role", "Message");
+
+        System.out.println("---------------------------------------------------------------------------");
+
         for (Notification n : list) {
+
             if (n.getTargetRole().equalsIgnoreCase("ALL") ||
                 (n.getTargetRole().equalsIgnoreCase("FACULTY") &&
                  (n.getTargetId() == null || n.getTargetId() == facultyId))) {
-                System.out.println(n);
+                String msg = n.getMessage();
+                if (msg.length() > 35) {
+                    msg = msg.substring(0, 35) + "...";
+                }
+
+                System.out.printf("%-15d %-20s %-40s\n",
+                        n.getNotificationId(),
+                        n.getTargetRole(),
+                        msg);
+
+                found = true;
             }
         }
-    }
 
+        if (!found) {
+            System.out.println("No notifications available");
+        }
+
+        System.out.println("----------------------------------------------------------------------------");
+    }
     // ================= LIBRARY =================
     public void searchBook(String keyword) {
         libraryService.searchBook(keyword);

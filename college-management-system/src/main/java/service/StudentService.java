@@ -474,7 +474,6 @@ public class StudentService {
                         a.getId(),
                         a.getTitle(),
                         desc);
-
                 found = true;
             }
         }

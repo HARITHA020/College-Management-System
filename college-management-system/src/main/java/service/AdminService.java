@@ -427,15 +427,27 @@ public class AdminService {
     }
 
     public void viewSchedules() {
+
         List<Exam> exams = examDao.getAllExams();
-        if(exams.isEmpty()) {
+
+        if (exams.isEmpty()) {
             System.out.println("No exams scheduled");
             return;
         }
+
+        System.out.println("\n--- Exam Schedule ---");
+
+        // ✅ Table Header
+        System.out.printf("%-10s %-15s %-25s\n",
+                "Exam ID", "Course ID", "Exam Date");
+        System.out.println("----------------------------------------------------------");
+
+        // ✅ Table Rows
         for (Exam e : exams) {
-            System.out.println("Exam ID: " + e.getExamId() +
-                    ", Course ID: " + e.getCourseId() +
-                    ", Date: " + e.getExamDate());
+            System.out.printf("%-10d %-15d %-25s\n",
+                    e.getExamId(),
+                    e.getCourseId(),
+                    e.getExamDate());
         }
     }
 
@@ -584,32 +596,64 @@ public class AdminService {
     }
 
     public void viewAllBooks() {
+
         List<Book> books = bookDAO.getAllBooks();
-        if(books.isEmpty()) {
+
+        if (books.isEmpty()) {
             System.out.println("No books available");
             return;
         }
+
+        System.out.println("\n--- Library Books ---");
+
+        // ✅ Header
+        System.out.printf("%-5s %-25s %-20s %-20s %-10s\n",
+                "ID", "Title", "Author", "ISBN", "Available");
+
+        System.out.println("------------------------------------------------------------------------------------------");
+
+        // ✅ Rows
         for (Book b : books) {
-            System.out.println("ID: " + b.getBookId() +
-                    " | Title: " + b.getTitle() +
-                    " | Author: " + b.getAuthor() +
-                    " | ISBN: " + b.getIsbn() +
-                    " | Available: " + b.isAvailable());
+
+            System.out.printf("%-5d %-25s %-20s %-20s %-10s\n",
+                    b.getBookId(),
+                    b.getTitle(),
+                    b.getAuthor(),
+                    b.getIsbn(),
+                    (b.isAvailable() ? "YES" : "NO"));
         }
     }
 
     public void viewBorrowRecords() {
+
         List<BorrowRecord> records = borrowRecordDAO.getActiveRecords();
-        if(records.isEmpty()) {
+
+        if (records.isEmpty()) {
             System.out.println("No borrow records");
             return;
         }
+
+        System.out.println("\n--- Borrow Records ---");
+
+        // ✅ Header
+        System.out.printf("%-10s %-12s %-10s %-20s %-20s\n",
+                "Record ID", "Student ID", "Book ID", "Borrow Date", "Return Date");
+
+        System.out.println("------------------------------------------------------------------------------------------");
+
+        // ✅ Rows
         for (BorrowRecord r : records) {
-            System.out.println("Record ID: " + r.getRecordId() +
-                    " | Student ID: " + r.getStudentId() +
-                    " | Book ID: " + r.getBookId() +
-                    " | Borrow Date: " + r.getBorrowDate() +
-                    " | Return Date: " + r.getReturnDate());
+
+            String returnDate = (r.getReturnDate() != null)
+                    ? r.getReturnDate().toString()
+                    : "Not Returned";
+
+            System.out.printf("%-10d %-12d %-10d %-20s %-20s\n",
+                    r.getRecordId(),
+                    r.getStudentId(),
+                    r.getBookId(),
+                    r.getBorrowDate(),
+                    returnDate);
         }
     }
     
@@ -642,6 +686,7 @@ public class AdminService {
     }
     // View all results
     public void viewAllResults() {
+
         List<Result> results = resultDAO.getAllResults();
 
         if (results.isEmpty()) {
@@ -649,9 +694,16 @@ public class AdminService {
             return;
         }
 
-        System.out.println("All Results:");
-        System.out.println("---------------------------------------------------");
+        System.out.println("\n--- All Results ---");
+
+        // ✅ Table Header
+        System.out.printf("%-8s %-20s %-20s %-10s %-8s %-12s\n",
+                "ResID", "Student", "Course", "Marks", "Grade", "Published");
+
+        System.out.println("------------------------------------------------------------------------------------------");
+
         for (Result r : results) {
+
             Student s = studentDao.getStudentById(r.getStudentId());
 
             // Get course via exam
@@ -661,14 +713,25 @@ public class AdminService {
             String studentName = (s != null) ? s.getName() : "Unknown";
             String courseName = (c != null) ? c.getCourseName() : "Unknown";
 
-            System.out.println("Result ID: " + r.getResultId() +
-                    " | Student: " + studentName +
-                    " | Course: " + courseName +
-                    " | Marks: " + r.getMarks() +
-                    " | Grade: " + r.getGrade() +
-                    " | Published: " + (r.isPublished() ? "Yes" : "No"));
+            // ✅ Trim long names (optional)
+            if (studentName.length() > 18) {
+                studentName = studentName.substring(0, 18) + "...";
+            }
+            if (courseName.length() > 18) {
+                courseName = courseName.substring(0, 18) + "...";
+            }
+
+            // ✅ Row
+            System.out.printf("%-8d %-20s %-20s %-10d %-8s %-12s\n",
+                    r.getResultId(),
+                    studentName,
+                    courseName,
+                    r.getMarks(),
+                    r.getGrade(),
+                    (r.isPublished() ? "YES" : "NO"));
         }
-        System.out.println("---------------------------------------------------");
+
+        System.out.println("------------------------------------------------------------------------------------------");
     }
 
     // Grade calculation helper
