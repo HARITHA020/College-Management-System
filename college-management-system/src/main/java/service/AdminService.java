@@ -463,15 +463,37 @@ public class AdminService {
 
     // View notifications
     public void viewNotifications() {
+
         List<Notification> list = notificationDao.getAllNotifications();
+
         if (list.isEmpty()) {
             System.out.println("No notifications available");
             return;
         }
 
         System.out.println("\n--- All Notifications (Admin View) ---");
+
+        // ✅ Header
+        System.out.printf("%-5s %-30s %-15s %-10s %-20s\n",
+                "ID", "Message", "Role", "TargetID", "Date");
+
+        System.out.println("------------------------------------------------------------------------------------------");
+
+        // ✅ Rows
         for (Notification n : list) {
-            System.out.println(n.toString());
+
+            // Optional: trim long message
+            String msg = n.getMessage();
+            if (msg.length() > 28) {
+                msg = msg.substring(0, 28) + "...";
+            }
+
+            System.out.printf("%-5d %-30s %-15s %-10d %-20s\n",
+                    n.getNotificationId(),
+                    msg,
+                    n.getTargetRole(),
+                    n.getTargetId(),
+                    n.getDate());
         }
     }
 
