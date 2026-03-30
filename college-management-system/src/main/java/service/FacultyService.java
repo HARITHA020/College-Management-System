@@ -110,7 +110,7 @@ public class FacultyService {
  	}
 
     // ✅ Convert userId → facultyId
-    private int getFacultyIdFromUserId(int userId) {
+    public int getFacultyIdFromUserId(int userId) {
         Faculty f = facultyDAO.getFacultyByUserId(userId);
         if (f == null) return -1;
         return f.getId();
@@ -120,21 +120,30 @@ public class FacultyService {
     public void viewMyStudents(int userId) {
 
         int facultyId = getFacultyIdFromUserId(userId);
+        boolean found = false;
 
         for (Course c : courseDAO.getAllCourses()) {
+
             if (c.getFacultyId() == facultyId) {
 
-                for (Enrollment e : enrollmentDao.getAllEnrollments()) {
-                    if (e.getCourseId() == c.getCourseId()) {
+                List<Enrollment> enrollments = enrollmentDao.getEnrollmentsByCourse(c.getCourseId());
 
-                        for (Student s : studentDAO.getAllStudents()) {
-                            if (s.getId() == e.getStudentId()) {
-                                System.out.println("Student ID: " + s.getId() + " | Name: " + s.getName());
-                            }
-                        }
+                for (Enrollment e : enrollments) {
+
+                    Student s = studentDAO.getStudentById(e.getStudentId());
+
+                    if (s != null) {
+                        System.out.println("Student ID: " + s.getId() +
+                                           " | Name: " + s.getName() +
+                                           " | Course: " + c.getCourseName());
+                        found = true;
                     }
                 }
             }
+        }
+
+        if (!found) {
+            System.out.println("No students found for your courses");
         }
     }
 
@@ -171,6 +180,13 @@ public class FacultyService {
         Course c = courseDAO.getCourseById(courseId);
         if (c == null) {
             System.out.println("Course not found");
+            return;
+        }
+
+        // ✅ NEW CHECK
+        boolean enrolled = enrollmentDao.isStudentEnrolled(studentId, courseId);
+        if (!enrolled) {
+            System.out.println("❌ Student is not enrolled in this course");
             return;
         }
 

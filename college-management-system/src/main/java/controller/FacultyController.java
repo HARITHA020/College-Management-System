@@ -7,12 +7,17 @@ public class FacultyController {
 
     private FacultyService facultyService = new FacultyService();
     private Scanner scanner = new Scanner(System.in);
-    private int userId; // logged-in faculty's userId
+   
+
+    private int facultyId;
 
     public FacultyController(int userId) {
-        this.userId = userId;
-    }
+        this.scanner = new Scanner(System.in);
+        this.facultyService = new FacultyService();
 
+        // ✅ Convert userId → facultyId
+        this.facultyId = facultyService.getFacultyIdFromUserId(userId);
+    }
     public void showMenu() {
 
         while (true) {
@@ -37,11 +42,11 @@ public class FacultyController {
             switch (choice) {
 
                 case 1:
-                    facultyService.viewMyStudents(userId);
+                    facultyService.viewMyStudents(facultyId);
                     break;
 
                 case 2:
-                    facultyService.viewMyCourses(userId);
+                    facultyService.viewMyCourses(facultyId);
                     break;
 
                 case 3:
@@ -73,7 +78,7 @@ public class FacultyController {
                     break;
 
                 case 5:
-                    facultyService.viewTimetable(userId);
+                    facultyService.viewTimetable(facultyId);
                     break;
 
                 case 6:
@@ -101,21 +106,21 @@ public class FacultyController {
                             System.out.println("Enter Content:");
                             String content = scanner.nextLine();
 
-                            facultyService.uploadMaterial(cId, title, content, userId);
+                            facultyService.uploadMaterial(cId, title, content, facultyId);
 
                         } else if (choices == 2) {
                             System.out.println("Enter Course ID:");
                             int courseId1 = scanner.nextInt();
                             scanner.nextLine();
 
-                            facultyService.viewMaterials(courseId1, userId, "FACULTY");
+                            facultyService.viewMaterials(courseId1, facultyId, "FACULTY");
 
                         } else if (choices == 3) {
                         	System.out.println("Enter Material ID to remove:");
                         	int materialId = scanner.nextInt();
                         	scanner.nextLine();
 
-                        	facultyService.deleteMaterial(materialId, userId, "FACULTY");
+                        	facultyService.deleteMaterial(materialId, facultyId, "FACULTY");
                         }
                     }
                     break; 
@@ -145,14 +150,14 @@ public class FacultyController {
 							System.out.println("Enter Description:");
 							String desc = scanner.nextLine();
 
-							facultyService.createAssignment(courseId2, atitle, desc, userId);
+							facultyService.createAssignment(courseId2, atitle, desc, facultyId);
 							
 						} else if (choices1 == 2) {
 							System.out.println("Enter Course ID:");
 							int courseId3 = scanner.nextInt();
 							scanner.nextLine();
 
-							facultyService.viewAssignments(courseId3, userId, "FACULTY");
+							facultyService.viewAssignments(courseId3, facultyId, "FACULTY");
 							
 
 						} else if (choices1 == 3) {
@@ -160,14 +165,14 @@ public class FacultyController {
 							int assignId = scanner.nextInt();
 							scanner.nextLine();
 
-							facultyService.deleteAssignment(assignId, userId, "FACULTY");
+							facultyService.deleteAssignment(assignId, facultyId, "FACULTY");
 							
 						}
 					}
 					break;
 					
                 case 8:
-                    facultyService.viewNotification(userId);
+                    facultyService.viewNotification(facultyId);
                     break;
 
                 case 9:
@@ -181,7 +186,7 @@ public class FacultyController {
                     int bookId = scanner.nextInt();
                     scanner.nextLine();
 
-                    facultyService.borrowBook(userId, bookId);
+                    facultyService.borrowBook(facultyId, bookId);
                     break;
 
                 case 11:
@@ -189,7 +194,7 @@ public class FacultyController {
                     int book_Id = scanner.nextInt();
                     scanner.nextLine();
 
-                    facultyService.returnBook(book_Id, userId);
+                    facultyService.returnBook(book_Id, facultyId);
                     break;
 
                 case 12: // ✅ FIXED
