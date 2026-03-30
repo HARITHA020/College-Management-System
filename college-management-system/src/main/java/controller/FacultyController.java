@@ -1,11 +1,15 @@
 package controller;
 
 import java.util.Scanner;
+
+import dao.FacultyDAO;
+import model.Faculty;
 import service.FacultyService;
 
 public class FacultyController {
 
     private FacultyService facultyService = new FacultyService();
+    private FacultyDAO facultyDao=new FacultyDAO();
     private Scanner scanner = new Scanner(System.in);
    
 
@@ -16,7 +20,14 @@ public class FacultyController {
         this.facultyService = new FacultyService();
 
         // ✅ Convert userId → facultyId
-        this.facultyId = facultyService.getFacultyIdFromUserId(userId);
+        Faculty f = facultyDao.getFacultyByUserId(userId);
+
+        if (f != null) {
+            this.facultyId = f.getId(); // ✅ correct facultyId
+        } else {
+            System.out.println("Faculty not found!");
+            this.facultyId = -1;
+        }
     }
     public void showMenu() {
 
