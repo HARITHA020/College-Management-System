@@ -63,25 +63,20 @@ public class StudentService {
          // ✅ FIXED ORDER + section added
 		studentDAO.addStudent(name, dob, contact, department, section, userId);
 	}
-	public void updateStudent(int id, String name, String department, String dob, String contact, String section) {
+	public void updateStudent(int studentId, String field, String value) {
 
-	    boolean exists = false;
-
-	    for (Student s : studentDAO.getAllStudents()) {
-	        if (s.getId() == id) {
-	            exists = true;
-	            break;
-	        }
-	    }
-
-	    if (!exists) {
-	        System.out.println("Student not found");
+	    if (studentId <= 0) {
+	        System.out.println("Invalid Student ID");
 	        return;
 	    }
 
-	    // ✅ UPDATED
-	    studentDAO.updateStudent(id, name, dob, contact, department, section);
+	    boolean updated = studentDAO.updateStudentField(studentId, field, value);
 
+	    if (updated) {
+	        System.out.println("✅ Student updated successfully");
+	    } else {
+	        System.out.println("❌ Update failed or field not valid");
+	    }
 	}
 
 	public void deleteStudent(int id) {

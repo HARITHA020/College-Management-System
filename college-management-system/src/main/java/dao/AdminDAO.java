@@ -35,25 +35,29 @@ public class AdminDAO {
     }
 
     // 🔹 UPDATE ADMIN
-    public void updateAdmin(int id, String name, String dob, String contact) {
-        try {
-            Connection con = DBConnection.getConnection();
+    public boolean updateAdminField(int adminId, String field, String value) {
 
-            String query = "UPDATE administrators SET name=?, dob=?, contact=? WHERE admin_id=?";
+        // ⚠️ Allow only valid fields to prevent SQL injection
+        if (!(field.equals("name") || field.equals("dob") || field.equals("contact"))) {
+            System.out.println("Invalid field: " + field);
+            return false;
+        }
 
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, name);
-            ps.setString(2, dob);
-            ps.setString(3, contact);
-            ps.setInt(4, id);
+        String sql = "UPDATE administrators SET " + field + " = ? WHERE admin_id = ?";
 
-            ps.executeUpdate();
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-            System.out.println("✅ Admin updated successfully");
+            ps.setString(1, value); // all fields are string
+            ps.setInt(2, adminId);
+
+            return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 
     // 🔹 DELETE ADMIN
