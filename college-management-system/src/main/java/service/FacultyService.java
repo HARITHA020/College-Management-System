@@ -154,9 +154,7 @@ public class FacultyService {
  	}
 
     // ================= COURSES =================
- 	public void viewMyCourses(int userId) {
-
- 	    int facultyId = userId; // already facultyId
+ 	public void viewMyCourses(int facultyId) {
  	    boolean found = false;
 
  	    System.out.println("\n---------- MY COURSES -------------");
@@ -261,18 +259,14 @@ public class FacultyService {
         }
     }
 
-    public void viewTimetable(int userId) {
+    public void viewTimetable(int facultyId) {
 
-    	int facultyId = userId; // already facultyId
-
-        List<Timetable> list = timetableDAO.getAllTimetables();
+    	List<Timetable> list = timetableDAO.getAllTimetables();
 
         if (list.isEmpty()) {
             System.out.println("No timetable available");
             return;
         }
-
-        // ✅ Updated header
         System.out.printf("%-10s %-20s %-10s %-10s\n",
                 "Day", "Period(Time)", "Room", "Course");
 
@@ -283,8 +277,6 @@ public class FacultyService {
         for (Timetable t : list) {
 
             if (t.getFacultyId() == facultyId) {
-
-                // ✅ Updated row with time
                 System.out.printf("%-10s %-20s %-10s %-10d\n",
                         t.getDay(),
                         "P" + t.getPeriod() + " (" + getTimeByPeriod(t.getPeriod()) + ")",
