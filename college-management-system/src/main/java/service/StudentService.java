@@ -187,7 +187,7 @@ public class StudentService {
      }
  }
 
-	// 🔥 Student Timetable View
+//🔥 Grid-style Timetable with proper alignment
 	public void viewTimetable(int studentId) {
 
 		List<Enrollment> enrollments = enrollmentDao.getEnrollmentsByStudent(studentId);
@@ -197,38 +197,50 @@ public class StudentService {
 			return;
 		}
 
-		// ✅ Get student section
 		String section = studentDAO.getStudentById(studentId).getSection();
+		List<Timetable> timetables = timetableDAO.getAllTimetables();
 
-		List<Timetable> list = timetableDAO.getAllTimetables();
+		String[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+		int periods = 6;
 
-		// ✅ Header
-		System.out.printf("%-10s %-20s %-10s %-10s\n", "Day", "Period(Time)", "Room", "Course");
+		int colWidth = 20; // ✅ Increased width for alignment
 
-		System.out.println("----------------------------------------------------------");
-
-		boolean found = false;
-
-		for (Enrollment e : enrollments) {
-
-			for (Timetable t : list) {
-
-				if (t.getCourseId() == e.getCourseId() && t.getSection().equalsIgnoreCase(section)) {
-
-					System.out.printf("%-10s %-20s %-10s %-10d\n", t.getDay(),
-							"P" + t.getPeriod() + " (" + getTimeByPeriod(t.getPeriod()) + ")", // 🔥 FIX
-							t.getRoom(), t.getCourseId());
-
-					found = true;
-				}
-			}
+		// Header
+		System.out.printf("%-10s", "Day");
+		for (int p = 1; p <= periods; p++) {
+			System.out.printf("| P%d (%s) ", p, getTimeByPeriod(p), "");
 		}
+		System.out.println();
 
-		if (!found) {
-			System.out.println("No timetable available for your section");
+		// Separator
+		for (int i = 0; i < 10 + periods * (colWidth + 3); i++)
+			System.out.print("-");
+		System.out.println();
+
+		// Rows
+		for (String day : days) {
+			System.out.printf("%-10s", day);
+
+			for (int p = 1; p <= periods; p++) {
+				String courseInfo = "-";
+
+				for (Timetable t : timetables) {
+					boolean enrolled = enrollments.stream().anyMatch(en -> en.getCourseId() == t.getCourseId());
+
+					if (t.getDay().equalsIgnoreCase(day) && t.getPeriod() == p
+							&& t.getSection().equalsIgnoreCase(section) && enrolled) {
+
+						Course c = courseDAO.getCourseById(t.getCourseId());
+						courseInfo = "C" + t.getCourseId() + ":" + c.getCourseName();
+						break;
+					}
+				}
+
+				System.out.printf("| %-18s", courseInfo); // ✅ Fixed width
+			}
+			System.out.println();
 		}
 	}
-
     // ===================== MARKS / EXAMS =====================
     public void viewMarks(int studentId) {
         List<Result> results = resultDAO.getResultsByStudent(studentId);
