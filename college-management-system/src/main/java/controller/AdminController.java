@@ -126,16 +126,38 @@ public class AdminController {
                 int id = input.nextInt();
                 input.nextLine();
 
-                System.out.print("Enter New Name: ");
-                String name = input.nextLine();
+                System.out.println("Which field do you want to update?");
+                System.out.println("1. Name");
+                System.out.println("2. DOB");
+                System.out.println("3. Contact");
+                System.out.print("Enter choice: ");
+                int fieldChoice = input.nextInt();
+                input.nextLine();
 
-                System.out.print("Enter New DOB: ");
-                String dob = input.nextLine();
+                String field = "", value = "";
 
-                System.out.print("Enter New Contact: ");
-                String contact = input.nextLine();
+                switch (fieldChoice) {
+                    case 1:
+                        field = "name";
+                        System.out.print("Enter new Name: ");
+                        value = input.nextLine();
+                        break;
+                    case 2:
+                        field = "dob";
+                        System.out.print("Enter new DOB: ");
+                        value = input.nextLine();
+                        break;
+                    case 3:
+                        field = "contact";
+                        System.out.print("Enter new Contact: ");
+                        value = input.nextLine();
+                        break;
+                    default:
+                        System.out.println("Invalid choice");
+                        return;
+                }
 
-                adminService.updateAdmin(id, name, dob, contact);
+                adminService.updateAdmin(id, field, value);
             }
 
             else if (choice == 3) {
@@ -198,22 +220,50 @@ public class AdminController {
                 int id = input.nextInt();
                 input.nextLine();
 
-                System.out.print("Enter New Name: ");
-                String name = input.nextLine();
+                System.out.println("Which field do you want to update?");
+                System.out.println("1. Name");
+                System.out.println("2. Department");
+                System.out.println("3. DOB");
+                System.out.println("4. Contact");
+                System.out.println("5. Section");
+                System.out.print("Enter choice: ");
+                int fieldChoice = input.nextInt();
+                input.nextLine();
 
-                System.out.print("Enter New Department: ");
-                String dept = input.nextLine();
+                String field = "", value = "";
 
-                System.out.print("Enter New DOB: ");
-                String dob = input.nextLine();
+                switch (fieldChoice) {
+                    case 1:
+                        field = "name";
+                        System.out.print("Enter new Name: ");
+                        value = input.nextLine();
+                        break;
+                    case 2:
+                        field = "department";
+                        System.out.print("Enter new Department: ");
+                        value = input.nextLine();
+                        break;
+                    case 3:
+                        field = "dob";
+                        System.out.print("Enter new DOB (yyyy-MM-dd): ");
+                        value = input.nextLine();
+                        break;
+                    case 4:
+                        field = "contact";
+                        System.out.print("Enter new Contact: ");
+                        value = input.nextLine();
+                        break;
+                    case 5:
+                        field = "section";
+                        System.out.print("Enter new Section: ");
+                        value = input.nextLine();
+                        break;
+                    default:
+                        System.out.println("Invalid choice");
+                        return;
+                }
 
-                System.out.print("Enter New Contact: ");
-                String contact = input.nextLine();
-                
-                System.out.print("Enter New Section: ");
-                String section = input.nextLine();
-
-                studentService.updateStudent(id, name, dept, dob, contact,section);
+                studentService.updateStudent(id, field, value);
             }
 
             else if (choice == 3) {
@@ -238,7 +288,7 @@ public class AdminController {
             System.out.println("1. Add Faculty");
             System.out.println("2. Update Faculty");
             System.out.println("3. Delete Faculty");
-            System.out.println("4. View Students");
+            System.out.println("4. View Faculty");
             System.out.println("5. Exit");
 
             choice = input.nextInt();
@@ -273,19 +323,44 @@ public class AdminController {
                 int id = input.nextInt();
                 input.nextLine();
 
-                System.out.print("Enter New Name: ");
-                String name = input.nextLine();
+                System.out.println("Which field do you want to update?");
+                System.out.println("1. Name");
+                System.out.println("2. Department");
+                System.out.println("3. DOB");
+                System.out.println("4. Contact");
+                System.out.print("Enter choice: ");
+                int fieldChoice = input.nextInt();
+                input.nextLine();
 
-                System.out.print("Enter New Department: ");
-                String dept = input.nextLine();
+                String field = "", value = "";
 
-                System.out.print("Enter New DOB: ");
-                String dob = input.nextLine();
+                switch (fieldChoice) {
+                    case 1:
+                        field = "name";
+                        System.out.print("Enter new Name: ");
+                        value = input.nextLine();
+                        break;
+                    case 2:
+                        field = "department";
+                        System.out.print("Enter new Department: ");
+                        value = input.nextLine();
+                        break;
+                    case 3:
+                        field = "dob";
+                        System.out.print("Enter new DOB (yyyy-MM-dd): ");
+                        value = input.nextLine();
+                        break;
+                    case 4:
+                        field = "contact";
+                        System.out.print("Enter new Contact: ");
+                        value = input.nextLine();
+                        break;
+                    default:
+                        System.out.println("Invalid choice");
+                        return;
+                }
 
-                System.out.print("Enter New Contact: ");
-                String contact = input.nextLine();
-
-                facultyService.updateFaculty(id, name, dept, dob, contact);
+                facultyService.updateFaculty(id, field, value);
             }
 
             else if (choice == 3) {
@@ -303,76 +378,176 @@ public class AdminController {
 
         int choice = 0;
 
-        while (choice != 7) {
+        while (choice != 8) {
 
             System.out.println("\n--- Manage Course ---");
             System.out.println("1. Add Course");
-            System.out.println("2. Assign Course to Faculty");
-            System.out.println("3. Assign Student to Course");
-            System.out.println("4. View Courses");
-            System.out.println("5. View the Enrollment Details");
-            System.out.println("6. Delete Enrollments");
-            System.out.println("7. Exit");
+            System.out.println("2. Update Course");
+            System.out.println("3. Assign Course to Faculty");
+            System.out.println("4. Assign Student to Course");
+            System.out.println("5. View Courses");
+            System.out.println("6. View Enrollment Details");
+            System.out.println("7. Delete Course / Enrollment");
+            System.out.println("8. Exit");
 
             choice = input.nextInt();
             input.nextLine();
 
-            if (choice == 1) {
-                System.out.print("Enter Course Name: ");
-                String courseName = input.nextLine();
+            switch (choice) {
+                case 1: // Add Course
+                    System.out.print("Enter Course Name: ");
+                    String name = input.nextLine();
 
-                System.out.print("Enter Faculty ID: ");
-                int facultyId = input.nextInt();
+                    System.out.print("Enter Credits: ");
+                    int credits = input.nextInt();
+                    input.nextLine();
 
-                adminService.addCourse(courseName, facultyId);
-            }
-            else if (choice == 2) {
-                System.out.print("Enter Course ID: ");
-                int courseId = input.nextInt();
+                    System.out.print("Enter Duration (e.g., 1 semester): ");
+                    String duration = input.nextLine();
 
-                System.out.print("Enter Faculty ID: ");
-                int facultyId = input.nextInt();
+                    System.out.print("Enter Department: ");
+                    String department = input.nextLine();
 
-                adminService.assignCourse(courseId, facultyId);
-            }
-            else if (choice == 3) {
-                System.out.print("Enter Student ID: ");
-                int studentId = input.nextInt();
+                    System.out.print("Enter Faculty ID: ");
+                    int facultyId = input.nextInt();
+                    input.nextLine();
 
-                System.out.print("Enter Course ID: ");
-                int courseId = input.nextInt();
+                    System.out.print("Enter Description: ");
+                    String description = input.nextLine();
 
-                adminService.assignStudentToCourse(studentId, courseId);
-            }
-            else if (choice == 4) {
-            	adminService.viewCourses();
-            }
-            else if(choice==5) {
-            	 adminService.viewEnrollmentDetails();
-            }
-            else if(choice==6) {
-            	System.out.print("Enter Student ID: ");
-                int studentId = input.nextInt();
+                    adminService.addCourse(name, credits, duration, department, facultyId, description);
+                    break;
 
-                System.out.print("Enter Course ID: ");
-                int courseId = input.nextInt();
-            	adminService.DeleteEnrollments(studentId,courseId);
+				case 2: // Update Course
+					System.out.print("Enter Course ID to update: ");
+					int cId = input.nextInt();
+					input.nextLine();
+
+					System.out.println("Which field do you want to update?");
+					System.out.println("1. Course Name");
+					System.out.println("2. Credits");
+					System.out.println("3. Duration");
+					System.out.println("4. Department");
+					System.out.println("5. Faculty ID");
+					System.out.println("6. Description");
+
+					int fieldChoice = input.nextInt();
+					input.nextLine();
+					String newValue = "";
+					String field = "";
+
+					switch (fieldChoice) {
+					case 1:
+						System.out.print("Enter new Course Name: ");
+						newValue = input.nextLine();
+						field = "course_name";
+						break;
+					case 2:
+						System.out.print("Enter new Credits: ");
+						newValue = input.nextLine();
+						field = "credits";
+						break;
+					case 3:
+						System.out.print("Enter new Duration: ");
+						newValue = input.nextLine();
+						field = "duration";
+						break;
+					case 4:
+						System.out.print("Enter new Department: ");
+						newValue = input.nextLine();
+						field = "department";
+						break;
+					case 5:
+						System.out.print("Enter new Faculty ID: ");
+						newValue = input.nextLine();
+						field = "faculty_id";
+						break;
+					case 6:
+						System.out.print("Enter new Description: ");
+						newValue = input.nextLine();
+						field = "description";
+						break;
+					default:
+						System.out.println("Invalid choice!");
+						break;
+					}
+
+					if (!field.isBlank()) {
+						adminService.updateCourse(cId, field, newValue);
+					}
+					break;
+
+                case 3: // Assign Course to Faculty
+                    System.out.print("Enter Course ID: ");
+                    int assignCourseId = input.nextInt();
+
+                    System.out.print("Enter Faculty ID: ");
+                    int assignFacultyId = input.nextInt();
+
+                    adminService.assignCourse(assignCourseId, assignFacultyId);
+                    break;
+
+                case 4: // Assign Student to Course
+                    System.out.print("Enter Student ID: ");
+                    int studentId = input.nextInt();
+
+                    System.out.print("Enter Course ID: ");
+                    int assignCourseId2 = input.nextInt();
+
+                    adminService.assignStudentToCourse(studentId, assignCourseId2);
+                    break;
+
+                case 5: // View Courses
+                    adminService.viewCourses();
+                    break;
+
+                case 6: // View Enrollment Details
+                    adminService.viewEnrollmentDetails();
+                    break;
+
+                case 7: // Delete Course or Enrollment
+                    System.out.println("1. Delete Course");
+                    System.out.println("2. Delete Student Enrollment");
+                    int delChoice = input.nextInt();
+
+                    if (delChoice == 1) {
+                        System.out.print("Enter Course ID to delete: ");
+                        int delCourseId = input.nextInt();
+                        adminService.deleteCourse(delCourseId);
+                    } else if (delChoice == 2) {
+                        System.out.print("Enter Student ID: ");
+                        int delStudentId = input.nextInt();
+
+                        System.out.print("Enter Course ID: ");
+                        int delEnrollCourseId = input.nextInt();
+
+                        adminService.deleteEnrollment(delStudentId, delEnrollCourseId);
+                    }
+                    break;
+
+                case 8: // Exit
+                    System.out.println("Exiting Course Management...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice! Try again.");
             }
         }
     }
-
     // ================= TIMETABLE =================
     public void manageTimetable() {
 
         int choice = 0;
 
-        while (choice != 4) {
+        while (choice != 6) {
 
             System.out.println("\n--- TIMETABLE MENU ---");
             System.out.println("1. Add Timetable");
             System.out.println("2. View All");
             System.out.println("3. View by Date & Section");
-            System.out.println("4. Exit");
+            System.out.println("4. Delete Timetable");
+            System.out.println("5. Update Timetable"); // ✅ NEW
+            System.out.println("6. Exit");
 
             choice = input.nextInt();
             input.nextLine();
@@ -416,46 +591,167 @@ public class AdminController {
 
                     adminService.viewByDate(date, sec);
                     break;
+
+                case 4:
+                    System.out.print("Enter Timetable ID to delete: ");
+                    int timetableId = input.nextInt();
+                    input.nextLine();
+
+                    adminService.deleteTimetable(timetableId);
+                    break;
+                  
+                case 5:
+                    System.out.print("Enter Timetable ID to update: ");
+                    int tId = input.nextInt();
+                    input.nextLine();
+
+                    System.out.println("What do you want to update?");
+                    System.out.println("1. Day");
+                    System.out.println("2. Period");
+                    System.out.println("3. Room");
+                    System.out.println("4. Course ID");
+                    System.out.println("5. Faculty ID");
+                    System.out.println("6. Section");
+
+                    int fieldChoice = input.nextInt();
+                    input.nextLine();
+
+                    String newValue = "";
+
+                    switch (fieldChoice) {
+
+                        case 1:
+                            System.out.print("Enter new Day: ");
+                            newValue = input.nextLine();
+                            adminService.updateTimetable(tId, "day", newValue);
+                            break;
+
+                        case 2:
+                            System.out.print("Enter new Period: ");
+                            newValue = input.nextLine();
+                            adminService.updateTimetable(tId, "period", newValue);
+                            break;
+
+                        case 3:
+                            System.out.print("Enter new Room: ");
+                            newValue = input.nextLine();
+                            adminService.updateTimetable(tId, "room", newValue);
+                            break;
+
+                        case 4:
+                            System.out.print("Enter new Course ID: ");
+                            newValue = input.nextLine();
+                            adminService.updateTimetable(tId, "course_id", newValue);
+                            break;
+
+                        case 5:
+                            System.out.print("Enter new Faculty ID: ");
+                            newValue = input.nextLine();
+                            adminService.updateTimetable(tId, "faculty_id", newValue);
+                            break;
+
+                        case 6:
+                            System.out.print("Enter new Section: ");
+                            newValue = input.nextLine();
+                            adminService.updateTimetable(tId, "section", newValue);
+                            break;
+
+                        default:
+                            System.out.println("Invalid choice");
+                    }
+                    break;
             }
         }
     }
 
 
     // ================= EXAM =================
-	public void examSchedule() {
-		int choice = 0;
+    public void examSchedule() {
 
-		while (choice != 3) {
+        int choice = 0;
 
-			System.out.println("\n--- Manage Exam ---");
-			System.out.println("1. Add Exam");
-			System.out.println("2. View Exams");
-			System.out.println("3. Exit");
+        while (choice != 5) {
 
-			choice = input.nextInt();
-			input.nextLine();
+            System.out.println("\n--- Manage Exam ---");
+            System.out.println("1. Add Exam");
+            System.out.println("2. View Exams");
+            System.out.println("3. Delete Exam");
+            System.out.println("4. Update Exam");
+            System.out.println("5. Exit");
 
-			if (choice == 1) {
+            choice = input.nextInt();
+            input.nextLine();
 
-				System.out.print("Enter Exam ID: ");
-				int examId = input.nextInt();
+            if (choice == 1) {
 
-				System.out.print("Enter Course ID: ");
-				int courseId = input.nextInt();
-				input.nextLine();
+                System.out.print("Enter Course ID: ");
+                int courseId = input.nextInt();
+                input.nextLine();
 
-				System.out.print("Enter Exam Date: ");
-				String examDate = input.nextLine();
+                System.out.print("Enter Exam Date: ");
+                String examDate = input.nextLine();
 
-				System.out.println("Enter Max Marks:");
-				int maxMark = input.nextInt();
+                System.out.println("Enter Max Marks:");
+                int maxMark = input.nextInt();
 
-				adminService.scheduleExam(examId, courseId, examDate, maxMark);
-			} else if (choice == 2) {
-				adminService.viewSchedules();
-			}
-		}
-	}
+                adminService.scheduleExam( courseId, examDate, maxMark);
+
+            } else if (choice == 2) {
+
+                adminService.viewSchedules();
+
+            } else if (choice == 3) {
+
+                // ✅ DELETE
+                System.out.print("Enter Exam ID to delete: ");
+                int examId = input.nextInt();
+                input.nextLine();
+
+                adminService.deleteExam(examId);
+
+            } else if (choice == 4) {
+
+                // ✅ UPDATE (ASK WHICH FIELD)
+                System.out.print("Enter Exam ID to update: ");
+                int examId = input.nextInt();
+                input.nextLine();
+
+                System.out.println("What do you want to update?");
+                System.out.println("1. Course ID");
+                System.out.println("2. Exam Date");
+                System.out.println("3. Max Marks");
+
+                int fieldChoice = input.nextInt();
+                input.nextLine();
+
+                String value = "";
+
+                switch (fieldChoice) {
+
+                    case 1:
+                        System.out.print("Enter new Course ID: ");
+                        value = input.nextLine();
+                        adminService.updateExam(examId, "course_id", value);
+                        break;
+
+                    case 2:
+                        System.out.print("Enter new Exam Date: ");
+                        value = input.nextLine();
+                        adminService.updateExam(examId, "exam_date", value);
+                        break;
+
+                    case 3:
+                        System.out.print("Enter new Max Marks: ");
+                        value = input.nextLine();
+                        adminService.updateExam(examId, "max_marks", value);
+                        break;
+
+                    default:
+                        System.out.println("Invalid choice");
+                }
+            }
+        }
+    }
 
     // ================= PUBLISH RESULT =================
     private void publishResult() {
@@ -524,21 +820,22 @@ public class AdminController {
 
         int choice = 0;
 
-        while (choice != 5) {
+        while (choice != 6) {
 
             System.out.println("\n--- Library Menu ---");
             System.out.println("1. Add Book");
-            System.out.println("2. Remove Book");
-            System.out.println("3. View All Books");
-            System.out.println("4. View Borrow Records");
-            System.out.println("5. Exit");
+            System.out.println("2. Update Book");  
+            System.out.println("3. Remove Book");
+            System.out.println("4. View All Books");
+            System.out.println("5. View Borrow Records");
+            System.out.println("6. Exit");
 
             choice = input.nextInt();
             input.nextLine();
 
             switch (choice) {
 
-                case 1:
+                case 1: // Add Book
                     System.out.print("Enter Title: ");
                     String title = input.nextLine();
 
@@ -548,30 +845,82 @@ public class AdminController {
                     System.out.print("Enter ISBN: ");
                     String isbn = input.nextLine();
 
-                    adminService.addBook(title, author, isbn);
+                    System.out.print("Enter Total Copies: ");
+                    int total = input.nextInt();
+                    input.nextLine();
+
+                    adminService.addBook(title, author, isbn, total);
                     break;
 
-                case 2:
-                    System.out.print("Enter Book ID to remove: ");
-                    int removeId = input.nextInt();
-                    adminService.removeBook(removeId);
-                    break;
+				case 2: // Update Book
+					System.out.print("Enter Book ID to update: ");
+					int bookId = input.nextInt();
+					input.nextLine();
 
-                case 3:
-                    adminService.viewAllBooks();
-                    break;
+					System.out.println("Which field do you want to update?");
+					System.out.println("1. Title");
+					System.out.println("2. Author");
+					System.out.println("3. ISBN");
+					System.out.println("4. Total Copies");
 
-                case 4:
-                    adminService.viewBorrowRecords();
-                    break;
+					int fieldChoice = input.nextInt();
+					input.nextLine();
+					String newValue = "";
+					String field = "";
 
-                case 5:
-                    System.out.println("Exiting Library Menu...");
-                    break;
+					switch (fieldChoice) {
+					case 1:
+						System.out.print("Enter new Title: ");
+						newValue = input.nextLine();
+						field = "title";
+						break;
+					case 2:
+						System.out.print("Enter new Author: ");
+						newValue = input.nextLine();
+						field = "author";
+						break;
+					case 3:
+						System.out.print("Enter new ISBN: ");
+						newValue = input.nextLine();
+						field = "isbn";
+						break;
+					case 4:
+						System.out.print("Enter new Total Copies: ");
+						newValue = input.nextLine();
+						field = "total_copies";
+						break;
+					default:
+						System.out.println("Invalid choice!");
+						break;
+					}
 
-                default:
-                    System.out.println("Invalid choice");
-            }
-        }
-    }
+					if (!field.isBlank()) {
+						adminService.updateBook(bookId, field, newValue);
+					}
+					break;
+
+				case 3: // Remove Book
+					System.out.print("Enter Book ID to remove: ");
+					int removeId = input.nextInt();
+					input.nextLine();
+					adminService.removeBook(removeId);
+					break;
+
+				case 4: // View All Books
+					adminService.viewAllBooks();
+					break;
+
+				case 5: // View Borrow Records
+					adminService.viewBorrowRecords();
+					break;
+
+				case 6: // Exit
+					System.out.println("Exiting Library Menu...");
+					break;
+
+				default:
+					System.out.println("Invalid choice");
+				}
+			}
+		}
 }

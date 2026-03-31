@@ -55,24 +55,54 @@ public class ExamDAO {
     }
 
     // 🔹 DELETE EXAM
-    public void deleteExam(int examId) {
-        try {
-            Connection con = DBConnection.getConnection();
 
-            String query = "DELETE FROM exams WHERE exam_id=?";
+    public boolean deleteExamById(int id) {
 
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1, examId);
+        String sql = "DELETE FROM exams WHERE exam_id = ?";
 
-            ps.executeUpdate();
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            System.out.println("✅ Exam deleted successfully");
+            ps.setInt(1, id);
+
+            return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 
+ // UPDATE
+    public boolean updateExamField(int id, String field, String value) {
+
+        // ✅ सुरक्षा: only allow valid fields
+        if (!(field.equals("course_id") || field.equals("exam_date") || field.equals("max_marks"))) {
+            return false;
+        }
+
+        String sql = "UPDATE exams SET " + field + " = ? WHERE exam_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            if (field.equals("course_id") || field.equals("max_marks")) {
+                ps.setInt(1, Integer.parseInt(value));
+            } else {
+                ps.setString(1, value);
+            }
+
+            ps.setInt(2, id);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
     // 🔹 GET ALL EXAMS
     public List<Exam> getAllExams() {
 

@@ -5,16 +5,17 @@ public class Book {
     private String title;
     private String author;
     private String isbn;
-    private boolean available;
+    private int totalCopies;
+    private int availableCopies;
 
-    public Book(int bookId, String title, String author, String isbn, boolean available) {
-        this.bookId    = bookId;
-        this.title     = title;
-        this.author    = author;
-        this.isbn      = isbn;
-        this.available = available;
-    }
-
+	public Book(int bookId, String title, String author, String isbn, int totalCopies, int availableCopies) {
+		this.bookId = bookId;
+		this.title = title;
+		this.author = author;
+		this.isbn = isbn;
+		this.totalCopies = totalCopies;
+		this.availableCopies = availableCopies;
+	}
     public int getBookId()                      { return bookId; }
     public void setBookId(int bookId)           { this.bookId = bookId; }
 
@@ -27,6 +28,16 @@ public class Book {
     public String getIsbn()                     { return isbn; }
     public void setIsbn(String isbn)            { this.isbn = isbn; }
 
-    public boolean isAvailable()                { return available; }
-    public void setAvailable(boolean available) { this.available = available; }
+    public int getTotalCopies() { return totalCopies; }
+    public int getAvailableCopies() { return availableCopies; }
+    
+    @Override
+    public String toString() {
+        return String.format("%-10d %-20s %-20s %-15s %-10s",
+                bookId,
+                title,
+                author,
+                isbn);
+    }
+    
 }

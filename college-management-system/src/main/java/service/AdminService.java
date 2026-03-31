@@ -62,34 +62,20 @@ public class AdminService {
     }
 
     // ✅ UPDATE ADMIN
-    public void updateAdmin(int id, String name, String dob, String contact) {
+    public void updateAdmin(int adminId, String field, String value) {
 
-        if (id <= 0) {
+        if (adminId <= 0) {
             System.out.println("Invalid Admin ID");
             return;
         }
 
-        if (name == null || name.trim().isEmpty()) {
-            System.out.println("Admin name cannot be empty");
-            return;
+        boolean updated = adminDao.updateAdminField(adminId, field, value);
+
+        if (updated) {
+            System.out.println("✅ Admin updated successfully");
+        } else {
+            System.out.println("❌ Update failed");
         }
-
-        boolean exists = false;
-
-        for (Administrator admin : adminDao.getAllAdmins()) {
-            if (admin.getId() == id) {
-                exists = true;
-                break;
-            }
-        }
-
-        if (!exists) {
-            System.out.println("Admin not found");
-            return;
-        }
-
-        adminDao.updateAdmin(id, name, dob, contact);
-        System.out.println("✅ Admin updated successfully");
     }
 
     // ✅ DELETE ADMIN
@@ -111,7 +97,6 @@ public class AdminService {
         // 🔹 2. Delete USER (not admin)
         userDAO.deleteUser(userId);
 
-        System.out.println("✅ Admin deleted successfully (CASCADE)");
     }
     // ✅ VIEW ADMIN
     public void viewAdmins() {
@@ -139,8 +124,63 @@ public class AdminService {
 
 
     // ================= COURSE =================
-    public void addCourse(String courseName, int facultyId) {
-        courseDao.addCourse(facultyId, courseName);
+ // ------------------ ADD COURSE ------------------
+    public void addCourse(String name, int credits, String duration, String department, int facultyId, String description) {
+        courseDao.addCourse(name, credits, duration, department, facultyId, description);
+    }
+
+    // ------------------ UPDATE COURSE ------------------
+    public void updateCourse(int courseId, String field, String value) {
+
+        // Validate course ID
+        Course existing = courseDao.getCourseById(courseId);
+        if (existing == null) {
+            System.out.println("❌ Course ID " + courseId + " does not exist.");
+            return;
+        }
+
+        boolean updated = courseDao.updateCourseField(courseId, field, value);
+
+        if (updated) {
+            System.out.println("✅ Course updated successfully");
+        } else {
+            System.out.println("❌ Update failed");
+        }
+    }
+
+    // ------------------ DELETE COURSE ------------------
+    public void deleteCourse(int courseId) {
+
+        // Optional: check if course exists first
+        Course existing = courseDao.getCourseById(courseId);
+        if (existing == null) {
+            System.out.println("❌ Course ID " + courseId + " does not exist.");
+            return;
+        }
+
+        // Delete course
+        courseDao.deleteCourse(courseId);
+    }
+
+    // ------------------ DELETE ENROLLMENT ------------------
+    public void deleteEnrollment(int studentId, int courseId) {
+
+        // Optional: validate student and course
+        Student s = studentDao.getStudentById(studentId);
+        Course c = courseDao.getCourseById(courseId);
+
+        if (s == null) {
+            System.out.println("❌ Student ID " + studentId + " does not exist.");
+            return;
+        }
+
+        if (c == null) {
+            System.out.println("❌ Course ID " + courseId + " does not exist.");
+            return;
+        }
+
+        // Call DAO to remove enrollment
+        enrollmentDAO.deleteEnrollment(studentId, courseId);
     }
 
     public void assignCourse(int courseId, int facultyId) {
@@ -357,15 +397,40 @@ public class AdminService {
             System.out.println("Invalid date format (YYYY-MM-DD)");
         }
     }
+    public void updateTimetable(int timetableId, String field, String value) {
 
-    // ================= EXAM =================
-    public void scheduleExam(int examId, int courseId, String examDate, int maxMark) {
-
-        // 🔹 1. Validate exam ID
-        if (examId <= 0) {
-            System.out.println("Invalid Exam ID");
+        if (timetableId <= 0) {
+            System.out.println("Invalid Timetable ID");
             return;
         }
+
+        boolean updated = timetableDao.updateTimetableField(timetableId, field, value);
+
+        if (updated) {
+            System.out.println("✅ Timetable updated successfully");
+        } else {
+            System.out.println("❌ Update failed");
+        }
+    }
+    public void deleteTimetable(int timetableId) {
+
+        if (timetableId <= 0) {
+            System.out.println("Invalid Timetable ID");
+            return;
+        }
+
+        boolean deleted = timetableDao.deleteTimetableById(timetableId);
+
+        if (deleted) {
+            System.out.println("✅ Timetable deleted successfully");
+        } else {
+            System.out.println("❌ Timetable not found");
+        }
+    }
+
+    // ================= EXAM =================
+    public void scheduleExam(int courseId, String examDate, int maxMark) {
+
 
         // 🔹 2. Validate course exists
         boolean courseExists = false;
@@ -393,14 +458,7 @@ public class AdminService {
             return;
         }
 
-        // 🔹 4. Check duplicate exam ID
-        for (Exam e : examDao.getAllExams()) {
-            if (e.getExamId() == examId) {
-                System.out.println("Exam ID already exists");
-                return;
-            }
-        }
-
+      
         // 🔹 5. Conflict check (VERY IMPORTANT 🔥)
 
         for (Exam e : examDao.getAllExams()) {
@@ -424,6 +482,41 @@ public class AdminService {
         examDao.scheduleExam( courseId, examDate, maxMark);
 
         System.out.println("Exam Scheduled Successfully");
+    }
+    
+ // DELETE
+    public void deleteExam(int examId) {
+
+        if (examId <= 0) {
+            System.out.println("Invalid Exam ID");
+            return;
+        }
+
+        boolean deleted = examDao.deleteExamById(examId);
+
+        if (deleted) {
+            System.out.println("✅ Exam deleted successfully");
+        } else {
+            System.out.println("❌ Exam not found");
+        }
+    }
+
+
+    // UPDATE
+    public void updateExam(int examId, String field, String value) {
+
+        if (examId <= 0) {
+            System.out.println("Invalid Exam ID");
+            return;
+        }
+
+        boolean updated = examDao.updateExamField(examId, field, value);
+
+        if (updated) {
+            System.out.println("✅ Exam updated successfully");
+        } else {
+            System.out.println("❌ Update failed");
+        }
     }
 
     public void viewSchedules() {
@@ -513,10 +606,9 @@ public class AdminService {
     public void deleteNotification(int notificationId) {
         notificationDao.deleteNotification(notificationId);
     }
-    
-
+   
     // ================= LIBRARY =================
-    public void addBook(String title, String author, String isbn) {
+    public void addBook(String title, String author, String isbn, int totalCopies ) {
         // 🔹 1. Validate Title
         if (title == null || title.trim().isEmpty()) {
             System.out.println("Title cannot be empty");
@@ -554,13 +646,27 @@ public class AdminService {
         author = author.trim();
         isbn = isbn.trim();
 
-        // 🔹 7. Create Book
+        //available check 
+        if (totalCopies <= 0) {
+            System.out.println("Invalid copies");
+            return;
+        }
 
-        bookDAO.addBook(title, author, isbn);
+        bookDAO.addBook(title, author, isbn,totalCopies, totalCopies);
 
         System.out.println("Book added successfully");
     }
 
+    public void updateBook(int bookId, String field, String value) {
+
+        boolean updated = bookDAO.updateBookField(bookId, field, value);
+
+        if (updated) {
+            System.out.println("✅ Book updated successfully");
+        } else {
+            System.out.println("❌ Update failed");
+        }
+    }
     public void removeBook(int id) {
 
         // 🔹 1. Validate ID
@@ -584,13 +690,6 @@ public class AdminService {
             return;
         }
 
-        // 🔹 3. Optional: Check if book is issued
-        if (!foundBook.isAvailable()) {
-            System.out.println("Cannot remove: Book is currently issued");
-            return;
-        }
-
-        // 🔹 4. Remove
         bookDAO.removeBook(id);
 
     }
@@ -605,23 +704,25 @@ public class AdminService {
         }
 
         System.out.println("\n--- Library Books ---");
+        System.out.printf("%-5s %-25s %-20s %-20s %-10s %-10s\n",
+                "ID", "Title", "Author", "ISBN", "Total", "Available");
 
-        // ✅ Header
-        System.out.printf("%-5s %-25s %-20s %-20s %-10s\n",
-                "ID", "Title", "Author", "ISBN", "Available");
-
-        System.out.println("------------------------------------------------------------------------------------------");
-
-        // ✅ Rows
+        System.out.println("-----------------------------------------------------------------------------------------------");
         for (Book b : books) {
-
-            System.out.printf("%-5d %-25s %-20s %-20s %-10s\n",
+            String title = b.getTitle();
+            if (title.length() > 10) {
+                title = title.substring(0, 10) + "...";
+            }
+            System.out.printf("%-5d %-25s %-20s %-20s %-10d %-10d\n",
                     b.getBookId(),
-                    b.getTitle(),
+                    title,   
                     b.getAuthor(),
                     b.getIsbn(),
-                    (b.isAvailable() ? "YES" : "NO"));
+                    b.getTotalCopies(),
+                    b.getAvailableCopies()
+            );
         }
+        System.out.println("-----------------------------------------------------------------------------------------------");
     }
 
     public void viewBorrowRecords() {
@@ -635,10 +736,8 @@ public class AdminService {
 
         System.out.println("\n--- Borrow Records ---");
 
-        // ✅ Header
-        System.out.printf("%-10s %-12s %-10s %-20s %-20s\n",
-                "Record ID", "Student ID", "Book ID", "Borrow Date", "Return Date");
-
+        System.out.printf("%-10s %-12s %-12s %-10s %-20s %-20s\n",
+                "Record ID", "Student ID", "Faculty ID", "Book ID", "Borrow Date", "Return Date");
         System.out.println("------------------------------------------------------------------------------------------");
 
         // ✅ Rows
@@ -648,38 +747,49 @@ public class AdminService {
                     ? r.getReturnDate().toString()
                     : "Not Returned";
 
-            System.out.printf("%-10d %-12d %-10d %-20s %-20s\n",
+            System.out.printf("%-10d %-12s %-12s %-10d %-20s %-20s\n",
                     r.getRecordId(),
-                    r.getStudentId(),
+                    (r.getStudentId() != null ? r.getStudentId() : "-"),
+                    (r.getFacultyId() != null ? r.getFacultyId() : "-"),
                     r.getBookId(),
                     r.getBorrowDate(),
-                    returnDate);
+                    returnDate
+            );
         }
     }
     
     //=================Result==================
- // Publish result with extra marks
+
     public void publishResult(int resultId, int extraMarks) {
 
         Result r = resultDAO.getResultById(resultId);
+
         if (r == null) {
             System.out.println("Result not found!");
             return;
         }
 
-        // Add extra marks
-        r.setMarks(r.getMarks() + extraMarks);
+        // ❌ PREVENT RE-PUBLISH
+        if (r.isPublished()) {
+            System.out.println("❌ Result is already published");
+            return;
+        }
 
-        // Update grade
+        // ✅ Add extra marks only if > 0
+        if (extraMarks > 0) {
+            r.setMarks(r.getMarks() + extraMarks);
+        }
+
+        // ✅ Update grade
         r.setGrade(calculateGrade(r.getMarks()));
 
-        // Set published
+        // ✅ Set published
         r.setPublished(true);
 
-        // ✅ VERY IMPORTANT: SAVE TO DB
+        // ✅ Save to DB
         resultDAO.updateResult(r);
 
-        System.out.println("Result published successfully for Student ID " + r.getStudentId() +
+        System.out.println("✅ Result published successfully for Student ID " + r.getStudentId() +
                 " in Exam ID " + r.getExamId() +
                 " with marks: " + r.getMarks() +
                 " and Grade: " + r.getGrade());

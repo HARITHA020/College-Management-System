@@ -34,26 +34,35 @@ public class FacultyDAO {
 
     
     // 🔹 UPDATE FACULTY
-    public void updateFaculty(int facultyId, String name, String department, String dob, String contact) {
+    public boolean updateFacultyField(int facultyId, String field, String value) {
 
-        String query = "UPDATE faculty SET name=?, department=?, dob=?, contact=? WHERE faculty_id=?";
+        // ⚠️ Allow only valid fields to prevent SQL injection
+        if (!(field.equals("name") || field.equals("department") || field.equals("dob") || field.equals("contact"))) {
+            System.out.println("Invalid field: " + field);
+            return false;
+        }
+
+        String sql = "UPDATE faculty SET " + field + " = ? WHERE faculty_id = ?";
 
         try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(query)) {
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, name);
-            ps.setString(2, department);
-            ps.setString(3, dob);
-            ps.setString(4, contact);
-            ps.setInt(5, facultyId);
+            // Handle DOB as Date
+            if (field.equals("dob")) {
+                ps.setDate(1, Date.valueOf(value)); // value must be in yyyy-MM-dd format
+            } else {
+                ps.setString(1, value);
+            }
 
-            ps.executeUpdate();
+            ps.setInt(2, facultyId);
 
-            System.out.println("✅ Faculty updated successfully");
+            return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 
     // 🔹 DELETE FACULTY
