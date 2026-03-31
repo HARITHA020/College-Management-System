@@ -166,14 +166,15 @@ public class EnrollmentDAO {
         }
     }
     public void viewEnrollmentDetails() {  
-        String query = "SELECT e.enrollment_id, " +
-                "s.student_id, s.name AS student_name, " +
-                "c.course_id, c.course_name, " +
-                "f.faculty_id, f.name AS faculty_name " +
-                "FROM enrollments e " +
-                "JOIN students s ON e.student_id = s.student_id " +
-                "JOIN courses c ON e.course_id = c.course_id " +
-                "JOIN faculty f ON c.faculty_id = f.faculty_id";
+    	String query = "SELECT e.enrollment_id, " +
+    	        "s.student_id, s.name AS student_name, " +
+    	        "c.course_id, c.course_name, " +
+    	        "f.faculty_id, f.name AS faculty_name " +
+    	        "FROM enrollments e " +
+    	        "JOIN students s ON e.student_id = s.student_id " +
+    	        "JOIN courses c ON e.course_id = c.course_id " +
+    	        "JOIN faculty f ON c.faculty_id = f.faculty_id " +
+    	        "ORDER BY e.enrollment_id ASC";
 
         try (Connection con = DBConnection.getConnection();
         	     PreparedStatement ps = con.prepareStatement(query);

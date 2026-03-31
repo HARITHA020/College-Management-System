@@ -529,19 +529,18 @@ public class AdminService {
         }
 
         System.out.println("\n--- Exam Schedule ---");
-
-        // ✅ Table Header
-        System.out.printf("%-10s %-15s %-25s\n",
-                "Exam ID", "Course ID", "Exam Date");
-        System.out.println("----------------------------------------------------------");
-
-        // ✅ Table Rows
+        System.out.printf("%-10s %-15s %-25s %-25s\n",
+                "Exam ID", "Course ID","Course Name", "Exam Date");
+        System.out.println("------------------------------------------------------------------");
         for (Exam e : exams) {
-            System.out.printf("%-10d %-15d %-25s\n",
+            Course c = courseDao.getCourseById(e.getCourseId()); 
+            System.out.printf("%-10d %-15d %-25s %-25s\n",
                     e.getExamId(),
                     e.getCourseId(),
+                    c.getCourseName(),  
                     e.getExamDate());
         }
+        System.out.println("------------------------------------------------------------------");
     }
 
     // ================= NOTIFICATION =================

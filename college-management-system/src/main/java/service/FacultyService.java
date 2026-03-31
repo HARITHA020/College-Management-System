@@ -256,6 +256,8 @@ public class FacultyService {
         }
     }
 
+ 
+ // 🔥 Faculty Timetable - Grid Format with Section
     public void viewTimetable(int facultyId) {
         List<Timetable> list = timetableDAO.getAllTimetables();
 
@@ -263,30 +265,42 @@ public class FacultyService {
             System.out.println("No timetable available");
             return;
         }
-        System.out.printf("%-10s %-20s %-10s %-10s\n",
-                "Day", "Period(Time)", "Room", "Course");
 
-        System.out.println("----------------------------------------------------------");
+        // ✅ Days of week
+        String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
-        boolean found = false;
-
-        for (Timetable t : list) {
-
-            if (t.getFacultyId() == facultyId) {
-
-                // ✅ Updated row with time
-                System.out.printf("%-10s %-20s %-10s %-10d\n",
-                        t.getDay(),
-                        "P" + t.getPeriod() + " (" + getTimeByPeriod(t.getPeriod()) + ")",
-                        t.getRoom(),
-                        t.getCourseId());
-
-                found = true;
-            }
+        // ✅ Print header
+        System.out.printf("%-10s", "Day");
+        for (int p = 1; p <= 6; p++) {
+            System.out.printf(" | %-25s", "P" + p + " (" + getTimeByPeriod(p) + ")");
         }
+        System.out.println();
+        System.out.println("---------------------------------------------------------------------------------------------------");
 
-        if (!found) {
-            System.out.println("No timetable assigned");
+        for (String day : days) {
+            System.out.printf("%-10s", day);
+
+            for (int p = 1; p <= 6; p++) {
+                Timetable tt = null;
+                for (Timetable t : list) {
+                    if (t.getFacultyId() == facultyId
+                        && t.getDay().equalsIgnoreCase(day)
+                        && t.getPeriod() == p) {
+                        tt = t;
+                        break;
+                    }
+                }                String courseDisplay;
+                if (tt != null) {
+                    Course c = courseDAO.getCourseById(tt.getCourseId());
+                    courseDisplay = "C" + tt.getCourseId() + ":" + c.getCourseName() + "(" + tt.getSection() + ")";
+                } else {
+                    courseDisplay = " - ";
+                }
+
+                System.out.printf(" | %-25s", courseDisplay);
+            }
+
+            System.out.println();
         }
     }
     // ===============MATERIALS================ //
