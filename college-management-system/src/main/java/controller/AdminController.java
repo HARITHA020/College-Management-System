@@ -910,7 +910,7 @@ public class AdminController {
 					adminService.viewAllBooks();
 					break;
 
-				case 5: // View Borrow Records
+				case 5: 
 					adminService.viewBorrowRecords();
 					break;
 

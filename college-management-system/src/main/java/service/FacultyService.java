@@ -7,7 +7,6 @@ import dao.*;
 import model.*;
 
 public class FacultyService {
-
     private FacultyDAO facultyDAO;
     private StudentDAO studentDAO;
     private ExamDAO examDAO;
@@ -21,7 +20,6 @@ public class FacultyService {
     private AssignmentDAO assignmentDAO;
     private AttendanceDAO attendanceDao = new AttendanceDAO();
     private UserDAO userDAO = new UserDAO();
-
     public FacultyService() {
         facultyDAO = new FacultyDAO();
         studentDAO = new StudentDAO();
@@ -33,9 +31,7 @@ public class FacultyService {
         materialDAO = new MaterialDAO();
         assignmentDAO = new AssignmentDAO();
     }
-    
- // Faculty Management (Admin Purpose)
-
+    // Faculty Management (Admin Purpose)
  	public void addFacultyWithUser(String email, String password,String name, String department, String dob,
  			String contact) {
 
@@ -50,12 +46,8 @@ public class FacultyService {
  			System.out.println("User creation failed");
  			return;
  		}
-
- // ✅ IMPORTANT CHANGE HERE
  		facultyDAO.addFaculty( name, department, dob, contact, userId);
-
  	}
-
  	public void updateFaculty(int facultyId, String field, String value) {
 
  	    if (facultyId <= 0) {
@@ -102,13 +94,11 @@ public class FacultyService {
 
  	    System.out.println("\n---------------------- FACULTY LIST ----------------------");
 
- 	    // Header
  	    System.out.printf("%-5s %-20s %-15s %-12s %-15s\n",
  	            "ID", "Name", "Department", "DOB", "Contact");
 
  	    System.out.println("----------------------------------------------------------");
 
- 	    // Data
  	    for (Faculty f : faculties) {
  	        System.out.printf("%-5d %-20s %-15s %-12s %-15s\n",
  	                f.getId(),
@@ -176,7 +166,6 @@ public class FacultyService {
 
  	        if (c.getFacultyId() == facultyId) {
 
- 	            // ✅ Table Row
  	            System.out.printf("%-12d %-25s\n",
  	                    c.getCourseId(),
  	                    c.getCourseName());
