@@ -125,8 +125,8 @@ public class AdminService {
 
     // ================= COURSE =================
  // ------------------ ADD COURSE ------------------
-    public void addCourse(String name, int credits, String duration, String department, int facultyId, String description) {
-        courseDao.addCourse(name, credits, duration, department, facultyId, description);
+    public void addCourse(String name, int credits, String duration, String department, int facultyId, String description, int semester) {
+        courseDao.addCourse(name, credits, duration, department, facultyId, description, semester);
     }
 
     // ------------------ UPDATE COURSE ------------------

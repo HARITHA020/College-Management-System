@@ -414,8 +414,12 @@ public class AdminController {
 
                     System.out.print("Enter Description: ");
                     String description = input.nextLine();
+                    
+                    System.out.print("Enter Semester: ");
+                    int semester = input.nextInt();
+                    input.nextLine();
 
-                    adminService.addCourse(name, credits, duration, department, facultyId, description);
+                    adminService.addCourse(name, credits, duration, department, facultyId, description, semester);
                     break;
 
 				case 2: // Update Course
@@ -430,6 +434,7 @@ public class AdminController {
 					System.out.println("4. Department");
 					System.out.println("5. Faculty ID");
 					System.out.println("6. Description");
+					System.out.println("7. Semester");
 
 					int fieldChoice = input.nextInt();
 					input.nextLine();
@@ -467,6 +472,11 @@ public class AdminController {
 						newValue = input.nextLine();
 						field = "description";
 						break;
+					case 7:
+					    System.out.print("Enter new Semester: ");
+					    newValue = input.nextLine();
+					    field = "semester";
+					    break;
 					default:
 						System.out.println("Invalid choice!");
 						break;

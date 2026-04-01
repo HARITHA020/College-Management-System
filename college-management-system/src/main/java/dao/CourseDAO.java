@@ -10,17 +10,19 @@ import model.Course;
 public class CourseDAO {
 
     // 🔹 ADD COURSE
-    public void addCourse(String name, int credits, String duration, String department, int facultyId, String description) {
-        String query = "INSERT INTO courses(course_name, credits, duration, department, faculty_id, description) VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection con = DBConnection.getConnection();
+    public void addCourse(String name, int credits, String duration, String department, int facultyId, String description,int semester) {
+    	String query = "INSERT INTO courses(course_name, credits, duration, department, faculty_id, description, semester) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    	try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
-
-            ps.setString(1, name);
-            ps.setInt(2, credits);
-            ps.setString(3, duration);
-            ps.setString(4, department);
-            ps.setInt(5, facultyId);
-            ps.setString(6, description);
+        	
+        	ps.setString(1, name);
+        	ps.setInt(2, credits);
+        	ps.setString(3, duration);
+        	ps.setString(4, department);
+        	ps.setInt(5, facultyId);
+        	ps.setString(6, description);
+        	ps.setInt(7, semester);  // new
+        	
 
             ps.executeUpdate();
             System.out.println("✅ Course added successfully");
@@ -33,22 +35,20 @@ public class CourseDAO {
     public boolean updateCourseField(int courseId, String field, String value) {
 
         // ⚠️ Only allow valid fields to prevent SQL injection
-        if (!(field.equals("course_name") || field.equals("credits") || field.equals("duration") ||
-              field.equals("department") || field.equals("faculty_id") || field.equals("description"))) {
-            return false;
-        }
-
+    	 if (!(field.equals("course_name") || field.equals("credits") || field.equals("duration") ||
+       	      field.equals("department") || field.equals("faculty_id") || field.equals("description") || field.equals("semester"))) {
+       	    return false;
+       	}
         String sql = "UPDATE courses SET " + field + " = ? WHERE course_id = ?";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
-
             // Handle integer fields
-            if (field.equals("credits") || field.equals("faculty_id")) {
-                ps.setInt(1, Integer.parseInt(value));
-            } else {
-                ps.setString(1, value);
-            }
+        	if (field.equals("credits") || field.equals("faculty_id") || field.equals("semester")) {
+        	    ps.setInt(1, Integer.parseInt(value));
+        	} else {
+        	    ps.setString(1, value);
+        	}
 
             ps.setInt(2, courseId);
             return ps.executeUpdate() > 0;
@@ -89,15 +89,16 @@ public class CourseDAO {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                Course c = new Course(
-                        rs.getInt("course_id"),
-                        rs.getString("course_name"),
-                        rs.getInt("faculty_id"),
-                        rs.getInt("credits"),
-                        rs.getString("duration"),
-                        rs.getString("department"),
-                        rs.getString("description")
-                );
+            	Course c = new Course(
+            		    rs.getInt("course_id"),
+            		    rs.getString("course_name"),
+            		    rs.getInt("faculty_id"),
+            		    rs.getInt("credits"),
+            		    rs.getString("duration"),
+            		    rs.getString("department"),
+            		    rs.getString("description"),
+            		    rs.getInt("semester")  // new
+            		);
                 courses.add(c);
             }
 
@@ -118,14 +119,15 @@ public class CourseDAO {
 
             if (rs.next()) {
                 return new Course(
-                        rs.getInt("course_id"),
-                        rs.getString("course_name"),
-                        rs.getInt("faculty_id"),
-                        rs.getInt("credits"),
-                        rs.getString("duration"),
-                        rs.getString("department"),
-                        rs.getString("description")
-                );
+                	    rs.getInt("course_id"),
+                	    rs.getString("course_name"),
+                	    rs.getInt("faculty_id"),
+                	    rs.getInt("credits"),
+                	    rs.getString("duration"),
+                	    rs.getString("department"),
+                	    rs.getString("description"),
+                	    rs.getInt("semester")  // new
+                	);
             }
 
         } catch (Exception e) {
@@ -168,15 +170,16 @@ public class CourseDAO {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                Course c = new Course(
-                        rs.getInt("course_id"),
-                        rs.getString("course_name"),
-                        rs.getInt("credits"),
-                        rs.getInt("faculty_id"),
-                        rs.getString("department"),
-                        rs.getString("duration"),
-                        rs.getString("description")
-                );
+            	Course c = new Course(
+            		    rs.getInt("course_id"),
+            		    rs.getString("course_name"),
+            		    rs.getInt("faculty_id"),
+            		    rs.getInt("credits"),
+            		    rs.getString("duration"),
+            		    rs.getString("department"),
+            		    rs.getString("description"),
+            		    rs.getInt("semester")  // new
+            		);
 
                 courses.add(c);
             }
