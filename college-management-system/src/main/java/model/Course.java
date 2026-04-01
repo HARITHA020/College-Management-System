@@ -4,22 +4,22 @@ public class Course {
     private int courseId;
     private String courseName;
     private int facultyId;
-    private int credits;           // NEW
-    private String duration;       // NEW (e.g., "1 semester")
-    private String department;     // NEW
-    private String description;    // NEW
-
+    private int credits;           
+    private String duration;      
+    private String department;     
+    private String description;     
+    private int semester;
     // Constructor with all fields
-    public Course(int courseId, String courseName, int facultyId, int credits, String duration, String department, String description) {
-        this.courseId   = courseId;
+    public Course(int courseId, String courseName, int facultyId, int credits, String duration, String department, String description, int semester) {
+        this.courseId = courseId;
         this.courseName = courseName;
-        this.facultyId  = facultyId;
-        this.credits    = credits;
-        this.duration   = duration;
+        this.facultyId = facultyId;
+        this.credits = credits;
+        this.duration = duration;
         this.department = department;
-        this.description= description;
+        this.description = description;
+        this.semester = semester;
     }
-
     // Getters and Setters
     public int getCourseId() { return courseId; }
     public void setCourseId(int courseId) { this.courseId = courseId; }
@@ -41,4 +41,10 @@ public class Course {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    
+    public int getSemester() { return semester; }
+    public void setSemester(int semester) { this.semester = semester; }
+ 
+
+ 
 }
