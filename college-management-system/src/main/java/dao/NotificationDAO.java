@@ -1,3 +1,8 @@
+/*
+ * Author : Haritha
+ * Dao helps to retrieve the the data form the mysql using the jdbc query commands
+ */
+
 package dao;
 
 import java.sql.*;
@@ -20,7 +25,7 @@ public class NotificationDAO {
             ps.setString(3, notification.getTargetRole());
 
             if (notification.getTargetId() == null) {
-                ps.setNull(4, java.sql.Types.INTEGER);
+                ps.setNull(4, java.sql.Types.INTEGER);   // to avoid the nullpointerexpection or sql error
             } else {
                 ps.setInt(4, notification.getTargetId());
             }

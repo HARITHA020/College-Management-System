@@ -1,3 +1,7 @@
+/*
+ * Author : Haritha
+ * This service method will helps to send the input details to the dao which is to store the details in the database
+ */
 package service;
 
 import java.time.LocalDate;
@@ -26,7 +30,7 @@ public class AdminService {
 
     // ================= ADMIN =================
     public void addAdminWithUser(String email, String password, String name, String dob, String contact) {
-
+        //validating the all input fields
         if (email == null || email.trim().isEmpty()) {
             System.out.println("Email cannot be empty");
             return;
@@ -46,24 +50,22 @@ public class AdminService {
             System.out.println("Email already exists");
             return;
         }
-
-        // 🔹 Create user
+        // getting the user id from the user data which match the particular email and password and role
         int userId = userDAO.createUser(email, password, "ADMIN");
 
         if (userId == -1) {
             System.out.println("User creation failed");
             return;
         }
-
-        // 🔹 Create admin
+         // sending the admin details to DAO for storing the admin details in database
         adminDao.addAdmin(name, dob, contact, userId);
 
         
     }
 
-    // ✅ UPDATE ADMIN
+    // UPDATE ADMIN 
     public void updateAdmin(int adminId, String field, String value) {
-
+        // validating the admin id
         if (adminId <= 0) {
             System.out.println("Invalid Admin ID");
             return;
@@ -78,7 +80,7 @@ public class AdminService {
         }
     }
 
-    // ✅ DELETE ADMIN
+    // DELETE ADMIN
     public void deleteAdmin(int id) {
 
         if (id <= 0) {
@@ -86,7 +88,7 @@ public class AdminService {
             return;
         }
 
-        // 🔹 1. Get user_id from admin table
+        //  1. Get user_id from admin table
         int userId = adminDao.getUserIdByAdminId(id);
 
         if (userId == -1) {
@@ -94,13 +96,13 @@ public class AdminService {
             return;
         }
 
-        // 🔹 2. Delete USER (not admin)
+        //  2. Delete USER (not admin)
         userDAO.deleteUser(userId);
 
     }
-    // ✅ VIEW ADMIN
+    //  VIEW ADMIN
     public void viewAdmins() {
-
+        // getting all the admin details from the backend 
         List<Administrator> admins = adminDao.getAllAdmins();
 
         if (admins.isEmpty()) {
@@ -112,7 +114,7 @@ public class AdminService {
                 "ID", "Name", "DOB", "Contact");
 
         System.out.println("------------------------------------------------------------");
-
+        // printing the admin details
         for (Administrator admin : admins) {
             System.out.printf("%-5d %-20s %-15s %-15s\n",
                     admin.getId(),
@@ -124,12 +126,12 @@ public class AdminService {
 
 
     // ================= COURSE =================
- // ------------------ ADD COURSE ------------------
+    //ADD COURSE
     public void addCourse(String name, int credits, String duration, String department, int facultyId, String description, int semester) {
         courseDao.addCourse(name, credits, duration, department, facultyId, description, semester);
     }
 
-    // ------------------ UPDATE COURSE ------------------
+    // UPDATE COURSE
     public void updateCourse(int courseId, String field, String value) {
 
         // Validate course ID
@@ -148,10 +150,10 @@ public class AdminService {
         }
     }
 
-    // ------------------ DELETE COURSE ------------------
+    //DELETE COURSE 
     public void deleteCourse(int courseId) {
 
-        // Optional: check if course exists first
+        //check if course exists first
         Course existing = courseDao.getCourseById(courseId);
         if (existing == null) {
             System.out.println("❌ Course ID " + courseId + " does not exist.");
@@ -162,10 +164,10 @@ public class AdminService {
         courseDao.deleteCourse(courseId);
     }
 
-    // ------------------ DELETE ENROLLMENT ------------------
+    // DELETE ENROLLMENT
     public void deleteEnrollment(int studentId, int courseId) {
 
-        // Optional: validate student and course
+        // validate student and course
         Student s = studentDao.getStudentById(studentId);
         Course c = courseDao.getCourseById(courseId);
 
@@ -184,8 +186,7 @@ public class AdminService {
     }
 
     public void assignCourse(int courseId, int facultyId) {
-
-        // 🔹 Step 1: Validate course exists
+        //Validate course exists
         boolean courseExists = false;
         for (Course c : courseDao.getAllCourses()) {
             if (c.getCourseId() == courseId) {
@@ -199,7 +200,7 @@ public class AdminService {
             return;
         }
 
-        // 🔹 Step 2: Validate faculty exists
+        //  Validate faculty exists
         boolean facultyExists = false;
         for (Faculty f : facultyDao.getAllFaculty()) {
             if (f.getId() == facultyId) {
@@ -213,15 +214,14 @@ public class AdminService {
             return;
         }
 
-        // 🔹 Step 3: Assign course to faculty
+        //  Assign course to faculty
         courseDao.assignCourse(courseId, facultyId);
 
         System.out.println("Course Assigned Successfully");
     }
     
     public void assignStudentToCourse(int studentId, int courseId) {
-        
-        // 🔹 Step 1: Validate student exists
+        // Validate student exists
         boolean studentExists = false;
         for (Student s : studentDao.getAllStudents()) {
             if (s.getId() == studentId) {
@@ -235,7 +235,7 @@ public class AdminService {
             return;
         }
 
-        // 🔹 Step 2: Validate course exists
+        //  Validate course exists
         boolean courseExists = false;
         for (Course c : courseDao.getAllCourses()) {
             if (c.getCourseId() == courseId) {
@@ -249,12 +249,12 @@ public class AdminService {
             return;
         }
 
-        // 🔹 Step 3: If both exist, enroll student
+        // If both exist, enroll student
         enrollmentDAO.enrollStudent(studentId, courseId);
     }
 
     public void viewCourses() {
-
+       // get course from the dao
         List<Course> courses = courseDao.getAllCourses();
 
         if (courses.isEmpty()) {
@@ -286,7 +286,7 @@ public class AdminService {
 
     // ================= TIMETABLE =================
     public String getTimeByPeriod(int period) {
-
+        // setting the peroids time which calls based on the iteration
         switch (period) {
             case 1: return "9:00 - 10:00";
             case 2: return "10:00 - 11:00";
@@ -358,7 +358,7 @@ public class AdminService {
         }
     }
 
-    // 🔥 VIEW BY DATE + SECTION
+    //VIEW BY DATE + SECTION
     public void viewByDate(String dateInput, String section) {
 
         try {
@@ -379,7 +379,7 @@ public class AdminService {
 
                     System.out.println(
                             "Period: " + t.getPeriod() +
-                            " (" + getTimeByPeriod(t.getPeriod()) + ")" + // ✅ ADDED
+                            " (" + getTimeByPeriod(t.getPeriod()) + ")" + 
                             ", Room: " + t.getRoom() +
                             ", Course: " + t.getCourseId() +
                             ", Faculty: " + t.getFacultyId()
@@ -432,7 +432,7 @@ public class AdminService {
     public void scheduleExam(int courseId, String examDate, int maxMark) {
 
 
-        // 🔹 2. Validate course exists
+        //  Validate course exists
         boolean courseExists = false;
         for (Course c : courseDao.getAllCourses()) {
             if (c.getCourseId() == courseId) {
@@ -446,7 +446,7 @@ public class AdminService {
             return;
         }
 
-        // 🔹 3. Validate exam date
+        //  Validate exam date
         if (examDate == null || examDate.trim().isEmpty()) {
             System.out.println("Exam date cannot be empty");
             return;
@@ -459,7 +459,7 @@ public class AdminService {
         }
 
       
-        // 🔹 5. Conflict check (VERY IMPORTANT 🔥)
+        // Conflict check (VERY IMPORTANT 🔥)
 
         for (Exam e : examDao.getAllExams()) {
 
@@ -478,13 +478,13 @@ public class AdminService {
             }
         }
 
-        // 🔹 6. All valid → schedule exam
+        // All valid → schedule exam
         examDao.scheduleExam( courseId, examDate, maxMark);
 
         System.out.println("Exam Scheduled Successfully");
     }
     
- // DELETE
+     // DELETE
     public void deleteExam(int examId) {
 
         if (examId <= 0) {
@@ -576,17 +576,12 @@ public class AdminService {
         }
 
         System.out.println("\n--- All Notifications (Admin View) ---");
-
-        // ✅ Header
         System.out.printf("%-5s %-30s %-15s %-10s %-20s\n",
                 "ID", "Message", "Role", "TargetID", "Date");
 
         System.out.println("------------------------------------------------------------------------------------------");
-
-        // ✅ Rows
         for (Notification n : list) {
-
-            // Optional: trim long message
+            // trim long message
             String msg = n.getMessage();
             if (msg.length() > 28) {
                 msg = msg.substring(0, 28) + "...";
@@ -608,31 +603,31 @@ public class AdminService {
    
     // ================= LIBRARY =================
     public void addBook(String title, String author, String isbn, int totalCopies ) {
-        // 🔹 1. Validate Title
+        //Validate Title
         if (title == null || title.trim().isEmpty()) {
             System.out.println("Title cannot be empty");
             return;
         }
 
-        // 🔹 2. Validate Author
+        // Validate Author
         if (author == null || author.trim().isEmpty()) {
             System.out.println("Author cannot be empty");
             return;
         }
 
-        // 🔹 3. Validate ISBN
+        // Validate ISBN
         if (isbn == null || isbn.trim().isEmpty()) {
             System.out.println("ISBN cannot be empty");
             return;
         }
 
-        // 🔹 4. ISBN format check (basic)
+        //  ISBN format check (basic)
         if (!isbn.matches("\\d{10}|\\d{13}")) {
             System.out.println("Invalid ISBN (must be 10 or 13 digits)");
             return;
         }
 
-        // 🔹 5. Duplicate ISBN check (VERY IMPORTANT 🔥)
+        // Duplicate ISBN check (VERY IMPORTANT 🔥)
         for (Book b : bookDAO.getAllBooks()) {
             if (b.getIsbn().equals(isbn)) {
                 System.out.println("Book with same ISBN already exists");
@@ -640,7 +635,7 @@ public class AdminService {
             }
         }
 
-        // 🔹 6. Trim clean data
+        //  Trim clean data
         title = title.trim();
         author = author.trim();
         isbn = isbn.trim();
@@ -668,13 +663,13 @@ public class AdminService {
     }
     public void removeBook(int id) {
 
-        // 🔹 1. Validate ID
+        // Validate ID
         if (id <= 0) {
             System.out.println("Invalid Book ID");
             return;
         }
 
-        // 🔹 2. Check if book exists
+        // Check if book exists
         Book foundBook = null;
 
         for (Book b : bookDAO.getAllBooks()) {
@@ -768,24 +763,24 @@ public class AdminService {
             return;
         }
 
-        // ❌ PREVENT RE-PUBLISH
+        //  PREVENT RE-PUBLISH
         if (r.isPublished()) {
             System.out.println("❌ Result is already published");
             return;
         }
 
-        // ✅ Add extra marks only if > 0
+        // Add extra marks only if > 0
         if (extraMarks > 0) {
             r.setMarks(r.getMarks() + extraMarks);
         }
 
-        // ✅ Update grade
+        // Update grade
         r.setGrade(calculateGrade(r.getMarks()));
 
-        // ✅ Set published
+        // Set published
         r.setPublished(true);
 
-        // ✅ Save to DB
+        // Save to DB
         resultDAO.updateResult(r);
 
         System.out.println("✅ Result published successfully for Student ID " + r.getStudentId() +
@@ -804,8 +799,6 @@ public class AdminService {
         }
 
         System.out.println("\n--- All Results ---");
-
-        // ✅ Table Header
         System.out.printf("%-8s %-20s %-20s %-10s %-8s %-12s\n",
                 "ResID", "Student", "Course", "Marks", "Grade", "Published");
 
@@ -822,15 +815,13 @@ public class AdminService {
             String studentName = (s != null) ? s.getName() : "Unknown";
             String courseName = (c != null) ? c.getCourseName() : "Unknown";
 
-            // ✅ Trim long names (optional)
+            // Trim long names (optional)
             if (studentName.length() > 18) {
                 studentName = studentName.substring(0, 18) + "...";
             }
             if (courseName.length() > 18) {
                 courseName = courseName.substring(0, 18) + "...";
             }
-
-            // ✅ Row
             System.out.printf("%-8d %-20s %-20s %-10d %-8s %-12s\n",
                     r.getResultId(),
                     studentName,

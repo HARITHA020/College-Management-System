@@ -1,9 +1,15 @@
+/*
+ * Author : Haritha
+ * Model is used to initialize the variable and getter,setter used to return or set value based on input 
+ */
+
+
 package model;
 
 public class Result {
     private int resultId;
     private int studentId;
-    private int examId;  // ✅ Changed from courseId to examId
+    private int examId;  
     private int marks;
     private String grade;
     private boolean published;
@@ -12,7 +18,7 @@ public class Result {
     public Result(int resultId, int studentId, int examId, int marks, String grade) {
         this.resultId = resultId;
         this.studentId = studentId;
-        this.examId = examId; // ✅ correctly use examId
+        this.examId = examId;
         this.marks = marks;
         this.grade = grade;
         this.published = false; // default not published
@@ -21,7 +27,7 @@ public class Result {
     // Getters and setters
     public int getResultId() { return resultId; }
     public int getStudentId() { return studentId; }
-    public int getExamId() { return examId; }  // ✅ getter
+    public int getExamId() { return examId; }  
     public int getMarks() { return marks; }
     public String getGrade() { return grade; }
     public boolean isPublished() { return published; }

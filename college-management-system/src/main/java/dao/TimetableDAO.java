@@ -1,3 +1,10 @@
+/*
+ * Author: Haritha
+ * Dao helps to retrieve the the data form the mysql using the jdbc query commands
+*/
+
+
+
 package dao;
 
 import java.sql.*;
@@ -32,7 +39,7 @@ public class TimetableDAO {
     
     public boolean updateTimetableField(int id, String field, String value) {
 
-        // ⚠️ Prevent SQL injection (only allow valid fields)
+        // only allow valid fields
         if (!(field.equals("day") || field.equals("period") || field.equals("room") ||
               field.equals("course_id") || field.equals("faculty_id") || field.equals("section"))) {
             return false;
@@ -60,7 +67,7 @@ public class TimetableDAO {
 
         return false;
     }
-    
+    //delete
     public boolean deleteTimetableById(int id) {
 
         String sql = "DELETE FROM timetable WHERE timetable_id = ?";
