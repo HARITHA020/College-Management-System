@@ -194,4 +194,46 @@ public class CourseDAO {
 
         return courses;
     }
+    public boolean isCourseExists(String name, String department, int semester) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "SELECT * FROM courses WHERE course_name=? AND department=? AND semester=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, name);
+            ps.setString(2, department);
+            ps.setInt(3, semester);
+
+            ResultSet rs = ps.executeQuery();
+            boolean exists = rs.next();
+
+            rs.close();
+            ps.close();
+
+            return exists;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean isCourseAlreadyAssigned(int courseId, int facultyId) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "SELECT * FROM courses WHERE course_id=? AND faculty_id=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, courseId);
+            ps.setInt(2, facultyId);
+
+            ResultSet rs = ps.executeQuery();
+            boolean exists = rs.next();
+
+            rs.close();
+            ps.close();
+            return exists;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

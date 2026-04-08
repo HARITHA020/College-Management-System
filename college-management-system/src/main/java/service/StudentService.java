@@ -55,6 +55,16 @@ public class StudentService {
 	public void addStudentWithUser(String email, String password,  String name, String department, String dob,
 			String contact, String section) {
 
+		 if (email == null || email.trim().isEmpty()) {
+		        System.out.println("Email cannot be empty");
+		        return;
+		    }
+		    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+		    if (!email.matches(emailRegex)) {
+		        System.out.println("Invalid email format");
+		        return;
+		    }
+
 		if (userDAO.checkEmailExists(email)) {
 			System.out.println("Email already exists");
 			return;
