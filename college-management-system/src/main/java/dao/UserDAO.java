@@ -1,3 +1,9 @@
+/*
+ * Author : Haritha
+ * Dao helps to retrieve the the data form the mysql using the jdbc query commands
+ */
+
+
 package dao;
 
 import java.sql.*;

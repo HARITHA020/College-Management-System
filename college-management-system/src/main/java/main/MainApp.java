@@ -1,3 +1,9 @@
+/*
+ * Author : Haritha
+ * This is the starting point of application which call the login controller for login.
+ */
+
+
 package main;
 
 import java.util.Scanner;

@@ -1,6 +1,6 @@
 /*
  * Author :Haritha
- * 
+ * Login controller is the main point to decide who should login based on there email, password and role
  */
 
 
