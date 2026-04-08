@@ -1,9 +1,14 @@
+/*
+ * Borrow Record Model
+ * Author: Jerishwin Joseph
+ */
 package model;
 
+// BorrowRecord model class representing a borrowing transaction in the library
 public class BorrowRecord {
     private int recordId;
-    private Integer studentId; // nullable for faculty
-    private Integer facultyId; // nullable for student
+    private Integer studentId; 
+    private Integer facultyId; 
     private int bookId;
     private String borrowDate;
     private String returnDate;  // null means not yet returned
@@ -17,7 +22,8 @@ public class BorrowRecord {
         this.borrowDate = borrowDate;
         this.returnDate = returnDate;
     }
-
+    
+    // Getters and Setters
     public int getRecordId() { return recordId; }
     public void setRecordId(int recordId) { this.recordId = recordId; }
 

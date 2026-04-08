@@ -1,5 +1,10 @@
+/*
+ * Exam Model
+ * Author: Jerishwin Joseph
+ */
 package model;
 
+// Exam model class representing an exam for a course
 public class Exam {
     private int examId;
     private int courseId;
@@ -13,6 +18,7 @@ public class Exam {
         this.maxMarks = maxMarks;
     }
 
+    // Getters and Setters
     public int getExamId()                    { return examId; }
     public void setExamId(int examId)         { this.examId = examId; }
 

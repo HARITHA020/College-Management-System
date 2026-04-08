@@ -1,3 +1,7 @@
+/*
+ * Book DAO
+ * Author: Jerishwin Joseph
+ */
 package dao;
 
 import java.sql.*;
@@ -9,10 +13,12 @@ import model.Book;
 
 public class BookDAO {
 
+
     // 🔹 ADD BOOK
 	public void addBook(String title, String author, String isbn, int totalCopies,int available) {
 	    try {
 	        Connection con = DBConnection.getConnection();
+
 
 	        String query = "INSERT INTO books(title, author, isbn, total_copies, available_copies) VALUES (?, ?, ?, ?, ?)";
 
@@ -65,7 +71,7 @@ public class BookDAO {
         return false;
     }
 
-    // 🔹 REMOVE BOOK
+    // Remove Book
     public void removeBook(int bookId) {
         try {
             Connection con = DBConnection.getConnection();
@@ -88,7 +94,7 @@ public class BookDAO {
     
     
 
-    // 🔹 GET ALL BOOKS
+    // Get All Books
     public List<Book> getAllBooks() {
 
         List<Book> books = new ArrayList<>();
@@ -121,7 +127,7 @@ public class BookDAO {
         return books;
     }
 
-    // 🔹 GET BOOK BY ID
+    // Get Book By ID
     public Book getBookById(int bookId) {
 
         try {
@@ -152,7 +158,7 @@ public class BookDAO {
         return null;
     }
 
-    // 🔹 SEARCH BOOKS BY KEYWORD (title or author)
+    // Search Books by Title or Author
     public List<Book> searchBooks(String keyword) {
 
         List<Book> books = new ArrayList<>();

@@ -1,3 +1,10 @@
+/*
+ * Student Services
+ * Author: Jerishwin Joseph
+ * contains all the business logic related to student operations, including 
+ * CRUD, course management, timetable, marks, attendance, 
+ * notifications, materials, assignments, and library interactions.
+ */
 package service;
 
 import java.util.ArrayList;
@@ -60,8 +67,6 @@ public class StudentService {
 			return;
 		}
 
-
-         // ✅ FIXED ORDER + section added
 		studentDAO.addStudent(name, dob, contact, department, section, userId);
 	}
 	public void updateStudent(int studentId, String field, String value) {
@@ -90,7 +95,7 @@ public class StudentService {
 	    }
 
 	    try {
-	        enrollmentDao.deleteByStudentId(id);   // ✅ FIX NAME
+	        enrollmentDao.deleteByStudentId(id); 
 	        attendanceDao.deleteByStudentId(id);
 	        borrowDAO.deleteByStudentId(id);
 
@@ -111,13 +116,11 @@ public class StudentService {
 
         System.out.println("\n-------------------- STUDENT LIST --------------------------------------------");
 
-        // ✅ Table Header
         System.out.printf("%-5s %-20s %-15s %-10s %-12s %-15s\n",
                 "ID", "Name", "Department", "Section", "DOB", "Contact");
 
         System.out.println("--------------------------------------------------------------------------------");
 
-        // ✅ Table Rows
         for (Student s : students) {
             System.out.printf("%-5d %-20s %-15s %-10s %-12s %-15s\n",
                     s.getId(),
@@ -174,7 +177,6 @@ public class StudentService {
 
  // ================= TIMETABLE =================
 
- // 🔥 Time mapping
  public String getTimeByPeriod(int period) {
 
      switch (period) {
@@ -411,7 +413,7 @@ public class StudentService {
 
         List<Course> courses = courseDAO.getAllCourses();
 
-        // ✅ Table Header
+        // Table Header
         System.out.printf("%-25s %-15s %-15s %-15s\n",
                 "Course", "Total Classes", "Attended", "Percentage");
         System.out.println("--------------------------------------------------------------------------");
@@ -429,7 +431,7 @@ public class StudentService {
             double percentage = totalClasses == 0 ? 0 :
                     ((double) attendedClasses / totalClasses) * 100;
 
-            // ✅ Table Row
+            // Table Row
             System.out.printf("%-25s %-15d %-15d %-15.2f%%\n",
                     c.getCourseName(),
                     totalClasses,
@@ -452,7 +454,7 @@ public class StudentService {
 
         System.out.println("\n--- Notifications ---");
 
-        // ✅ Table Header
+        // Table Header
         System.out.printf("%-5s %-50s %-20s\n",
                 "ID", "Message", "Date");
         System.out.println("--------------------------------------------------------------------------");
@@ -463,13 +465,13 @@ public class StudentService {
                 (n.getTargetRole().equalsIgnoreCase("STUDENT") &&
                  (n.getTargetId() == null || n.getTargetId() == studentId))) {
 
-                // ✅ Trim long message (optional)
+                // Trim long message (optional)
                 String msg = n.getMessage();
                 if (msg.length() > 45) {
                     msg = msg.substring(0, 45) + "...";
                 }
 
-                // ✅ Table Row
+                // Table Row
                 System.out.printf("%-5d %-50s %-20s\n",
                         n.getNotificationId(),
                         msg,
@@ -487,7 +489,7 @@ public class StudentService {
     // ===================== MATERIALS =====================
     public void viewMaterials(int courseId, int studentId, String role) {
 
-        // ✅ Validate enrollment
+        // Validate enrollment
         boolean enrolled = false;
         for (Enrollment e : enrollmentDao.getEnrollmentsByStudent(studentId)) {
             if (e.getCourseId() == courseId) {
@@ -506,7 +508,7 @@ public class StudentService {
 
         System.out.println("\n--- Course Materials ---");
 
-        // ✅ Table Header
+        // Table Header
         System.out.printf("%-5s %-25s %-50s\n",
                 "ID", "Title", "Content");
         System.out.println("--------------------------------------------------------------------------");
@@ -514,13 +516,13 @@ public class StudentService {
         for (Material m : materials) {
             if (m.getCourseId() == courseId) {
 
-                // ✅ Trim long content (optional)
+                // Trim long content 
                 String content = m.getContent();
                 if (content.length() > 45) {
                     content = content.substring(0, 45) + "...";
                 }
 
-                // ✅ Table Row
+                // Table Row
                 System.out.printf("%-5d %-25s %-50s\n",
                         m.getId(),
                         m.getTitle(),
@@ -538,7 +540,7 @@ public class StudentService {
     // ===================== ASSIGNMENTS =====================
     public void viewAssignments(int courseId, int studentId, String role) {
 
-        // ✅ Validate enrollment
+        // Validate enrollment
         boolean enrolled = false;
         for (Enrollment e : enrollmentDao.getEnrollmentsByStudent(studentId)) {
             if (e.getCourseId() == courseId) {
@@ -557,7 +559,7 @@ public class StudentService {
 
         System.out.println("\n--- Assignments ---");
 
-        // ✅ Table Header
+        // Table Header
         System.out.printf("%-5s %-25s %-50s\n",
                 "ID", "Title", "Description");
         System.out.println("--------------------------------------------------------------------------");
@@ -565,13 +567,13 @@ public class StudentService {
         for (Assignment a : assignments) {
             if (a.getCourseId() == courseId) {
 
-                // ✅ Trim long description (optional)
+                //  Trim long description (optional)
                 String desc = a.getDescription();
                 if (desc.length() > 45) {
                     desc = desc.substring(0, 45) + "...";
                 }
 
-                // ✅ Table Row
+                // Table Row
                 System.out.printf("%-5d %-25s %-50s\n",
                         a.getId(),
                         a.getTitle(),

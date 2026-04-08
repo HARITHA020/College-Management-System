@@ -1,3 +1,7 @@
+/*
+ * Exam DAO
+ * Author: Jerishwin Joseph
+ */
 package dao;
 
 import java.sql.*;
@@ -9,7 +13,7 @@ import model.Exam;
 
 public class ExamDAO {
 
-    // 🔹 SCHEDULE EXAM
+    // Schedule Exam
     public void scheduleExam(int courseId, String examDate, int maxMarks) {
         try {
             Connection con = DBConnection.getConnection();
@@ -32,7 +36,7 @@ public class ExamDAO {
         }
     }
 
-    // 🔹 UPDATE EXAM
+    // update Exam
     public void updateExam(int examId, int courseId, String examDate, int maxMarks) {
         try {
             Connection con = DBConnection.getConnection();
@@ -77,7 +81,7 @@ public class ExamDAO {
  // UPDATE
     public boolean updateExamField(int id, String field, String value) {
 
-        // ✅ सुरक्षा: only allow valid fields
+        // ✅ only allow valid fields
         if (!(field.equals("course_id") || field.equals("exam_date") || field.equals("max_marks"))) {
             return false;
         }
@@ -134,7 +138,7 @@ public class ExamDAO {
         return exams;
     }
 
-    // 🔹 GET EXAM BY ID
+    // Get Exam by ID
     public Exam getExamById(int examId) {
 
         try {
@@ -163,7 +167,7 @@ public class ExamDAO {
         return null;
     }
 
-    // 🔹 GET EXAMS BY COURSE ID
+    // Get Exams by Course ID
     public List<Exam> getExamsByCourseId(int courseId) {
 
         List<Exam> exams = new ArrayList<>();

@@ -1,3 +1,7 @@
+/*
+ * Borrow Record DAO
+ * Author: Jerishwin Joseph
+ */
 package dao;
 
 import java.sql.*;
@@ -10,7 +14,6 @@ import model.BorrowRecord;
 
 public class BorrowRecordDAO {
 
-    // 🔹 BORROW BOOK
 	// 🔹 BORROW BOOK
 	public void borrowBook(BorrowRecord record) {
 	    try {
@@ -104,7 +107,7 @@ public class BorrowRecordDAO {
         }
     }
 
-    // 🔹 GET RECORD BY ID
+    // Get Record By ID
     public BorrowRecord getRecordById(int recordId) {
         try {
             Connection con = DBConnection.getConnection();
@@ -144,7 +147,7 @@ public class BorrowRecordDAO {
         return -1;
     }
     
-    //deletion
+    // Delete Records by Student ID 
     public void deleteByStudentId(int studentId) {
 
         String query = "DELETE FROM borrow_records WHERE student_id=?";
@@ -160,7 +163,7 @@ public class BorrowRecordDAO {
         }
     }
 
-    // 🔹 GET ACTIVE BORROWS
+    // Get Active Borrow Records 
     public List<BorrowRecord> getActiveRecords() {
         List<BorrowRecord> records = new ArrayList<>();
         try {
@@ -168,7 +171,7 @@ public class BorrowRecordDAO {
             String query = "SELECT * FROM borrow_records WHERE return_date IS NULL";
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
+            while (rs.next()) { 
                 records.add(new BorrowRecord(
                         rs.getInt("record_id"),
                         rs.getObject("student_id") != null ? rs.getInt("student_id") : null,

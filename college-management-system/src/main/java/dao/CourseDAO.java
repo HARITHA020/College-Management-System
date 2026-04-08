@@ -1,3 +1,7 @@
+/*
+ * Course DAO
+ * Author: Jerishwin Joseph
+ */
 package dao;
 
 import java.sql.*;
@@ -108,7 +112,7 @@ public class CourseDAO {
         return courses;
     }
 
-    // 🔹 GET COURSE BY ID
+    // Get Course By ID
     public Course getCourseById(int courseId) {
         String query = "SELECT * FROM courses WHERE course_id=?";
         try (Connection con = DBConnection.getConnection();

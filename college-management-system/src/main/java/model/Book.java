@@ -1,5 +1,10 @@
+/*
+ * Book Model
+ * Author: Jerishwin Joseph
+ */
 package model;
 
+//Book model class representing a book in the library
 public class Book {
     private int bookId;
     private String title;

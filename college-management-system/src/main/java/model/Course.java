@@ -1,5 +1,10 @@
+/*
+ * Course model
+ * Author: Jerishwin Joseph
+ */
 package model;
 
+// Course model class representing a course offered by the college
 public class Course {
     private int courseId;
     private String courseName;
