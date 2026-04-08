@@ -1,5 +1,10 @@
+/*
+ * Book Model
+ * Author: Jerishwin Joseph
+ */
 package model;
 
+//Book model class representing a book in the library
 public class Book {
     private int bookId;
     private String title;
@@ -14,7 +19,8 @@ public class Book {
         this.isbn      = isbn;
         this.available = available;
     }
-
+    
+    // Getters and Setters
     public int getBookId()                      { return bookId; }
     public void setBookId(int bookId)           { this.bookId = bookId; }
 

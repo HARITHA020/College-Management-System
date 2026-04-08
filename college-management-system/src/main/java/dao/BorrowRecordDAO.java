@@ -1,3 +1,7 @@
+/*
+ * Borrow Record DAO
+ * Author: Jerishwin Joseph
+ */
 package dao;
 
 import java.sql.*;
@@ -9,7 +13,7 @@ import model.BorrowRecord;
 
 public class BorrowRecordDAO {
 
-    // 🔹 BORROW BOOK
+    // Borrow Book
     public void borrowBook(BorrowRecord record) {
         try {
             Connection con = DBConnection.getConnection();
@@ -17,7 +21,7 @@ public class BorrowRecordDAO {
             String query = "INSERT INTO borrow_records(student_id, faculty_id, book_id, borrow_date, return_date) VALUES (?, ?, ?, ?, NULL)";
 
             PreparedStatement ps = con.prepareStatement(query);
-            if (record.getStudentId() != null)
+            if (record.getStudentId() != null) // Handle null student_id
                 ps.setInt(1, record.getStudentId());
             else
                 ps.setNull(1, Types.INTEGER);
@@ -32,7 +36,7 @@ public class BorrowRecordDAO {
 
             int rows = ps.executeUpdate();
 
-            if (rows > 0) {
+            if (rows > 0) { // Mark book as unavailable
                 updateBookAvailability(record.getBookId(), false);
                 System.out.println("✅ Book borrowed successfully");
             }
@@ -42,7 +46,7 @@ public class BorrowRecordDAO {
         }
     }
 
-    // 🔹 RETURN BOOK
+    // Return Book
     public void returnBook(int recordId, String returnDate) {
         try {
             Connection con = DBConnection.getConnection();
@@ -66,7 +70,7 @@ public class BorrowRecordDAO {
         }
     }
 
-    // 🔹 GET RECORD BY ID
+    // Get Record By ID
     public BorrowRecord getRecordById(int recordId) {
         try {
             Connection con = DBConnection.getConnection();
@@ -91,7 +95,7 @@ public class BorrowRecordDAO {
         return null;
     }
 
-    // 🔹 UPDATE BOOK AVAILABILITY
+    // Update Book Availability
     private void updateBookAvailability(int bookId, boolean available) {
         try {
             Connection con = DBConnection.getConnection();
@@ -119,7 +123,7 @@ public class BorrowRecordDAO {
         return -1;
     }
     
-    //deletion
+    // Delete Records by Student ID 
     public void deleteByStudentId(int studentId) {
 
         String query = "DELETE FROM borrow_records WHERE student_id=?";
@@ -135,7 +139,7 @@ public class BorrowRecordDAO {
         }
     }
 
-    // 🔹 GET ACTIVE BORROWS
+    // Get Active Borrow Records 
     public List<BorrowRecord> getActiveRecords() {
         List<BorrowRecord> records = new ArrayList<>();
         try {
@@ -143,7 +147,7 @@ public class BorrowRecordDAO {
             String query = "SELECT * FROM borrow_records WHERE return_date IS NULL";
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
+            while (rs.next()) { 
                 records.add(new BorrowRecord(
                         rs.getInt("record_id"),
                         rs.getObject("student_id") != null ? rs.getInt("student_id") : null,

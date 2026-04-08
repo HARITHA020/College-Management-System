@@ -1,3 +1,7 @@
+/*
+ * Course DAO
+ * Author: Jerishwin Joseph
+ */
 package dao;
 
 import java.sql.*;
@@ -9,7 +13,7 @@ import model.Course;
 
 public class CourseDAO {
 
-    // 🔹 ADD COURSE (AUTO_INCREMENT)
+    // Add Course
     public void addCourse(int facultyId, String courseName) {
 
         String query = "INSERT INTO courses(course_name, faculty_id) VALUES (?, ?)";
@@ -31,7 +35,7 @@ public class CourseDAO {
         }
     }
 
-    // 🔹 UPDATE COURSE
+    // Update Course
     public void updateCourse(int id, String courseName, int facultyId) {
 
         String query = "UPDATE courses SET course_name=?, faculty_id=? WHERE course_id=?";
@@ -56,7 +60,7 @@ public class CourseDAO {
         }
     }
 
-    // 🔹 DELETE COURSE
+    // Delete Course
     public void deleteCourse(int id) {
 
         String query = "DELETE FROM courses WHERE course_id=?";
@@ -79,7 +83,7 @@ public class CourseDAO {
         }
     }
 
-    // 🔹 ASSIGN COURSE TO FACULTY (IMPORTANT)
+    // Assign Course to Faculty
     public void assignCourse(int courseId, int facultyId) {
 
         String query = "UPDATE courses SET faculty_id=? WHERE course_id=?";
@@ -103,7 +107,7 @@ public class CourseDAO {
         }
     }
 
-    // 🔹 GET ALL COURSES
+    // Get All Courses
     public List<Course> getAllCourses() {
 
         List<Course> courses = new ArrayList<>();
@@ -130,7 +134,7 @@ public class CourseDAO {
         return courses;
     }
 
-    // 🔹 GET COURSE BY ID
+    // Get Course By ID
     public Course getCourseById(int courseId) {
 
         String query = "SELECT * FROM courses WHERE course_id=?";
@@ -156,7 +160,7 @@ public class CourseDAO {
         return null;
     }
 
-    // 🔹 GET COURSES BY FACULTY ID
+    // Get Courses By Faculty ID
     public List<Course> getCoursesByFacultyId(int facultyId) {
 
         List<Course> courses = new ArrayList<>();

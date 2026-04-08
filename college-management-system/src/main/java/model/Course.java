@@ -1,5 +1,10 @@
+/*
+ * Course model
+ * Author: Jerishwin Joseph
+ */
 package model;
 
+// Course model class representing a course offered by the college
 public class Course {
     private int courseId;
     private String courseName;
@@ -10,7 +15,8 @@ public class Course {
         this.courseName = courseName;
         this.facultyId  = facultyId;
     }
-
+    
+    // Getters and Setters
     public int getCourseId()                    { return courseId; }
     public void setCourseId(int courseId)       { this.courseId = courseId; }
 

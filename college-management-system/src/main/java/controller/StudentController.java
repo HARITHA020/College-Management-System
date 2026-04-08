@@ -1,3 +1,8 @@
+/*
+ * Student Controller
+ * Author: Jerishwin Joseph
+ */
+
 package controller;
 
 import java.util.Scanner;
@@ -9,15 +14,16 @@ public class StudentController {
     private Scanner scanner;
     private int studentId; // logged-in student ID
 
-    // ✅ Constructor to pass logged-in student ID
+    // Constructor to pass logged-in student ID
     public StudentController(int userId) {
         this.studentService = new StudentService();
         this.scanner = new Scanner(System.in);
 
-        // ✅ Convert userId → studentId
+        // Convert userId to studentId
         this.studentId = studentService.getStudentIdByUserId(userId);
     }
 
+    // Main menu for students
     public void showMenu() {
         int choice;
         do {
@@ -36,7 +42,7 @@ public class StudentController {
 
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            scanner.nextLine(); 
 
             switch (choice) {
                 case 1:
@@ -80,12 +86,14 @@ public class StudentController {
     }
 
     // -------------------- Book Functions --------------------
+    // Search for books in the library
     private void searchBook() {
         System.out.print("Enter keyword: ");
         String keyword = scanner.nextLine();
         studentService.searchBook(keyword);
     }
 
+    // Borrow a book from the library
     private void borrowBook() {
         System.out.print("Enter Book ID: ");
         int bookId = scanner.nextInt();
@@ -93,14 +101,16 @@ public class StudentController {
         studentService.borrowBook(studentId, bookId);
     }
 
+    // Return a borrowed book to the library
     private void returnBook() {
         System.out.print("Enter Book ID to return: ");
         int bookId = scanner.nextInt();
         scanner.nextLine();
-        studentService.returnBook(bookId, studentId); // pass studentId here
+        studentService.returnBook(bookId, studentId); 
     }
 
     // -------------------- Materials & Assignments --------------------
+    // View course materials for a specific course
     private void viewMaterials() {
         System.out.print("Enter Course ID: ");
         int courseId = scanner.nextInt();
@@ -108,6 +118,7 @@ public class StudentController {
         studentService.viewMaterials(courseId, studentId, "STUDENT");
     }
 
+    // View assignments for a specific course
     private void viewAssignments() {
         System.out.print("Enter Course ID: ");
         int courseId = scanner.nextInt();

@@ -1,3 +1,7 @@
+/*
+ * Exam DAO
+ * Author: Jerishwin Joseph
+ */
 package dao;
 
 import java.sql.*;
@@ -9,7 +13,7 @@ import model.Exam;
 
 public class ExamDAO {
 
-    // 🔹 SCHEDULE EXAM
+    // Schedule Exam
     public void scheduleExam(int courseId, String examDate, int maxMarks) {
         try {
             Connection con = DBConnection.getConnection();
@@ -32,7 +36,7 @@ public class ExamDAO {
         }
     }
 
-    // 🔹 UPDATE EXAM
+    // update Exam
     public void updateExam(int examId, int courseId, String examDate, int maxMarks) {
         try {
             Connection con = DBConnection.getConnection();
@@ -54,7 +58,7 @@ public class ExamDAO {
         }
     }
 
-    // 🔹 DELETE EXAM
+    // Delete Exam
     public void deleteExam(int examId) {
         try {
             Connection con = DBConnection.getConnection();
@@ -73,7 +77,7 @@ public class ExamDAO {
         }
     }
 
-    // 🔹 GET ALL EXAMS
+    // get All Exams
     public List<Exam> getAllExams() {
 
         List<Exam> exams = new ArrayList<>();
@@ -104,7 +108,7 @@ public class ExamDAO {
         return exams;
     }
 
-    // 🔹 GET EXAM BY ID
+    // Get Exam by ID
     public Exam getExamById(int examId) {
 
         try {
@@ -133,7 +137,7 @@ public class ExamDAO {
         return null;
     }
 
-    // 🔹 GET EXAMS BY COURSE ID
+    // Get Exams by Course ID
     public List<Exam> getExamsByCourseId(int courseId) {
 
         List<Exam> exams = new ArrayList<>();

@@ -1,3 +1,7 @@
+/*
+ * Student DAO
+ * Author: Jerishwin Joseph
+ */
 package dao;
 
 import java.sql.*;
@@ -9,7 +13,7 @@ import model.Student;
 
 public class StudentDAO {
 
-    // 🔹 ADD STUDENT (AUTO_INCREMENT → no ID)
+    // Add Student
 	public void addStudent(String name, String dob, String contact, String department, String section, int userId) {
 
 	    String query = "INSERT INTO students(name, dob, contact, department, section, user_id) VALUES (?, ?, ?, ?, ?, ?)";
@@ -21,7 +25,7 @@ public class StudentDAO {
 	        ps.setDate(2, Date.valueOf(dob));
 	        ps.setString(3, contact);
 	        ps.setString(4, department);
-	        ps.setString(5, section);   // ✅ NEW
+	        ps.setString(5, section); 
 	        ps.setInt(6, userId);
 
 	        int rows = ps.executeUpdate();
@@ -35,7 +39,7 @@ public class StudentDAO {
 	    }
 	}
 
-    // 🔹 UPDATE STUDENT
+    // Update Student
 	public void updateStudent(int id, String name, String dob, String contact, String department, String section) {
 
 	    String query = "UPDATE students SET name=?, dob=?, contact=?, department=?, section=? WHERE student_id=?";
@@ -47,7 +51,7 @@ public class StudentDAO {
 	        ps.setDate(2, Date.valueOf(dob));
 	        ps.setString(3, contact);
 	        ps.setString(4, department);
-	        ps.setString(5, section);  // ✅ NEW
+	        ps.setString(5, section); 
 	        ps.setInt(6, id);
 
 	        int rows = ps.executeUpdate();
@@ -63,7 +67,7 @@ public class StudentDAO {
 	    }
 	}
 
-    // 🔹 DELETE STUDENT
+    // Delete Student
     public void deleteStudent(int id) {
 
         String query = "DELETE FROM students WHERE student_id=?";
@@ -86,7 +90,7 @@ public class StudentDAO {
         }
     }
 
-    // 🔹 GET ALL STUDENTS
+    // Get All Students
     public List<Student> getAllStudents() {
 
         List<Student> students = new ArrayList<>();
@@ -105,7 +109,7 @@ public class StudentDAO {
             	        rs.getString("department"),
             	        rs.getString("dob"),
             	        rs.getString("contact"),
-            	        rs.getString("section"),   // ✅ NEW
+            	        rs.getString("section"),  
             	        rs.getInt("user_id")
             	);
                 students.add(s);
@@ -118,7 +122,7 @@ public class StudentDAO {
         return students;
     }
 
-    // 🔹 GET STUDENT BY ID (IMPORTANT)
+    // Get Student by ID
     public Student getStudentById(int id) {
 
         String query = "SELECT * FROM students WHERE student_id=?";
@@ -136,7 +140,7 @@ public class StudentDAO {
             	        rs.getString("department"),
             	        rs.getString("dob"),
             	        rs.getString("contact"),
-            	        rs.getString("section"),   // ✅ NEW
+            	        rs.getString("section"),  
             	        rs.getInt("user_id")
             	);
             }
@@ -148,6 +152,7 @@ public class StudentDAO {
         return null;
     }
     
+    // Get Student ID by User ID
     public Student getStudentIdByUserId(int userId) {
 
         Student student = null;
@@ -180,7 +185,7 @@ public class StudentDAO {
         return student;
     }
 
-    // 🔹 GET STUDENT BY USER ID
+    // get Student by User ID
     public Student getStudentByUserId(int userId) {
 
         String query = "SELECT * FROM students WHERE user_id=?";
@@ -210,7 +215,7 @@ public class StudentDAO {
         return null;
     }
 
-    // 🔹 GET USER ID BY STUDENT ID
+    // Get User ID by Student ID
     public int getUserIdByStudentId(int studentId) {
 
         String query = "SELECT user_id FROM students WHERE student_id=?";
