@@ -1,3 +1,10 @@
+/*
+ * Author: Haritha
+ * Dao helps to retrieve the the data form the mysql using the jdbc query commands
+*/
+
+
+
 package dao;
 
 import java.sql.*;
@@ -28,6 +35,57 @@ public class TimetableDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    public boolean updateTimetableField(int id, String field, String value) {
+
+        // only allow valid fields
+        if (!(field.equals("day") || field.equals("period") || field.equals("room") ||
+              field.equals("course_id") || field.equals("faculty_id") || field.equals("section"))) {
+            return false;
+        }
+
+        String sql = "UPDATE timetable SET " + field + " = ? WHERE timetable_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            // Handle integer fields
+            if (field.equals("period") || field.equals("course_id") || field.equals("faculty_id")) {
+                ps.setInt(1, Integer.parseInt(value));
+            } else {
+                ps.setString(1, value);
+            }
+
+            ps.setInt(2, id);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    //delete
+    public boolean deleteTimetableById(int id) {
+
+        String sql = "DELETE FROM timetable WHERE timetable_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            int rows = ps.executeUpdate();
+
+            return rows > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     // GET ALL

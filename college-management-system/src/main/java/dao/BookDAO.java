@@ -13,49 +13,62 @@ import model.Book;
 
 public class BookDAO {
 
-    // Add Book
-    public void addBook(String title, String author, String isbn) {
-        try {
-            Connection con = DBConnection.getConnection();
 
-            String query = "INSERT INTO books(title, author, isbn, available) VALUES (?, ?, ?, TRUE)";
+    // 🔹 ADD BOOK
+	public void addBook(String title, String author, String isbn, int totalCopies,int available) {
+	    try {
+	        Connection con = DBConnection.getConnection();
 
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, title);
-            ps.setString(2, author);
-            ps.setString(3, isbn);
 
-            int rows = ps.executeUpdate();
+	        String query = "INSERT INTO books(title, author, isbn, total_copies, available_copies) VALUES (?, ?, ?, ?, ?)";
 
-            if (rows > 0) {
-                System.out.println("✅ Book added successfully");
+	        PreparedStatement ps = con.prepareStatement(query);
+	        ps.setString(1, title);
+	        ps.setString(2, author);
+	        ps.setString(3, isbn);
+	        ps.setInt(4, totalCopies);
+	        ps.setInt(5, totalCopies); // initially all available
+
+	        ps.executeUpdate();
+
+	        System.out.println("✅ Book added successfully");
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
+    // 🔹 UPDATE BOOK
+  
+    
+    public boolean updateBookField(int bookId, String field, String value) {
+
+        // Only allow valid fields
+        if (!(field.equals("title") || field.equals("author") || field.equals("isbn") || field.equals("total_copies"))) {
+            return false;
+        }
+
+        String sql = "UPDATE books SET " + field + " = ? WHERE book_id = ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            // Handle integer field
+            if (field.equals("total_copies")) {
+                ps.setInt(1, Integer.parseInt(value));
+            } else {
+                ps.setString(1, value);
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+            ps.setInt(2, bookId);
 
-    // Update Book
-    public void updateBook(int bookId, String title, String author, String isbn) {
-        try {
-            Connection con = DBConnection.getConnection();
-
-            String query = "UPDATE books SET title=?, author=?, isbn=? WHERE book_id=?";
-
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, title);
-            ps.setString(2, author);
-            ps.setString(3, isbn);
-            ps.setInt(4, bookId);
-
-            ps.executeUpdate();
-
-            System.out.println("✅ Book updated successfully");
+            return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 
     // Remove Book
@@ -63,7 +76,7 @@ public class BookDAO {
         try {
             Connection con = DBConnection.getConnection();
 
-            String query = "UPDATE books SET available = false WHERE book_id=?";
+            String query = "String query = \"UPDATE books SET available_copies = 0 WHERE book_id=?\";";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, bookId);
 
@@ -78,6 +91,8 @@ public class BookDAO {
             e.printStackTrace();
         }
     }
+    
+    
 
     // Get All Books
     public List<Book> getAllBooks() {
@@ -94,11 +109,12 @@ public class BookDAO {
 
             while (rs.next()) {
                 Book b = new Book(
-                        rs.getInt("book_id"),
-                        rs.getString("title"),
-                        rs.getString("author"),
-                        rs.getString("isbn"),
-                        rs.getBoolean("available")
+                		rs.getInt("book_id"),
+                	    rs.getString("title"),
+                	    rs.getString("author"),
+                	    rs.getString("isbn"),
+                	    rs.getInt("total_copies"),
+                	    rs.getInt("available_copies")
                 );
 
                 books.add(b);
@@ -126,11 +142,12 @@ public class BookDAO {
 
             if (rs.next()) {
                 return new Book(
-                        rs.getInt("book_id"),
-                        rs.getString("title"),
-                        rs.getString("author"),
-                        rs.getString("isbn"),
-                        rs.getBoolean("available")
+                		rs.getInt("book_id"),
+                	    rs.getString("title"),
+                	    rs.getString("author"),
+                	    rs.getString("isbn"),
+                	    rs.getInt("total_copies"),
+                	    rs.getInt("available_copies")
                 );
             }
 
@@ -159,11 +176,12 @@ public class BookDAO {
 
             while (rs.next()) {
                 Book b = new Book(
-                        rs.getInt("book_id"),
-                        rs.getString("title"),
-                        rs.getString("author"),
-                        rs.getString("isbn"),
-                        rs.getBoolean("available")
+                		rs.getInt("book_id"),
+                	    rs.getString("title"),
+                	    rs.getString("author"),
+                	    rs.getString("isbn"),
+                	    rs.getInt("total_copies"),
+                	    rs.getInt("available_copies")
                 );
 
                 books.add(b);
@@ -176,21 +194,5 @@ public class BookDAO {
         return books;
     }
 
-    // Update Book Availability
-    public void updateAvailability(int bookId, boolean available) {
-        try {
-            Connection con = DBConnection.getConnection();
-
-            String query = "UPDATE books SET available=? WHERE book_id=?";
-
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setBoolean(1, available);
-            ps.setInt(2, bookId);
-
-            ps.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+   
 }

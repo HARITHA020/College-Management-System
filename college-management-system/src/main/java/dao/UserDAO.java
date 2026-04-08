@@ -1,3 +1,9 @@
+/*
+ * Author : Haritha
+ * Dao helps to retrieve the the data form the mysql using the jdbc query commands
+ */
+
+
 package dao;
 
 import java.sql.*;
@@ -37,7 +43,7 @@ public class UserDAO {
         return response;
     }
 
-    // ✅ Check email exists
+    //  Check email exists
     public boolean checkEmailExists(String email) {
         try {
             Connection con = DBConnection.getConnection();
@@ -56,7 +62,7 @@ public class UserDAO {
         return false;
     }
 
-    // ✅ Create new user
+    // Create new user
     public int createUser(String email, String password, String role) {
         try {
             Connection con = DBConnection.getConnection();

@@ -39,32 +39,37 @@ public class StudentDAO {
 	    }
 	}
 
-    // Update Student
-	public void updateStudent(int id, String name, String dob, String contact, String department, String section) {
+    // 🔹 UPDATE STUDENT
+	public boolean updateStudentField(int studentId, String field, String value) {
 
-	    String query = "UPDATE students SET name=?, dob=?, contact=?, department=?, section=? WHERE student_id=?";
+	    // ⚠️ Allow only valid fields to prevent SQL injection
+	    if (!(field.equals("name") || field.equals("dob") || field.equals("contact") || 
+	          field.equals("department") || field.equals("section"))) {
+	        System.out.println("Invalid field: " + field);
+	        return false;
+	    }
+
+	    String sql = "UPDATE students SET " + field + " = ? WHERE student_id = ?";
 
 	    try (Connection con = DBConnection.getConnection();
-	         PreparedStatement ps = con.prepareStatement(query)) {
+	         PreparedStatement ps = con.prepareStatement(sql)) {
 
-	        ps.setString(1, name);
-	        ps.setDate(2, Date.valueOf(dob));
-	        ps.setString(3, contact);
-	        ps.setString(4, department);
-	        ps.setString(5, section); 
-	        ps.setInt(6, id);
-
-	        int rows = ps.executeUpdate();
-
-	        if (rows > 0) {
-	            System.out.println("✅ Student updated successfully");
+	        // Handle DOB as Date
+	        if (field.equals("dob")) {
+	            ps.setDate(1, Date.valueOf(value)); // value must be in yyyy-MM-dd format
 	        } else {
-	            System.out.println("⚠️ Student not found");
+	            ps.setString(1, value);
 	        }
+
+	        ps.setInt(2, studentId);
+
+	        return ps.executeUpdate() > 0;
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
+
+	    return false;
 	}
 
     // Delete Student

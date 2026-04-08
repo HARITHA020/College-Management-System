@@ -22,75 +22,117 @@ public class LibraryService {
 
     // 🔍 Search Book
     public void searchBook(String keyword) {
+
         List<Book> books = bookDAO.getAllBooks();
         boolean found = false;
 
+        System.out.println("\n------------------- SEARCH RESULTS -------------------");
+        System.out.printf("%-10s %-20s %-20s %-15s %-10s\n",
+                "ID", "Title", "Author", "ISBN", "Available");
+
+        System.out.println("-------------------------------------------------------------------------------");
         for (Book b : books) {
+
             if (b.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
                 b.getAuthor().toLowerCase().contains(keyword.toLowerCase())) {
-                System.out.println(b);
+            	 String title = b.getTitle();
+                 if (title.length() > 10) {
+                     title = title.substring(0, 10) + "...";
+                 }
+            	System.out.printf("%-10d %-20s %-20s %-15s %-15s\n",
+            	        b.getBookId(),
+            	        title,
+            	        b.getAuthor(),
+            	        b.getIsbn(),
+            	        b.getAvailableCopies() + "/" + b.getTotalCopies());
                 found = true;
             }
         }
-
         if (!found) {
             System.out.println("No books found");
         }
+        System.out.println("-------------------------------------------------------------------------------");
     }
 
-    // 📚 Borrow Book
+    
+ // 📚 Borrow Book
     public void borrowBook(int userId, String userType, int bookId) {
+
         if (userId <= 0 || bookId <= 0) {
             System.out.println("Invalid ID");
             return;
         }
 
         Book book = bookDAO.getBookById(bookId);
-        if (book == null) { System.out.println("Book not found"); return; }
-        if (!book.isAvailable()) { System.out.println("Book already borrowed"); return; }
+        if (book == null) {
+            System.out.println("Book not found");
+            return;
+        }
+
+        if (book.getAvailableCopies() <= 0) {
+            System.out.println("No copies available");
+            return;
+        }
 
         String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
         Integer studentId = null, facultyId = null;
-        if (userType.equalsIgnoreCase("student")) studentId = userId;
-        else if (userType.equalsIgnoreCase("faculty")) facultyId = userId;
-        else { System.out.println("Invalid user type"); return; }
+        String borrowerType = "";
+
+        if (userType.equalsIgnoreCase("student")) {
+            studentId = userId;
+            borrowerType = "Student";
+        }
+        else if (userType.equalsIgnoreCase("faculty")) {
+            facultyId = userId;
+            borrowerType = "Faculty";
+        }
+        else {
+            System.out.println("Invalid user type");
+            return;
+        }
 
         BorrowRecord record = new BorrowRecord(0, studentId, facultyId, bookId, today, null);
+
         borrowRecordDAO.borrowBook(record);
-        book.setAvailable(false);
-        System.out.println(userType + " borrowed book successfully");
+        System.out.println("📌 " + borrowerType + " (ID: " + userId + ") borrowed '" + book.getTitle() + "'");
     }
 
     // 🔁 Return Book
     public void returnBook(int userId, String userType, int bookId) {
-        // ✅ Get all active borrows
+
         List<BorrowRecord> activeRecords = borrowRecordDAO.getActiveRecords();
 
-        // Find the active record for this user & book
         BorrowRecord record = null;
+
         for (BorrowRecord r : activeRecords) {
             if (r.getBookId() == bookId) {
-                if (userType.equalsIgnoreCase("student") && r.getStudentId() != null && r.getStudentId() == userId) {
-                    record = r; break;
-                } else if (userType.equalsIgnoreCase("faculty") && r.getFacultyId() != null && r.getFacultyId() == userId) {
-                    record = r; break;
+
+                if (userType.equalsIgnoreCase("student") &&
+                    r.getStudentId() != null &&
+                    r.getStudentId() == userId) {
+                    record = r;
+                    break;
+                }
+
+                else if (userType.equalsIgnoreCase("faculty") &&
+                         r.getFacultyId() != null &&
+                         r.getFacultyId() == userId) {
+                    record = r;
+                    break;
                 }
             }
         }
 
         if (record == null) {
-            System.out.println("No active borrow record found for this user and book");
+            System.out.println("No active borrow record found");
             return;
         }
 
-        // ✅ Set return date
         String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
         borrowRecordDAO.returnBook(record.getRecordId(), today);
 
-        // ✅ Update book availability
-        Book book = bookDAO.getBookById(bookId);
-        if (book != null) book.setAvailable(true);
 
         System.out.println(userType + " returned book successfully");
     }

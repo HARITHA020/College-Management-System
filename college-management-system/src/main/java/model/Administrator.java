@@ -1,3 +1,10 @@
+/*
+ * Author : Haritha
+ * Model is used to initialize the variable and getter,setter used to return or set value based on input 
+ */
+
+
+
 package model;
 
 public class Administrator {
@@ -9,6 +16,7 @@ public class Administrator {
     private String contact;
     private int userId;  // Link to User table
 
+    //Constructor
     public Administrator(int id, String name, String password, String dob, String contact, int userId) {
         this.id = id;
         this.name = name;

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import dao.*;
 import model.*;
@@ -68,24 +69,20 @@ public class StudentService {
 
 		studentDAO.addStudent(name, dob, contact, department, section, userId);
 	}
-	public void updateStudent(int id, String name, String department, String dob, String contact, String section) {
+	public void updateStudent(int studentId, String field, String value) {
 
-	    boolean exists = false;
-
-	    for (Student s : studentDAO.getAllStudents()) {
-	        if (s.getId() == id) {
-	            exists = true;
-	            break;
-	        }
-	    }
-
-	    if (!exists) {
-	        System.out.println("Student not found");
+	    if (studentId <= 0) {
+	        System.out.println("Invalid Student ID");
 	        return;
 	    }
 
-	    studentDAO.updateStudent(id, name, dob, contact, department, section);
+	    boolean updated = studentDAO.updateStudentField(studentId, field, value);
 
+	    if (updated) {
+	        System.out.println("✅ Student updated successfully");
+	    } else {
+	        System.out.println("❌ Update failed or field not valid");
+	    }
 	}
 
 	public void deleteStudent(int id) {
@@ -193,7 +190,7 @@ public class StudentService {
      }
  }
 
-	// Student Timetable View
+//🔥 Grid-style Timetable with proper alignment
 	public void viewTimetable(int studentId) {
 
 		List<Enrollment> enrollments = enrollmentDao.getEnrollmentsByStudent(studentId);
@@ -203,99 +200,205 @@ public class StudentService {
 			return;
 		}
 
-		// Get student section
 		String section = studentDAO.getStudentById(studentId).getSection();
+		List<Timetable> timetables = timetableDAO.getAllTimetables();
 
-		List<Timetable> list = timetableDAO.getAllTimetables();
+		String[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+		int periods = 6;
+
+		int colWidth = 20; // ✅ Increased width for alignment
 
 		// Header
-		System.out.printf("%-10s %-20s %-10s %-10s\n", "Day", "Period(Time)", "Room", "Course");
-
-		System.out.println("----------------------------------------------------------");
-
-		boolean found = false;
-
-		for (Enrollment e : enrollments) {
-
-			for (Timetable t : list) {
-
-				if (t.getCourseId() == e.getCourseId() && t.getSection().equalsIgnoreCase(section)) {
-
-					System.out.printf("%-10s %-20s %-10s %-10d\n", t.getDay(),
-							"P" + t.getPeriod() + " (" + getTimeByPeriod(t.getPeriod()) + ")", // 🔥 FIX
-							t.getRoom(), t.getCourseId());
-
-					found = true;
-				}
-			}
+		System.out.printf("%-10s", "Day");
+		for (int p = 1; p <= periods; p++) {
+			System.out.printf("| P%d (%s) ", p, getTimeByPeriod(p), "");
 		}
+		System.out.println();
 
-		if (!found) {
-			System.out.println("No timetable available for your section");
+		// Separator
+		for (int i = 0; i < 10 + periods * (colWidth + 3); i++)
+			System.out.print("-");
+		System.out.println();
+
+		// Rows
+		for (String day : days) {
+			System.out.printf("%-10s", day);
+
+			for (int p = 1; p <= periods; p++) {
+				String courseInfo = "-";
+
+				for (Timetable t : timetables) {
+					boolean enrolled = enrollments.stream().anyMatch(en -> en.getCourseId() == t.getCourseId());
+
+					if (t.getDay().equalsIgnoreCase(day) && t.getPeriod() == p
+							&& t.getSection().equalsIgnoreCase(section) && enrolled) {
+
+						Course c = courseDAO.getCourseById(t.getCourseId());
+						courseInfo = "C" + t.getCourseId() + ":" + c.getCourseName();
+						break;
+					}
+				}
+
+				System.out.printf("| %-18s", courseInfo); // ✅ Fixed width
+			}
+			System.out.println();
 		}
 	}
-
     // ===================== MARKS / EXAMS =====================
-    public void viewMarks(int studentId) {
-        List<Result> results = resultDAO.getResultsByStudent(studentId);
+	public void viewMarks(int studentId) {
 
-        if (results == null || results.isEmpty()) {
-            System.out.println("No results available for this student.");
-            return;
-        }
+	    Scanner scanner = new Scanner(System.in);
 
-        System.out.println("\n--- Marks Report ---");
+	    // ===== GET STUDENT =====
+	    Student student = studentDAO.getStudentById(studentId);
+	    if (student == null) {
+	        System.out.println("❌ Student not found!");
+	        return;
+	    }
 
-        // Group results by course
-        Map<Integer, List<Result>> courseResultsMap = new HashMap<>();
+	    List<Result> results = resultDAO.getResultsByStudent(studentId);
+	    if (results == null || results.isEmpty()) {
+	        System.out.println("❌ No results available for this student.");
+	        return;
+	    }
 
-        for (Result r : results) {
-            if (!r.isPublished()) continue; // show only published results
+	    // ===== ASK SEMESTER =====
+	    System.out.print("Enter Semester (1-6): ");
+	    int selectedSem = scanner.nextInt();
 
-            Exam exam = examDAO.getExamById(r.getExamId()); // get exam from examId
-            if (exam == null) continue;
+	    // ✅ SEM VALIDATION
+	    if (selectedSem < 1 || selectedSem > 6) {
+	        System.out.println("❌ Invalid semester! Please enter between 1 and 6.");
+	        return;
+	    }
 
-            int courseId = exam.getCourseId(); // get courseId from exam
-            courseResultsMap.computeIfAbsent(courseId, k -> new ArrayList<>()).add(r);
-        }
+	    String line = "========================================================================================================";
 
-        for (Map.Entry<Integer, List<Result>> entry : courseResultsMap.entrySet()) {
-            int courseId = entry.getKey();
-            List<Result> courseResults = entry.getValue();
+	    // ===== HEADER =====
+	    System.out.println(line);
+	    System.out.println("Student Id   : " + student.getId());
+	    System.out.println("Student Name : " + student.getName());
+	    System.out.println("Year         : " + student.getSection());
+	    System.out.println("Semester     : " + selectedSem);
+	    System.out.println(line);
 
-            Course course = courseDAO.getCourseById(courseId);
-            String courseName = (course != null) ? course.getCourseName() : "Unknown Course";
+	    // ===== TABLE HEADER =====
+	    System.out.printf("%-10s %-25s %-7s %-10s %-7s %-7s %-10s\n",
+	            "Exam ID", "Course Name", "Marks", "Max Marks", "Grade", "Credit", "Status");
+	    System.out.println("--------------------------------------------------------------------------------------------------------");
 
-            double totalMarks = 0;
-            double maxTotal = 0;
+	    double totalMarks = 0;
+	    double maxTotal = 0;
+	    int totalCredits = 0;
+	    double totalGpaPoints = 0;
 
-            System.out.println("\nCourse: " + courseName + " (ID: " + courseId + ")");
+	    boolean isFail = false;
+	    boolean semFound = false;
 
-         // Header
-         System.out.printf("%-10s %-15s %-10s %-10s\n",
-                 "Exam ID", "Marks", "Max Marks", "Grade");
-         System.out.println("----------------------------------------------------------");
+	    // ===== GPA LOOP (ONLY SELECTED SEM) =====
+	    for (Result r : results) {
+	        if (!r.isPublished()) continue;
 
-         for (Result r : courseResults) {
-             Exam exam = examDAO.getExamById(r.getExamId());
-             int maxMarks = (exam != null) ? exam.getMaxMarks() : 100;
+	        Exam exam = examDAO.getExamById(r.getExamId());
+	        if (exam == null) continue;
 
-             System.out.printf("%-10d %-15d %-10d %-10s\n",
-                     r.getExamId(),
-                     r.getMarks(),
-                     maxMarks,
-                     r.getGrade());
+	        Course course = courseDAO.getCourseById(exam.getCourseId());
+	        if (course == null) continue;
 
-             totalMarks += r.getMarks();
-             maxTotal += maxMarks;
-         }
+	        // 👉 FILTER SEMESTER
+	        if (course.getSemester() != selectedSem) continue;
 
-         // Footer
-         System.out.println("----------------------------------------------------------");
-         System.out.printf("TOTAL: %.0f / %.0f\n", totalMarks, maxTotal);
-         System.out.printf("PERCENTAGE: %.2f%%\n", (maxTotal > 0 ? (totalMarks / maxTotal * 100) : 0));
-        }
-    }
+	        semFound = true;
+
+	        String courseName = course.getCourseName();
+	        int credit = course.getCredits();
+	        int maxMarks = exam.getMaxMarks();
+
+	        // ✅ SUBJECT STATUS
+	        String subjectStatus = (r.getMarks() >= 40) ? "PASS" : "FAIL";
+
+	        System.out.printf("%-10d %-25s %-7d %-10d %-7s %-7d %-10s\n",
+	                r.getExamId(),
+	                courseName,
+	                r.getMarks(),
+	                maxMarks,
+	                r.getGrade(),
+	                credit,
+	                subjectStatus);
+
+	        totalMarks += r.getMarks();
+	        maxTotal += maxMarks;
+	        totalCredits += credit;
+
+	        // OVERALL FAIL CHECK
+	        if (r.getMarks() < 40) {
+	            isFail = true;
+	        }
+
+	        double gpaPoint = getGpaFromGrade(r.getGrade());
+	        totalGpaPoints += gpaPoint * credit;
+	    }
+
+	    // ❌ NO DATA FOR SEM
+	    if (!semFound) {
+	        System.out.println("❌ Semester not found or no results available.");
+	        return;
+	    }
+
+	    System.out.println("--------------------------------------------------------------------------------------------------------");
+
+	    double gpa = (totalCredits > 0) ? totalGpaPoints / totalCredits : 0;
+
+	    // ===== CGPA LOOP =====
+	    double cgpaPoints = 0;
+	    int cgpaCredits = 0;
+
+	    for (Result r : results) {
+	        if (!r.isPublished()) continue;
+
+	        Exam exam = examDAO.getExamById(r.getExamId());
+	        if (exam == null) continue;
+
+	        Course course = courseDAO.getCourseById(exam.getCourseId());
+	        if (course == null) continue;
+
+	        if (course.getSemester() > selectedSem) continue;
+
+	        int credit = course.getCredits();
+	        double gpaPoint = getGpaFromGrade(r.getGrade());
+
+	        cgpaPoints += gpaPoint * credit;
+	        cgpaCredits += credit;
+	    }
+
+	    double cgpa = (cgpaCredits > 0) ? cgpaPoints / cgpaCredits : 0;
+
+	    // ===== OVERALL STATUS =====
+	    String status = isFail ? "FAIL ❌" : "PASS ✅";
+
+	    // ===== FOOTER =====
+	    System.out.println("Total Credits : " + totalCredits);
+	    System.out.printf("GPA           : %.2f\n", gpa);
+	    System.out.printf("CGPA          : %.2f\n", cgpa);
+	    System.out.println("Overall Status: " + status);
+	    System.out.println(line);
+	}
+
+
+	// ===== HELPER METHOD =====
+	private double getGpaFromGrade(String grade) {
+	    switch (grade) {
+	        case "A+": return 10;
+	        case "A":  return 9;
+	        case "B+": return 8;
+	        case "B":  return 7;
+	        case "C+": return 6;
+	        case "C":  return 5;
+	        default:   return 0;
+	    }
+	}
+
+
     // ===================== ATTENDANCE =====================
     public void viewAttendance(int studentId) {
 

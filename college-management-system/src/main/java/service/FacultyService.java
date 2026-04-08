@@ -7,7 +7,6 @@ import dao.*;
 import model.*;
 
 public class FacultyService {
-
     private FacultyDAO facultyDAO;
     private StudentDAO studentDAO;
     private ExamDAO examDAO;
@@ -21,7 +20,6 @@ public class FacultyService {
     private AssignmentDAO assignmentDAO;
     private AttendanceDAO attendanceDao = new AttendanceDAO();
     private UserDAO userDAO = new UserDAO();
-
     public FacultyService() {
         facultyDAO = new FacultyDAO();
         studentDAO = new StudentDAO();
@@ -33,9 +31,7 @@ public class FacultyService {
         materialDAO = new MaterialDAO();
         assignmentDAO = new AssignmentDAO();
     }
-    
- // Faculty Management (Admin Purpose)
-
+    // Faculty Management (Admin Purpose)
  	public void addFacultyWithUser(String email, String password,String name, String department, String dob,
  			String contact) {
 
@@ -50,16 +46,22 @@ public class FacultyService {
  			System.out.println("User creation failed");
  			return;
  		}
-
- // ✅ IMPORTANT CHANGE HERE
  		facultyDAO.addFaculty( name, department, dob, contact, userId);
-
  	}
+ 	public void updateFaculty(int facultyId, String field, String value) {
 
- 	public void updateFaculty(int id, String name, String department, String dob, String contact) {
+ 	    if (facultyId <= 0) {
+ 	        System.out.println("Invalid Faculty ID");
+ 	        return;
+ 	    }
 
- 		facultyDAO.updateFaculty(id, name, department, dob, contact);
- 		System.out.println("✅ Faculty updated successfully");
+ 	    boolean updated = facultyDAO.updateFacultyField(facultyId, field, value);
+
+ 	    if (updated) {
+ 	        System.out.println("✅ Faculty updated successfully");
+ 	    } else {
+ 	        System.out.println("❌ Update failed or invalid field");
+ 	    }
  	}
 
  	public void deleteFaculty(int id) {
@@ -92,13 +94,11 @@ public class FacultyService {
 
  	    System.out.println("\n---------------------- FACULTY LIST ----------------------");
 
- 	    // Header
  	    System.out.printf("%-5s %-20s %-15s %-12s %-15s\n",
  	            "ID", "Name", "Department", "DOB", "Contact");
 
  	    System.out.println("----------------------------------------------------------");
 
- 	    // Data
  	    for (Faculty f : faculties) {
  	        System.out.printf("%-5d %-20s %-15s %-12s %-15s\n",
  	                f.getId(),
@@ -111,9 +111,7 @@ public class FacultyService {
 
    
     // ================= STUDENTS =================
- 	public void viewMyStudents(int userId) {
-
- 	    int facultyId = userId; // already facultyId
+ 	public void viewMyStudents(int facultyId) {
  	    boolean found = false;
 
  	    System.out.println("\n------------------- MY STUDENTS -------------------");
@@ -154,9 +152,7 @@ public class FacultyService {
  	}
 
     // ================= COURSES =================
- 	public void viewMyCourses(int userId) {
-
- 	    int facultyId = userId; // already facultyId
+ 	public void viewMyCourses(int facultyId) {
  	    boolean found = false;
 
  	    System.out.println("\n---------- MY COURSES -------------");
@@ -170,7 +166,6 @@ public class FacultyService {
 
  	        if (c.getFacultyId() == facultyId) {
 
- 	            // ✅ Table Row
  	            System.out.printf("%-12d %-25s\n",
  	                    c.getCourseId(),
  	                    c.getCourseName());
@@ -261,10 +256,9 @@ public class FacultyService {
         }
     }
 
-    public void viewTimetable(int userId) {
-
-    	int facultyId = userId; // already facultyId
-
+ 
+ // 🔥 Faculty Timetable - Grid Format with Section
+    public void viewTimetable(int facultyId) {
         List<Timetable> list = timetableDAO.getAllTimetables();
 
         if (list.isEmpty()) {
@@ -272,37 +266,45 @@ public class FacultyService {
             return;
         }
 
-        // ✅ Updated header
-        System.out.printf("%-10s %-20s %-10s %-10s\n",
-                "Day", "Period(Time)", "Room", "Course");
+        // ✅ Days of week
+        String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
-        System.out.println("----------------------------------------------------------");
-
-        boolean found = false;
-
-        for (Timetable t : list) {
-
-            if (t.getFacultyId() == facultyId) {
-
-                // ✅ Updated row with time
-                System.out.printf("%-10s %-20s %-10s %-10d\n",
-                        t.getDay(),
-                        "P" + t.getPeriod() + " (" + getTimeByPeriod(t.getPeriod()) + ")",
-                        t.getRoom(),
-                        t.getCourseId());
-
-                found = true;
-            }
+        // ✅ Print header
+        System.out.printf("%-10s", "Day");
+        for (int p = 1; p <= 6; p++) {
+            System.out.printf(" | %-25s", "P" + p + " (" + getTimeByPeriod(p) + ")");
         }
+        System.out.println();
+        System.out.println("---------------------------------------------------------------------------------------------------");
 
-        if (!found) {
-            System.out.println("No timetable assigned");
+        for (String day : days) {
+            System.out.printf("%-10s", day);
+
+            for (int p = 1; p <= 6; p++) {
+                Timetable tt = null;
+                for (Timetable t : list) {
+                    if (t.getFacultyId() == facultyId
+                        && t.getDay().equalsIgnoreCase(day)
+                        && t.getPeriod() == p) {
+                        tt = t;
+                        break;
+                    }
+                }                String courseDisplay;
+                if (tt != null) {
+                    Course c = courseDAO.getCourseById(tt.getCourseId());
+                    courseDisplay = "C" + tt.getCourseId() + ":" + c.getCourseName() + "(" + tt.getSection() + ")";
+                } else {
+                    courseDisplay = " - ";
+                }
+
+                System.out.printf(" | %-25s", courseDisplay);
+            }
+
+            System.out.println();
         }
     }
     // ===============MATERIALS================ //
-    public void uploadMaterial(int courseId, String title, String content, int userId) {
-
-    	int facultyId = userId; // already facultyId
+    public void uploadMaterial(int courseId, String title, String content, int facultyId) {
 
         // 1. Validate course
         Course course = courseDAO.getCourseById(courseId);
@@ -336,9 +338,7 @@ public class FacultyService {
         System.out.println("Material uploaded successfully");
     }
 
-    public void viewMaterials(int courseId, int userId, String role) {
-
-        int facultyId = userId; // already facultyId
+    public void viewMaterials(int courseId, int facultyId, String role) {
         Course course = courseDAO.getCourseById(courseId);
 
         if (course == null) {
@@ -381,7 +381,7 @@ public class FacultyService {
         System.out.println("-----------------------------------------------------");
     }
     
-    public void deleteMaterial(int materialId, int userId, String role) {
+    public void deleteMaterial(int materialId, int facultyId, String role) {
         if (!role.equalsIgnoreCase("FACULTY")) {
             System.out.println("Access denied");
             return;
@@ -396,10 +396,7 @@ public class FacultyService {
         }
     }
     // ================= ASSIGNMENT =================
-    public void createAssignment(int courseId, String title, String desc, int userId) {
-
-    	int facultyId = userId; // already facultyId
-
+    public void createAssignment(int courseId, String title, String desc, int facultyId) {
         Course course = courseDAO.getCourseById(courseId);
 
         if (course == null) {
@@ -420,9 +417,7 @@ public class FacultyService {
         System.out.println("Assignment created");
     }
 
-    public void viewAssignments(int courseId, int userId, String role) {
-
-        int facultyId = userId; // already facultyId
+    public void viewAssignments(int courseId, int facultyId, String role) {
 
         Course course = courseDAO.getCourseById(courseId);
 
@@ -467,7 +462,7 @@ public class FacultyService {
         System.out.println("------------------------------------------------------------------------------");
     }
 
-    public void deleteAssignment(int AssignmentId, int userId, String role) {
+    public void deleteAssignment(int AssignmentId, int facultyId, String role) {
 
         if (!role.equalsIgnoreCase("FACULTY")) {
             System.out.println("Access denied");
@@ -525,11 +520,11 @@ public class FacultyService {
         libraryService.searchBook(keyword);
     }
 
-    public void borrowBook(int userId, int bookId) {
-        libraryService.borrowBook(userId, "faculty", bookId);
+    public void borrowBook(int facultyId, int bookId) {
+        libraryService.borrowBook(facultyId, "faculty", bookId);
     }
 
-    public void returnBook(int bookId, int userId) {
-        libraryService.returnBook(userId, "faculty", bookId);
+    public void returnBook(int bookId, int facultyId) {
+        libraryService.returnBook(facultyId, "faculty", bookId);
     }
 }
