@@ -1,3 +1,10 @@
+/*
+ * Author : Haritha
+ * Model is used to initialize the variable and getter,setter used to return or set value based on input 
+ */
+
+
+
 package model;
 
 public class Administrator {
