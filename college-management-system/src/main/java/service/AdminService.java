@@ -34,7 +34,13 @@ public class AdminService {
         if (email == null || email.trim().isEmpty()) {
             System.out.println("Email cannot be empty");
             return;
+      
         }
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+	    if (!email.matches(emailRegex)) {
+	        System.out.println("Invalid email format");
+	        return;
+	    }
 
         if (password == null || password.trim().isEmpty()) {
             System.out.println("Password cannot be empty");
@@ -127,9 +133,26 @@ public class AdminService {
 
     // ================= COURSE =================
     //ADD COURSE
-    public void addCourse(String name, int credits, String duration, String department, int facultyId, String description, int semester) {
-        courseDao.addCourse(name, credits, duration, department, facultyId, description, semester);
-    }
+	public void addCourse(String name, int credits, String duration, String department, int facultyId,
+			String description, int semester) {
+
+       //Empty validation
+		if (name == null || name.trim().isEmpty()) {
+			System.out.println("Course name cannot be empty");
+			return;
+		}
+
+      //Duplicate check
+		if (courseDao.isCourseExists(name, department, semester)) {
+			System.out.println("Course already exists for this department and semester");
+			return;
+		}
+
+       //Insert if valid
+		courseDao.addCourse(name, credits, duration, department, facultyId, description, semester);
+
+		System.out.println("Course added successfully");
+	}
 
     // UPDATE COURSE
     public void updateCourse(int courseId, String field, String value) {
@@ -186,7 +209,8 @@ public class AdminService {
     }
 
     public void assignCourse(int courseId, int facultyId) {
-        //Validate course exists
+
+        // ✅ Validate course exists
         boolean courseExists = false;
         for (Course c : courseDao.getAllCourses()) {
             if (c.getCourseId() == courseId) {
@@ -200,7 +224,6 @@ public class AdminService {
             return;
         }
 
-        //  Validate faculty exists
         boolean facultyExists = false;
         for (Faculty f : facultyDao.getAllFaculty()) {
             if (f.getId() == facultyId) {
@@ -213,15 +236,16 @@ public class AdminService {
             System.out.println("Error: Faculty ID " + facultyId + " does not exist.");
             return;
         }
-
-        //  Assign course to faculty
+        if (courseDao.isCourseAlreadyAssigned(courseId, facultyId)) {
+            System.out.println("Error: Course already assigned to this faculty.");
+            return;
+        }
         courseDao.assignCourse(courseId, facultyId);
-
         System.out.println("Course Assigned Successfully");
     }
     
     public void assignStudentToCourse(int studentId, int courseId) {
-        // Validate student exists
+
         boolean studentExists = false;
         for (Student s : studentDao.getAllStudents()) {
             if (s.getId() == studentId) {
@@ -235,7 +259,6 @@ public class AdminService {
             return;
         }
 
-        //  Validate course exists
         boolean courseExists = false;
         for (Course c : courseDao.getAllCourses()) {
             if (c.getCourseId() == courseId) {
@@ -249,8 +272,13 @@ public class AdminService {
             return;
         }
 
-        // If both exist, enroll student
+        if (enrollmentDAO.isAlreadyEnrolled(studentId, courseId)) {
+            System.out.println("Error: Student already enrolled in this course.");
+            return;
+        }
+
         enrollmentDAO.enrollStudent(studentId, courseId);
+        System.out.println("Student enrolled successfully");
     }
 
     public void viewCourses() {

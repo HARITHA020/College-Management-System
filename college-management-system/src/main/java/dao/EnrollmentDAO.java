@@ -223,4 +223,25 @@ public class EnrollmentDAO {
 
         return false;
     }
+    
+    public boolean isAlreadyEnrolled(int studentId, int courseId) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "SELECT * FROM enrollments WHERE student_id=? AND course_id=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, studentId);
+            ps.setInt(2, courseId);
+
+            ResultSet rs = ps.executeQuery();
+            boolean exists = rs.next();
+
+            rs.close();
+            ps.close();
+            return exists;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
