@@ -1,3 +1,10 @@
+/** 
+ * Author: Haritha
+ * This admin controller will handles the managing admin ,student, faculty details and display the courses and prepare timetable
+ * assign the course to the faculty, student and   create the schedule for the exams send the important notification to the student 
+ * and faculty and atlast publish the student results.
+ */
+
 package controller;
 
 import java.util.Scanner;
@@ -45,31 +52,31 @@ public class AdminController {
             switch (choice) {
 
                 case 1:
-                    manageAdmin();
+                    manageAdmin();         // add , update, delete
                     break;
                 case 2:
-                    manageStudent();
+                    manageStudent();      // add ,update , delete
                     break;
                 case 3:
-                    manageFaculty();
-                    break;
+                    manageFaculty();      // add ,update, delete
+                    break; 
                 case 4:
-                    manageCourse();
+                    manageCourse();       // add , assigning course , enrolling student , delete
                     break;
                 case 5:
-                    manageTimetable();
+                    manageTimetable();    // add , update ,delete
                     break;
                 case 6:
-                    examSchedule();
+                    examSchedule();       // add , update , delete
                     break;
                 case 7:
-                    manageNotification();
+                    manageNotification(); // add , delete
                     break;
                 case 8:
-                    manageLibrary();
+                    manageLibrary();      // add , update , remove
                     break;
                 case 9:
-                    publishResult();
+                    publishResult();     // publish student result with student id
                     break;
                 case 10:
                     adminService.viewAllResults();
@@ -99,8 +106,8 @@ public class AdminController {
 
             choice = input.nextInt();
             input.nextLine();
-
-            if (choice == 1) {
+             
+            if (choice == 1) {     // add admin details
 
                 System.out.print("Enter Email: ");
                 String email = input.nextLine();
@@ -117,10 +124,10 @@ public class AdminController {
                 System.out.print("Enter Contact Number: ");
                 String contact = input.nextLine();
 
-                adminService.addAdminWithUser(email, password, name, dob, contact);
+                adminService.addAdminWithUser(email, password, name, dob, contact);    
             }
 
-            else if (choice == 2) {
+            else if (choice == 2) {  //update admin
 
                 System.out.print("Enter Admin ID: ");
                 int id = input.nextInt();
@@ -160,7 +167,7 @@ public class AdminController {
                 adminService.updateAdmin(id, field, value);
             }
 
-            else if (choice == 3) {
+            else if (choice == 3) {    //delete admin
 
                 System.out.print("Enter Admin ID: ");
                 int id = input.nextInt();
@@ -188,7 +195,7 @@ public class AdminController {
             choice = input.nextInt();
             input.nextLine();
 
-            if (choice == 1) {
+            if (choice == 1) { // add student
 
                 System.out.print("Enter Email: ");
                 String email = input.nextLine();
@@ -214,7 +221,7 @@ public class AdminController {
                 studentService.addStudentWithUser(email, password,name, dept, dob, contact,section);
             }
 
-            else if (choice == 2) {
+            else if (choice == 2) {    //update student
 
                 System.out.print("Enter Student ID: ");
                 int id = input.nextInt();
@@ -266,7 +273,7 @@ public class AdminController {
                 studentService.updateStudent(id, field, value);
             }
 
-            else if (choice == 3) {
+            else if (choice == 3) {   //delete student
 
                 System.out.print("Enter Student ID: ");
                 int id = input.nextInt();
@@ -294,7 +301,7 @@ public class AdminController {
             choice = input.nextInt();
             input.nextLine();
 
-            if (choice == 1) {
+            if (choice == 1) {  // add faculty
 
             	System.out.print("Enter Email: ");
                 String email = input.nextLine();
@@ -317,12 +324,12 @@ public class AdminController {
                 facultyService.addFacultyWithUser(email, password, name,dep, dob, contact);
             }
 
-            else if (choice == 2) {
+            else if (choice == 2) {    //update faculty
 
                 System.out.print("Enter Faculty ID: ");
                 int id = input.nextInt();
                 input.nextLine();
-
+                //update the fields by particular selection
                 System.out.println("Which field do you want to update?");
                 System.out.println("1. Name");
                 System.out.println("2. Department");
@@ -363,7 +370,7 @@ public class AdminController {
                 facultyService.updateFaculty(id, field, value);
             }
 
-            else if (choice == 3) {
+            else if (choice == 3) {  //delete faculty
 
                 System.out.print("Enter Faculty ID: ");
                 int id = input.nextInt();
@@ -562,7 +569,7 @@ public class AdminController {
             choice = input.nextInt();
             input.nextLine();
 
-            switch (choice) {
+            switch (choice) {   // add timetable
 
                 case 1:
                     System.out.print("Day: ");
@@ -589,7 +596,7 @@ public class AdminController {
                     break;
 
                 case 2:
-                    adminService.viewTimetable();
+                    adminService.viewTimetable();    //view timetables details from database
                     break;
 
                 case 3:
@@ -599,7 +606,7 @@ public class AdminController {
                     System.out.print("Enter Section: ");
                     String sec = input.nextLine();
 
-                    adminService.viewByDate(date, sec);
+                    adminService.viewByDate(date, sec);    // view timetable by particular date and section
                     break;
 
                 case 4:
@@ -607,14 +614,14 @@ public class AdminController {
                     int timetableId = input.nextInt();
                     input.nextLine();
 
-                    adminService.deleteTimetable(timetableId);
+                    adminService.deleteTimetable(timetableId);     // delete timetable
                     break;
                   
                 case 5:
                     System.out.print("Enter Timetable ID to update: ");
                     int tId = input.nextInt();
                     input.nextLine();
-
+                    // update the particular field
                     System.out.println("What do you want to update?");
                     System.out.println("1. Day");
                     System.out.println("2. Period");
@@ -692,7 +699,7 @@ public class AdminController {
             choice = input.nextInt();
             input.nextLine();
 
-            if (choice == 1) {
+            if (choice == 1) {   // add exam
 
                 System.out.print("Enter Course ID: ");
                 int courseId = input.nextInt();
@@ -708,11 +715,11 @@ public class AdminController {
 
             } else if (choice == 2) {
 
-                adminService.viewSchedules();
+                adminService.viewSchedules();   // view exam from database
 
             } else if (choice == 3) {
 
-                // ✅ DELETE
+                //  DELETE
                 System.out.print("Enter Exam ID to delete: ");
                 int examId = input.nextInt();
                 input.nextLine();
@@ -721,7 +728,7 @@ public class AdminController {
 
             } else if (choice == 4) {
 
-                // ✅ UPDATE (ASK WHICH FIELD)
+                // update particular field
                 System.out.print("Enter Exam ID to update: ");
                 int examId = input.nextInt();
                 input.nextLine();
@@ -772,7 +779,7 @@ public class AdminController {
         System.out.print("Enter Extra Marks (optional): ");
         int extraMark = input.nextInt();
 
-        adminService.publishResult(resultId, extraMark);
+        adminService.publishResult(resultId, extraMark);     //publish result based on result stored in the database
     }
 
     // ================= NOTIFICATION =================
@@ -791,7 +798,7 @@ public class AdminController {
             choice = input.nextInt();
             input.nextLine();
 
-            if (choice == 1) {
+            if (choice == 1) {       // add notification
 
                 System.out.print("Enter Message: ");
                 String message = input.nextLine();
@@ -815,12 +822,12 @@ public class AdminController {
 
                 adminService.addNotification( message, date, role, targetId);
             } else if (choice == 2) {
-                adminService.viewNotifications();
+                adminService.viewNotifications();     // view notification from database
             }
             else if ( choice == 3) {
             	System.out.print("Enter the Notification Id to delete: ");
                 int id = input.nextInt();
-            	adminService.deleteNotification(id);
+            	adminService.deleteNotification(id);  // delete notification
             }
         }
     }

@@ -1,3 +1,8 @@
+/*
+ * Author : Haritha
+ * Model is used to initialize the variable and getter,setter used to return or set value based on input 
+ */
+
 package model;
 
 import java.util.Date;
@@ -8,7 +13,7 @@ public class Notification {
     private String message;
     private Date date;
     private String targetRole; // ALL / STUDENT / FACULTY / ADMIN
-    private Integer targetId;  // optional, null if ALL
+    private Integer targetId;  // particular person
 
     public Notification() {}
 

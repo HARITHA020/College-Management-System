@@ -1,3 +1,9 @@
+/*
+ * Author :Haritha
+ * 
+ */
+
+
 package controller;
 
 import dao.UserDAO;
@@ -7,7 +13,7 @@ public class LoginController {
 
     private UserDAO userDAO = new UserDAO();
 
-    // ✅ returns LoginResponse (role + userId)
+    // returns LoginResponse (role + userId)
     public LoginResponse checkRole(String email, String password) {
 
         if (email == null || email.trim().isEmpty()) {
@@ -35,7 +41,7 @@ public class LoginController {
         return response;
     }
 
-    // ✅ Main login method called from MainApp
+    // Main login method called from MainApp
     public boolean login(String email, String password) {
         LoginResponse response = checkRole(email, password);
         if (response == null) return false;
@@ -61,5 +67,6 @@ public class LoginController {
                 return false;
         }
         return true;
+        
     }
 }

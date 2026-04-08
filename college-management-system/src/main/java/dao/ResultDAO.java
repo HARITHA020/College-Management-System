@@ -1,3 +1,11 @@
+/*
+ * Author: Haritha
+ * Dao helps to retrieve the the data form the mysql using the jdbc query commands
+ */
+
+
+
+
 package dao;
 
 import java.sql.*;
@@ -16,7 +24,7 @@ public class ResultDAO {
             String query = "INSERT INTO results(student_id, exam_id, marks, grade, published) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, r.getStudentId());
-            ps.setInt(2, r.getExamId()); // ✅ corrected
+            ps.setInt(2, r.getExamId()); 
             ps.setInt(3, r.getMarks());
             ps.setString(4, r.getGrade());
             ps.setBoolean(5, r.isPublished());
@@ -168,7 +176,7 @@ public class ResultDAO {
         return results;
     }
 
-    // Helper: get exam ID by course
+    // get exam ID by course
     public int getExamIdByCourse(int courseId) {
         try {
             Connection con = DBConnection.getConnection();

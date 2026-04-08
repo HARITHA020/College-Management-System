@@ -9,7 +9,7 @@ import model.Administrator;
 
 public class AdminDAO {
 
-    // 🔹 ADD ADMIN
+    // ADD ADMIN
     public void addAdmin(String name, String dob, String contact, int userId) {
         try {
             Connection con = DBConnection.getConnection();
@@ -34,10 +34,10 @@ public class AdminDAO {
         }
     }
 
-    // 🔹 UPDATE ADMIN
+    // UPDATE ADMIN
     public boolean updateAdminField(int adminId, String field, String value) {
 
-        // ⚠️ Allow only valid fields to prevent SQL injection
+        // Allow only valid fields to prevent SQL injection
         if (!(field.equals("name") || field.equals("dob") || field.equals("contact"))) {
             System.out.println("Invalid field: " + field);
             return false;
@@ -48,7 +48,7 @@ public class AdminDAO {
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, value); // all fields are string
+            ps.setString(1, value); 
             ps.setInt(2, adminId);
 
             return ps.executeUpdate() > 0;
@@ -60,7 +60,7 @@ public class AdminDAO {
         return false;
     }
 
-    // 🔹 DELETE ADMIN
+    // DELETE ADMIN
     public void deleteAdmin(int id) {
         try {
             Connection con = DBConnection.getConnection();
@@ -79,7 +79,7 @@ public class AdminDAO {
         }
     }
 
-    // 🔹 GET ALL ADMINS
+    //  GET ALL ADMINS
     public List<Administrator> getAllAdmins() {
 
         List<Administrator> admins = new ArrayList<>();
@@ -96,7 +96,7 @@ public class AdminDAO {
                 Administrator a = new Administrator(
                         rs.getInt("admin_id"),
                         rs.getString("name"),
-                        null, // ❌ no password in this table
+                        null, // no password in this table
                         rs.getString("dob"),
                         rs.getString("contact"),
                         rs.getInt("user_id")
@@ -112,7 +112,7 @@ public class AdminDAO {
         return admins;
     }
 
-    // 🔹 GET ADMIN BY USER ID
+    // GET ADMIN BY USER ID
     public Administrator getAdminByUserId(int userId) {
 
         try {
@@ -127,7 +127,7 @@ public class AdminDAO {
 
             if (rs.next()) {
                 return new Administrator(
-                        rs.getInt("admin_id"), // ✅ fixed
+                        rs.getInt("admin_id"), 
                         rs.getString("name"),
                         null, // ❌ no password
                         rs.getString("dob"),
