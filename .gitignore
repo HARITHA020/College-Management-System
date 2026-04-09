@@ -4,3 +4,5 @@
 /bin/
 >>>>>>> branch 'master' of https://github.com/HARITHA020/College-Management-System.git
 college-management-system/src/main/resources/db.properties 
+.settings/ 
+college-management-system/.settings/ 
