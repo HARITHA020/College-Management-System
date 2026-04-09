@@ -1,3 +1,5 @@
+//AUTHOR: Balamurugan
+
 package dao;
 
 import java.sql.*;
@@ -9,13 +11,13 @@ import model.Attendance;
 
 public class AttendanceDAO {
 
-    // ===================== INSERT =====================
+    //  MARK ATTENDANCE
     public void markAttendance(Attendance att) {
 
         try {
             Connection con = DBConnection.getConnection();
 
-            // 🔥 Check duplicate
+            // Check duplicate 
             if (isAttendanceMarked(
                     att.getStudentId(),
                     att.getCourseId(),
@@ -56,7 +58,7 @@ public class AttendanceDAO {
         }
     }
 
-    // ===================== GET BY COURSE =====================
+    // GET ATTENDANCE BY COURSE
     public List<Attendance> getAttendanceByCourse(int courseId) {
 
         List<Attendance> list = new ArrayList<>();
@@ -91,7 +93,7 @@ public class AttendanceDAO {
         return list;
     }
 
-    // ===================== GET BY STUDENT =====================
+    // GET ATTENDANCE BY STUDENT
     public List<Attendance> getAttendanceByStudent(int studentId) {
 
         List<Attendance> list = new ArrayList<>();
@@ -126,7 +128,7 @@ public class AttendanceDAO {
         return list;
     }
 
-    // ===================== GET BY STUDENT + COURSE =====================
+    // GET THE ATTENDANCE BY -[ STUDENT + COURSE ]
     public List<Attendance> getAttendanceByStudentAndCourse(int studentId, int courseId) {
 
         List<Attendance> list = new ArrayList<>();
@@ -163,7 +165,7 @@ public class AttendanceDAO {
         return list;
     }
 
-    // ===================== DUPLICATE CHECK =====================
+    // MARKED DUPLICATE CHECK 
     public boolean isAttendanceMarked(int studentId, int courseId, java.sql.Date date) {
 
         try {

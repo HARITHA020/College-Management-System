@@ -1,3 +1,5 @@
+//AUTHOR: Balamurugan
+
 package model;
 
 import java.util.Date;
@@ -6,7 +8,7 @@ public class Attendance {
 
     private int studentId;
     private int courseId;
-    private Date date;       // Date of the class
+    private Date date;  
     private boolean present; // true = present, false = absent
 
     public Attendance(int studentId, int courseId, Date date, boolean present) {
