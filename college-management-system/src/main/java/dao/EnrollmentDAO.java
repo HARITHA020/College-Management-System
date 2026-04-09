@@ -1,3 +1,4 @@
+//AUTHOR: Balamurugan
 package dao;
 
 import java.sql.*;
@@ -9,12 +10,12 @@ import model.Enrollment;
 
 public class EnrollmentDAO {
 
-    // 🔹 ENROLL STUDENT
+    // ENROLL STUDENT
     public void enrollStudent(int studentId, int courseId) {
 
         try (Connection con = DBConnection.getConnection()) {
 
-            // ✅ Check duplicate
+            // Check duplicate
             String check = "SELECT * FROM enrollments WHERE student_id=? AND course_id=?";
             PreparedStatement ps1 = con.prepareStatement(check);
             ps1.setInt(1, studentId);
@@ -56,7 +57,7 @@ public class EnrollmentDAO {
         }
     }
 
-    // 🔹 GET ALL ENROLLMENTS
+    // GET ALL ENROLLMENTS
     public List<Enrollment> getAllEnrollments() {
 
         List<Enrollment> list = new ArrayList<>();
@@ -84,7 +85,7 @@ public class EnrollmentDAO {
         return list;
     }
 
-    // 🔹 GET BY STUDENT
+    // GET BY STUDENT
     public List<Enrollment> getEnrollmentsByStudent(int studentId) {
 
         List<Enrollment> list = new ArrayList<>();
@@ -113,7 +114,7 @@ public class EnrollmentDAO {
         return list;
     }
 
-    // 🔹 GET BY COURSE
+    // GET BY COURSE
     public List<Enrollment> getEnrollmentsByCourse(int courseId) {
 
         List<Enrollment> list = new ArrayList<>();
@@ -142,7 +143,7 @@ public class EnrollmentDAO {
         return list;
     }
 
-    // 🔹 DELETE ENROLLMENT
+    // DELETE ENROLLMENT
     public void deleteEnrollment(int studentId, int courseId) {
 
         try (Connection con = DBConnection.getConnection()) {

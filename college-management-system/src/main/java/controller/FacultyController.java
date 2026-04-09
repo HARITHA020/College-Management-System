@@ -1,3 +1,5 @@
+// AUTHOR: Balamurugan
+
 package controller;
 
 import java.util.Scanner;
@@ -19,11 +21,11 @@ public class FacultyController {
         this.scanner = new Scanner(System.in);
         this.facultyService = new FacultyService();
 
-        // ✅ Convert userId → facultyId
+        //Convert userId → facultyId
         Faculty f = facultyDao.getFacultyByUserId(userId);
 
         if (f != null) {
-            this.facultyId = f.getId(); // ✅ correct facultyId
+            this.facultyId = f.getId();
         } else {
             System.out.println("Faculty not found!");
             this.facultyId = -1;
@@ -48,7 +50,7 @@ public class FacultyController {
             System.out.println("12. Logout");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            scanner.nextLine();
 
             switch (choice) {
 
@@ -208,7 +210,7 @@ public class FacultyController {
                     facultyService.returnBook(book_Id, facultyId);
                     break;
 
-                case 12: // ✅ FIXED
+                case 12: 
                     System.out.println("Logging out...");
                     return;
 

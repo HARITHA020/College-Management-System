@@ -1,3 +1,5 @@
+// AUTHOR: Balamurugan
+
 package dao;
 
 import java.sql.*;
@@ -27,6 +29,7 @@ public class MaterialDAO {
             e.printStackTrace();
         }
     }
+    // DELETE MATERIAL
     public boolean deleteMaterialById(int materialId) {
         try (Connection con = DBConnection.getConnection()) {
             String query = "DELETE FROM materials WHERE material_id = ?";

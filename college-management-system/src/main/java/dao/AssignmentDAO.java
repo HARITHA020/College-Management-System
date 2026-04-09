@@ -1,3 +1,5 @@
+//AUTHOR: Balamurugan
+
 package dao;
 
 import java.sql.*;
@@ -27,7 +29,7 @@ public class AssignmentDAO {
             e.printStackTrace();
         }
     }
-    
+    // DELETE ASSIGNMENT
     public boolean deleteAssignment(int materialId) {
         try (Connection con = DBConnection.getConnection()) {
             String query = "DELETE FROM assignments WHERE assignment_id = ?";

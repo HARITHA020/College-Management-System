@@ -110,7 +110,7 @@ public class FacultyService {
  	}
 
    
-    // ================= STUDENTS =================
+    // VIEW STUDENTS 
  	public void viewMyStudents(int facultyId) {
  	    boolean found = false;
 
@@ -132,7 +132,6 @@ public class FacultyService {
  	                Student s = studentDAO.getStudentById(e.getStudentId());
 
  	                if (s != null) {
- 	                    // ✅ Table Row
  	                    System.out.printf("%-12d %-20s %-20s\n",
  	                            s.getId(),
  	                            s.getName(),
@@ -151,7 +150,7 @@ public class FacultyService {
  	    System.out.println("---------------------------------------------------");
  	}
 
-    // ================= COURSES =================
+    // VIEW COURSES 
  	public void viewMyCourses(int facultyId) {
  	    boolean found = false;
 
@@ -181,7 +180,7 @@ public class FacultyService {
  	    System.out.println("--------------------------------------");
  	}
 
-    // ================= ATTENDANCE =================
+    // MARK ATTENDANCE 
     public void markAttendance(int studentId, int courseId, boolean present) {
 
         Student s = studentDAO.getStudentById(studentId);
@@ -196,7 +195,6 @@ public class FacultyService {
             return;
         }
 
-        // ✅ NEW CHECK
         boolean enrolled = enrollmentDao.isStudentEnrolled(studentId, courseId);
         if (!enrolled) {
             System.out.println("❌ Student is not enrolled in this course");
@@ -213,7 +211,7 @@ public class FacultyService {
                 " as " + (present ? "PRESENT" : "ABSENT"));
     }
 
-    // ================= MARKS =================
+    // ADD MARKS
     public void addResult(int studentId, int courseId, int marks) {
 
         if (marks < 0 || marks > 100) {
@@ -241,7 +239,7 @@ public class FacultyService {
         System.out.println("Marks added (Not Published)");
     }
 
- // ================= TIMETABLE =================
+ // VIEW TIME by period
 
     public String getTimeByPeriod(int period) {
 
@@ -257,7 +255,7 @@ public class FacultyService {
     }
 
  
- // 🔥 Faculty Timetable - Grid Format with Section
+ // VIEW FULL TIMETABLE
     public void viewTimetable(int facultyId) {
         List<Timetable> list = timetableDAO.getAllTimetables();
 
@@ -265,11 +263,7 @@ public class FacultyService {
             System.out.println("No timetable available");
             return;
         }
-
-        // ✅ Days of week
         String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-
-        // ✅ Print header
         System.out.printf("%-10s", "Day");
         for (int p = 1; p <= 6; p++) {
             System.out.printf(" | %-25s", "P" + p + " (" + getTimeByPeriod(p) + ")");
@@ -303,7 +297,7 @@ public class FacultyService {
             System.out.println();
         }
     }
-    // ===============MATERIALS================ //
+    // UPLOAD MATERIALS
     public void uploadMaterial(int courseId, String title, String content, int facultyId) {
 
         // 1. Validate course
@@ -330,13 +324,14 @@ public class FacultyService {
             }
         }
 
-        // 4. Create object
+        // 4. Create Material
         Material m = new Material(0, courseId, title.trim(), content.trim());
 
         materialDAO.addMaterial(m);
 
         System.out.println("Material uploaded successfully");
     }
+    // view materials
 
     public void viewMaterials(int courseId, int facultyId, String role) {
         Course course = courseDAO.getCourseById(courseId);
@@ -380,7 +375,7 @@ public class FacultyService {
 
         System.out.println("-----------------------------------------------------");
     }
-    
+    // delete material
     public void deleteMaterial(int materialId, int facultyId, String role) {
         if (!role.equalsIgnoreCase("FACULTY")) {
             System.out.println("Access denied");
@@ -395,7 +390,7 @@ public class FacultyService {
             System.out.println("❌ No material found with this ID");
         }
     }
-    // ================= ASSIGNMENT =================
+    // CREATE ASSIGNMENT
     public void createAssignment(int courseId, String title, String desc, int facultyId) {
         Course course = courseDAO.getCourseById(courseId);
 
@@ -416,7 +411,7 @@ public class FacultyService {
 
         System.out.println("Assignment created");
     }
-
+    // view assignment
     public void viewAssignments(int courseId, int facultyId, String role) {
 
         Course course = courseDAO.getCourseById(courseId);
@@ -461,7 +456,7 @@ public class FacultyService {
 
         System.out.println("------------------------------------------------------------------------------");
     }
-
+    //delete assignment
     public void deleteAssignment(int AssignmentId, int facultyId, String role) {
 
         if (!role.equalsIgnoreCase("FACULTY")) {
@@ -477,7 +472,7 @@ public class FacultyService {
             System.out.println("❌ No assignment found to delete");
         }
     }
-    // ================= NOTIFICATION =================
+    // VIEW NOTIFICATION
     public void viewNotification(int facultyId) {
 
         List<Notification> list = notificationDAO.getAllNotifications();
@@ -515,7 +510,7 @@ public class FacultyService {
 
         System.out.println("----------------------------------------------------------------------------");
     }
-    // ================= LIBRARY =================
+    // LIBRARY 
     public void searchBook(String keyword) {
         libraryService.searchBook(keyword);
     }

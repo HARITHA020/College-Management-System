@@ -13,14 +13,13 @@ public class LibraryService {
 
     private BookDAO bookDAO;
     private BorrowRecordDAO borrowRecordDAO;
-
-    // ✅ Constructor
+    
     public LibraryService() {
         this.bookDAO = new BookDAO();
         this.borrowRecordDAO = new BorrowRecordDAO();
     }
 
-    // 🔍 Search Book
+    // Search Book
     public void searchBook(String keyword) {
 
         List<Book> books = bookDAO.getAllBooks();
@@ -55,7 +54,7 @@ public class LibraryService {
     }
 
     
- // 📚 Borrow Book
+ // Borrow Book
     public void borrowBook(int userId, String userType, int bookId) {
 
         if (userId <= 0 || bookId <= 0) {
@@ -98,7 +97,7 @@ public class LibraryService {
         System.out.println("📌 " + borrowerType + " (ID: " + userId + ") borrowed '" + book.getTitle() + "'");
     }
 
-    // 🔁 Return Book
+    // Return Book
     public void returnBook(int userId, String userType, int bookId) {
 
         List<BorrowRecord> activeRecords = borrowRecordDAO.getActiveRecords();

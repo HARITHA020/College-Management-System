@@ -1,3 +1,4 @@
+//AUTHOR :Balamurugan
 package dao;
 
 import java.sql.*;
@@ -9,7 +10,7 @@ import model.Faculty;
 
 public class FacultyDAO {
 
-    // 🔹 ADD FACULTY (AUTO_INCREMENT - RECOMMENDED)
+    // ADD FACULTY
     public void addFaculty(String name, String department, String dob, String contact, int userId) {
 
         String query = "INSERT INTO faculty(name, department, dob, contact, user_id) VALUES (?, ?, ?, ?, ?)";
@@ -33,10 +34,9 @@ public class FacultyDAO {
     }
 
     
-    // 🔹 UPDATE FACULTY
+    // UPDATE FACULTY
     public boolean updateFacultyField(int facultyId, String field, String value) {
-
-        // ⚠️ Allow only valid fields to prevent SQL injection
+    	// check fields to prevent invalid faculty
         if (!(field.equals("name") || field.equals("department") || field.equals("dob") || field.equals("contact"))) {
             System.out.println("Invalid field: " + field);
             return false;
@@ -47,9 +47,8 @@ public class FacultyDAO {
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            // Handle DOB as Date
             if (field.equals("dob")) {
-                ps.setDate(1, Date.valueOf(value)); // value must be in yyyy-MM-dd format
+                ps.setDate(1, Date.valueOf(value)); // format -'yyyy-mm-dd'
             } else {
                 ps.setString(1, value);
             }
@@ -65,7 +64,7 @@ public class FacultyDAO {
         return false;
     }
 
-    // 🔹 DELETE FACULTY
+    // DELETE FACULTY
     public void deleteFaculty(int facultyId) {
 
         String query = "DELETE FROM faculty WHERE faculty_id=?";
@@ -84,7 +83,7 @@ public class FacultyDAO {
         }
     }
 
-    // 🔹 GET ALL FACULTY
+    // GET ALL FACULTY
     public List<Faculty> getAllFaculty() {
 
         List<Faculty> list = new ArrayList<>();
@@ -114,7 +113,7 @@ public class FacultyDAO {
 
         return list;
     }
-    // get the faculty details by faculty id
+    // GET FACULTY DETAILS BY FACULTY ID
     public Faculty getFacultyById(int facultyId) {
 
         String query = "SELECT * FROM faculty WHERE faculty_id=?";
@@ -142,7 +141,7 @@ public class FacultyDAO {
 
         return null;
     }
-    // 🔹 GET FACULTY BY USER ID
+    // GET FACULTY BY USER ID
     public Faculty getFacultyByUserId(int userId) {
 
         String query = "SELECT * FROM faculty WHERE user_id=?";
@@ -172,7 +171,7 @@ public class FacultyDAO {
         return null;
     }
 
-    // 🔹 GET USER ID BY FACULTY ID
+    // GET USER ID BY FACULTY ID
     public int getUserIdByFacultyId(int facultyId) {
 
         String query = "SELECT user_id FROM faculty WHERE faculty_id=?";
@@ -195,7 +194,7 @@ public class FacultyDAO {
         return -1;
     }
 
-    // 🔹 CHECK FACULTY EXISTS (useful if using manual ID)
+    // CHECK FACULTY EXISTS
     public boolean isFacultyExists(int facultyId) {
 
         String query = "SELECT faculty_id FROM faculty WHERE faculty_id=?";
