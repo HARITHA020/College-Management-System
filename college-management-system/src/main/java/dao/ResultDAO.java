@@ -197,4 +197,25 @@ public class ResultDAO {
         }
         return -1;
     }
+    public boolean isResultAlreadyExists(int studentId, int examId) {
+        String query = "SELECT COUNT(*) FROM results WHERE student_id = ? AND exam_id = ?";
+        
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, studentId);
+            ps.setInt(2, examId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }
