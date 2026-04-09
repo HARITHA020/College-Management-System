@@ -7,10 +7,7 @@
  */
 package service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import dao.*;
@@ -216,7 +213,7 @@ public class StudentService {
 		String[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 		int periods = 6;
 
-		int colWidth = 20; // ✅ Increased width for alignment
+		int colWidth = 20; 
 
 		// Header
 		System.out.printf("%-10s", "Day");
@@ -249,7 +246,7 @@ public class StudentService {
 					}
 				}
 
-				System.out.printf("| %-18s", courseInfo); // ✅ Fixed width
+				System.out.printf("| %-18s", courseInfo); 
 			}
 			System.out.println();
 		}
