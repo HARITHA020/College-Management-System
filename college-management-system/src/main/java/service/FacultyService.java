@@ -212,16 +212,33 @@ public class FacultyService {
     }
 
     // ADD MARKS
-    public void addResult(int studentId, int courseId, int marks) {
+    public void addResult(int facultyId,int studentId, int courseId, int marks) {
 
         if (marks < 0 || marks > 100) {
             System.out.println("Invalid marks");
+            return;
+        }
+     // student  VALIDATION
+        if (!studentDAO.isStudentExists(studentId)) {
+            System.out.println("❌ Student does not exist");
+            return;
+        }
+        // USE YOUR EXISTING METHOD HERE
+      
+        if (!courseDAO.isCourseAlreadyAssigned(courseId, facultyId)) {
+            System.out.println("❌ You are not allowed to enter marks for this course");
             return;
         }
 
         int examId = resultDAO.getExamIdByCourse(courseId);
         if (examId == -1) {
             System.out.println("No exam found");
+            return;
+        }
+
+        // CHECK DUPLICATE
+        if (resultDAO.isResultAlreadyExists(studentId, examId)) {
+            System.out.println("Marks already entered for this student and course");
             return;
         }
 

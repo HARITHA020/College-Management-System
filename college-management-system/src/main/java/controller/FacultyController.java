@@ -87,7 +87,7 @@ public class FacultyController {
                     int marks = scanner.nextInt();
                     scanner.nextLine();
 
-                    facultyService.addResult(sid, cid, marks);
+                    facultyService.addResult(facultyId,sid, cid, marks);
                     break;
 
                 case 5:

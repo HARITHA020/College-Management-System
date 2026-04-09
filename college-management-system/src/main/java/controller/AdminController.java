@@ -21,7 +21,7 @@ public class AdminController {
     private Scanner input = new Scanner(System.in);
     private int userId; // logged-in admin's userId
 
-    // ✅ Constructor to set logged-in userId
+    // Constructor to set logged-in userId
     public AdminController(int userId) {
         this.userId = userId;
     }
