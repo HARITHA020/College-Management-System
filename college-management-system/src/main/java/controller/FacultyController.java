@@ -6,12 +6,14 @@ import java.util.Scanner;
 
 import dao.FacultyDAO;
 import model.Faculty;
+import service.AdminService;
 import service.FacultyService;
 
 public class FacultyController {
 
     private FacultyService facultyService = new FacultyService();
     private FacultyDAO facultyDao=new FacultyDAO();
+    private AdminService adminService= new AdminService();
     private Scanner scanner = new Scanner(System.in);
    
 
@@ -44,10 +46,11 @@ public class FacultyController {
             System.out.println("6. Manage Material");
             System.out.println("7. Manage Assignment");
             System.out.println("8. View Notifications");
-            System.out.println("9. Search Book");
-            System.out.println("10. Borrow Book");
-            System.out.println("11. Return Book");
-            System.out.println("12. Logout");
+            System.out.println("9. View Allbooks");
+            System.out.println("10. Search Book");
+            System.out.println("11. Borrow Book");
+            System.out.println("12. Return Book");
+            System.out.println("13. Logout");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -187,14 +190,18 @@ public class FacultyController {
                 case 8:
                     facultyService.viewNotification(facultyId);
                     break;
-
+                
                 case 9:
+                	adminService.viewAllBooks();
+                	break;
+
+                case 10:
                     System.out.print("Enter keyword: ");
                     String keyword = scanner.nextLine();
                     facultyService.searchBook(keyword);
                     break;
 
-                case 10:
+                case 11:
                     System.out.println("Enter Book ID:");
                     int bookId = scanner.nextInt();
                     scanner.nextLine();
@@ -202,7 +209,7 @@ public class FacultyController {
                     facultyService.borrowBook(facultyId, bookId);
                     break;
 
-                case 11:
+                case 12:
                     System.out.print("Enter Book ID to return: ");
                     int book_Id = scanner.nextInt();
                     scanner.nextLine();
@@ -210,7 +217,7 @@ public class FacultyController {
                     facultyService.returnBook(book_Id, facultyId);
                     break;
 
-                case 12: 
+                case 13: 
                     System.out.println("Logging out...");
                     return;
 
