@@ -23,7 +23,7 @@ public class MainApp {
 
             System.out.print("Enter Password: ");
             String password = input.nextLine();
-
+            //starting point of console based login
             boolean success = loginController.login(email, password);
 
             if (!success) {

@@ -762,7 +762,9 @@ public class AdminService {
                 "Record ID", "Student ID", "Faculty ID", "Book ID", "Borrow Date", "Return Date");
         System.out.println("------------------------------------------------------------------------------------------");
 
-        // ✅ Rows
+        // 
+        
+        //Rows
         for (BorrowRecord r : records) {
 
             String returnDate = (r.getReturnDate() != null)
