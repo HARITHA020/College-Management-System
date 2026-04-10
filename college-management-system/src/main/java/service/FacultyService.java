@@ -40,6 +40,15 @@ public class FacultyService {
  			System.out.println("Email already exists");
  			return;
  		}
+ 		String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+		    if (!email.matches(emailRegex)) {
+		        System.out.println("Invalid email format");
+		        return;
+		    }
+ 		if (password == null || !password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$")) {
+ 		    System.out.println("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.");
+ 		    return;
+ 		}
 
  		int userId = userDAO.createUser(email, password, "FACULTY");
 

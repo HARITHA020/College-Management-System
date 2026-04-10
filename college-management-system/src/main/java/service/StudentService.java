@@ -61,6 +61,10 @@ public class StudentService {
 		        System.out.println("Invalid email format");
 		        return;
 		    }
+		    if (password == null || !password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$")) {
+		        System.out.println("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.");
+		        return;
+		    }
 
 		if (userDAO.checkEmailExists(email)) {
 			System.out.println("Email already exists");

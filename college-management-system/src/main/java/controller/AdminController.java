@@ -215,7 +215,7 @@ public class AdminController {
                 System.out.print("Enter Contact Number: ");
                 String contact = input.nextLine();
                 
-                System.out.println("Enter Section (A/B/C):");
+                System.out.println("Enter Section (eg.1st A):");
                 String section = input.nextLine();
 
                 studentService.addStudentWithUser(email, password,name, dept, dob, contact,section);

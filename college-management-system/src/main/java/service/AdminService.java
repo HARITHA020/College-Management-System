@@ -42,10 +42,10 @@ public class AdminService {
 	        return;
 	    }
 
-        if (password == null || password.trim().isEmpty()) {
-            System.out.println("Password cannot be empty");
-            return;
-        }
+	    if (password == null || !password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$")) {
+	        System.out.println("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.");
+	        return;
+	    }
 
         if (name == null || name.trim().isEmpty()) {
             System.out.println("Admin name cannot be empty");
