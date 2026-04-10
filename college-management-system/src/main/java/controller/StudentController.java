@@ -6,11 +6,14 @@
 package controller;
 
 import java.util.Scanner;
+
+import service.AdminService;
 import service.StudentService;
 
 public class StudentController {
 
     private StudentService studentService;
+    private AdminService adminService= new AdminService();
     private Scanner scanner;
     private int studentId; // logged-in student ID
 
@@ -33,11 +36,12 @@ public class StudentController {
             System.out.println("3. View Marks");
             System.out.println("4. View Attendance");
             System.out.println("5. View Notifications");
-            System.out.println("6. Search Book");
-            System.out.println("7. Borrow Book");
-            System.out.println("8. Return Book");
-            System.out.println("9. View Materials");
-            System.out.println("10. View Assignments");
+            System.out.println("6. view Book");
+            System.out.println("7. Search Book");
+            System.out.println("8. Borrow Book");
+            System.out.println("9. Return Book");
+            System.out.println("10. View Materials");
+            System.out.println("11. View Assignments");
             System.out.println("0. Logout");
 
             System.out.print("Enter your choice: ");
@@ -61,18 +65,21 @@ public class StudentController {
                     studentService.viewNotifications(studentId);
                     break;
                 case 6:
+                	adminService.viewAllBooks();
+                	break;
+                case 7:
                     searchBook();
                     break;
-                case 7:
+                case 8:
                     borrowBook();
                     break;
-                case 8:
+                case 9:
                     returnBook();
                     break;
-                case 9:
+                case 10:
                     viewMaterials();
                     break;
-                case 10:
+                case 11:
                     viewAssignments();
                     break;
                 case 0:
