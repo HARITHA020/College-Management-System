@@ -14,7 +14,7 @@ import model.BorrowRecord;
 
 public class BorrowRecordDAO {
 
-	// 🔹 BORROW BOOK
+	// BORROW BOOK
 	public void borrowBook(BorrowRecord record) {
 	    try {
 	        Connection con = DBConnection.getConnection();
@@ -58,7 +58,7 @@ public class BorrowRecordDAO {
 	    }
 	}
 
-    // 🔹 RETURN BOOK
+    // RETURN BOOK
     public void returnBook(int recordId, String returnDate) {
         try {
             Connection con = DBConnection.getConnection();

@@ -13,7 +13,7 @@ import model.Course;
 
 public class CourseDAO {
 
-    // 🔹 ADD COURSE
+    //  ADD COURSE
     public void addCourse(String name, int credits, String duration, String department, int facultyId, String description,int semester) {
     	String query = "INSERT INTO courses(course_name, credits, duration, department, faculty_id, description, semester) VALUES (?, ?, ?, ?, ?, ?, ?)";
     	try (Connection con = DBConnection.getConnection();
@@ -38,7 +38,7 @@ public class CourseDAO {
 
     public boolean updateCourseField(int courseId, String field, String value) {
 
-        // ⚠️ Only allow valid fields to prevent SQL injection
+        //  Only allow valid fields to prevent SQL injection
     	 if (!(field.equals("course_name") || field.equals("credits") || field.equals("duration") ||
        	      field.equals("department") || field.equals("faculty_id") || field.equals("description") || field.equals("semester"))) {
        	    return false;
@@ -64,7 +64,7 @@ public class CourseDAO {
         return false;
     }
 
-    // 🔹 DELETE COURSE
+    //  DELETE COURSE
     public void deleteCourse(int courseId) {
         String query = "DELETE FROM courses WHERE course_id=?";
         try (Connection con = DBConnection.getConnection();
@@ -84,7 +84,7 @@ public class CourseDAO {
         }
     }
 
-    // 🔹 GET ALL COURSES
+    //  GET ALL COURSES
     public List<Course> getAllCourses() {
         List<Course> courses = new ArrayList<>();
         String query = "SELECT * FROM courses";
@@ -140,7 +140,7 @@ public class CourseDAO {
         return null;
     }
 
-    // 🔹 ASSIGN COURSE TO FACULTY
+    //  ASSIGN COURSE TO FACULTY
     public void assignCourse(int courseId, int facultyId) {
         String query = "UPDATE courses SET faculty_id=? WHERE course_id=?";
         try (Connection con = DBConnection.getConnection();
@@ -161,7 +161,7 @@ public class CourseDAO {
         }
     }
 
-    // 🔹 GET COURSES BY FACULTY ID
+    //  GET COURSES BY FACULTY ID
     public List<Course> getCoursesByFacultyId(int facultyId) {
 
         List<Course> courses = new ArrayList<>();
