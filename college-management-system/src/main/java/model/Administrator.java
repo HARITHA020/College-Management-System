@@ -3,43 +3,28 @@
  * Model is used to initialize the variable and getter,setter used to return or set value based on input 
  */
 
-
-
 package model;
 
-public class Administrator {
+public class Administrator extends Person {
 
-    private int id;
-    private String name;
     private String password;
-    private String dob;
-    private String contact;
-    private int userId;  // Link to User table
 
-    //Constructor
-    public Administrator(int id, String name, String password, String dob, String contact, int userId) {
-        this.id = id;
-        this.name = name;
+    public Administrator(int id, String name, String dob, String contact,
+                         int userId, String password) {
+
+        super(id, name, dob, contact, userId); // call parent constructor
         this.password = password;
-        this.dob = dob;
-        this.contact = contact;
-        this.userId = userId;
     }
 
-    // Getters
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getPassword() { return password; }
-    public String getDob() { return dob; }
-    public String getContact() { return contact; }
-    public int getUserId() { return userId; }
+    // Getter
+    public String getPassword() {
+        return password;
+    }
 
-    // Setters
-    public void setName(String name) { this.name = name; }
-    public void setPassword(String password) { this.password = password; }
-    public void setDob(String dob) { this.dob = dob; }
-    public void setContact(String contact) { this.contact = contact; }
-    public void setUserId(int userId) { this.userId = userId; }
+    // Setter
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @Override
     public String toString() {

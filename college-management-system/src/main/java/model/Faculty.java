@@ -1,39 +1,23 @@
-//AUTHOR: Balamurugan
-
 package model;
 
-public class Faculty {
+public class Faculty extends Person {
 
-    private int id;
-    private String name;
     private String department;
-    private String dob;
-    private String contact;
-    private int userId;  // Link to User table
 
     public Faculty(int id, String name, String department, String dob, String contact, int userId) {
-        this.id = id;
-        this.name = name;
+        super(id, name, dob, contact, userId); // call parent constructor
         this.department = department;
-        this.dob = dob;
-        this.contact = contact;
-        this.userId = userId;
     }
 
-    // Getters
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getDepartment() { return department; }
-    public String getDob() { return dob; }
-    public String getContact() { return contact; }
-    public int getUserId() { return userId; }
+    // Getter
+    public String getDepartment() {
+        return department;
+    }
 
-    // Setters
-    public void setName(String name) { this.name = name; }
-    public void setDepartment(String department) { this.department = department; }
-    public void setDob(String dob) { this.dob = dob; }
-    public void setContact(String contact) { this.contact = contact; }
-    public void setUserId(int userId) { this.userId = userId; }
+    // Setter
+    public void setDepartment(String department) {
+        this.department = department;
+    }
 
     @Override
     public String toString() {

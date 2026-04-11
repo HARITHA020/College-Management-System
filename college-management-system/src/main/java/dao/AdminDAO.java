@@ -100,10 +100,10 @@ public class AdminDAO {
                 Administrator a = new Administrator(
                         rs.getInt("admin_id"),
                         rs.getString("name"),
-                        null, // no password in this table
                         rs.getString("dob"),
                         rs.getString("contact"),
-                        rs.getInt("user_id")
+                        rs.getInt("user_id"),
+                        null // no password in this table
                 );
 
                 admins.add(a);
@@ -131,12 +131,12 @@ public class AdminDAO {
 
             if (rs.next()) {
                 return new Administrator(
-                        rs.getInt("admin_id"), 
-                        rs.getString("name"),
-                        null, // ❌ no password
-                        rs.getString("dob"),
-                        rs.getString("contact"),
-                        rs.getInt("user_id")
+                		 rs.getInt("admin_id"),
+                         rs.getString("name"),
+                         rs.getString("dob"),
+                         rs.getString("contact"),
+                         rs.getInt("user_id"),
+                         null // no password in this table
                 );
             }
 
