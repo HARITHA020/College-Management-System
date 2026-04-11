@@ -111,11 +111,12 @@ public class StudentDAO {
             	Student s = new Student(
             	        rs.getInt("student_id"),
             	        rs.getString("name"),
-            	        rs.getString("department"),
             	        rs.getString("dob"),
             	        rs.getString("contact"),
-            	        rs.getString("section"),  
-            	        rs.getInt("user_id")
+            	        rs.getInt("user_id"),
+            	        rs.getString("department"),
+            	        rs.getString("section")  
+            	       
             	);
                 students.add(s);
             }
@@ -140,13 +141,13 @@ public class StudentDAO {
 
             if (rs.next()) {
             	return new Student(
-            	        rs.getInt("student_id"),
-            	        rs.getString("name"),
-            	        rs.getString("department"),
-            	        rs.getString("dob"),
-            	        rs.getString("contact"),
-            	        rs.getString("section"),  
-            	        rs.getInt("user_id")
+            			 rs.getInt("student_id"),
+             	        rs.getString("name"),
+             	        rs.getString("dob"),
+             	        rs.getString("contact"),
+             	        rs.getInt("user_id"),
+             	        rs.getString("department"),
+             	        rs.getString("section")  
             	);
             }
 
@@ -173,13 +174,13 @@ public class StudentDAO {
 
             if (rs.next()) {
                 student = new Student(
-                    rs.getInt("student_id"),
-                    rs.getString("name"),
-                    rs.getString("department"),
-                    rs.getString("dob"),
-                    rs.getString("contact"),
-                    rs.getString("section"),
-                    rs.getInt("user_id")
+                		 rs.getInt("student_id"),
+             	        rs.getString("name"),
+             	        rs.getString("dob"),
+             	        rs.getString("contact"),
+             	        rs.getInt("user_id"),
+             	        rs.getString("department"),
+             	        rs.getString("section")  
                 );
             }
 
@@ -203,13 +204,13 @@ public class StudentDAO {
 
             if (rs.next()) {
                 return new Student(
-                        rs.getInt("student_id"),
-                        rs.getString("name"),
-                        rs.getString("dob"),
-                        rs.getString("contact"),
-                        rs.getString("department"),
-                        rs.getString("section"),
-                        rs.getInt("user_id")
+                		 rs.getInt("student_id"),
+             	        rs.getString("name"),
+             	        rs.getString("dob"),
+             	        rs.getString("contact"),
+             	        rs.getInt("user_id"),
+             	        rs.getString("department"),
+             	        rs.getString("section")  
                 );
             }
 
